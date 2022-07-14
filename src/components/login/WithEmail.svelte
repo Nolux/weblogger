@@ -1,5 +1,7 @@
 <script>
   import { signInWithEmailAndPassword } from "firebase/auth";
+  import { goto } from "$app/navigation";
+
   import { auth } from "$lib/store/firebase";
   import { user } from "$lib/store/userStore";
   let userInput = { email: "", password: "" };
@@ -15,6 +17,7 @@
     signInWithEmailAndPassword(auth, userInput.email, userInput.password)
       .then((result) => {
         // Signed in successfully.
+        goto("/");
       })
       .catch((err) => console.log(err));
   }}>Sign in</button

@@ -1,5 +1,7 @@
 <script>
   import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+  import { goto } from "$app/navigation";
+
   import { auth, GoogleProvider } from "$lib/store/firebase";
 </script>
 
@@ -14,6 +16,7 @@
         // The signed-in user info.
         const user = result.user;
         // ...
+        goto("/");
       })
       .catch((error) => {
         // Handle Errors here.
