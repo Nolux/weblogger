@@ -37,6 +37,12 @@
   <button
     class="btn mb-4"
     on:click|preventDefault={() => {
+      goto("/login/forgot");
+    }}>Forgot Password</button
+  >
+  <button
+    class="btn mb-4"
+    on:click|preventDefault={() => {
       goto("/login/register");
     }}>Register</button
   >
