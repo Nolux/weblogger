@@ -19,6 +19,10 @@
   console.log($user);
 </script>
 
+<svelte:head>
+  <title>Weblogger</title>
+</svelte:head>
+
 <div class="w-screen h-screen">
   <Nav />
   <Alert />
