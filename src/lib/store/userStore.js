@@ -1,7 +1,7 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "$lib/store/firebase";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { goto } from "$app/navigation";
 import { browser } from "$app/env";
 
@@ -19,7 +19,6 @@ function createUser() {
       } else {
         const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
           set({ isLoggedIn: user !== null, user: { ...user, ...doc.data() } });
-          console.log(doc.data());
         });
       }
     });
@@ -30,6 +29,13 @@ function createUser() {
     signOut: () => {
       signOut(auth);
       goto("/");
+    },
+    selectProject: async (project) => {
+      let currentUser = get(user);
+
+      await updateDoc(doc(db, "users", currentUser.user.uid), {
+        selectedProject: project,
+      });
     },
   };
 }

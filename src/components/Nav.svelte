@@ -20,10 +20,28 @@
   </div>
   <div class="flex-none">
     {#if $user.user && $user.user.selectedProject}
-      <div>{$user.user.selectedProject.name}</div>
+      <div class="dropdown">
+        <button tabindex="0" class="btn btn-xs btn-ghost"
+          >{$user.user.selectedProject.name}</button
+        >
+        <ul
+          tabindex="0"
+          class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
+        >
+          <li>
+            {#each $user.user.assignedProjects as project}
+              <button
+                on:click={() => {
+                  user.selectProject(project);
+                }}>{project.name}</button
+              >
+            {/each}
+          </li>
+        </ul>
+      </div>
       <div class="divider divider-horizontal" />
-      <div class="dropdown dropdown-end">
-        <button tabindex="0" class="">{$theme}</button>
+      <div class="dropdown">
+        <button tabindex="0" class="btn btn-xs btn-ghost">{$theme}</button>
         <ul
           tabindex="0"
           class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
