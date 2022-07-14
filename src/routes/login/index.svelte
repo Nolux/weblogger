@@ -4,8 +4,9 @@
   import WithGoogle from "../../components/login/WithGoogle.svelte";
 </script>
 
-<div class="form-control">
+<div class="container w-80 p-6 mx-auto form-control">
   <WithEmail />
+  <div class="divider" />
+  <div class="text-center pb-4">With providers:</div>
   <WithGoogle />
-  <button on:click={() => auth.signOut()} class="btn">Sign Out</button>
 </div>
