@@ -11,6 +11,10 @@
       name: "Logger",
       url: "/logger",
     },
+    {
+      name: "Profile",
+      url: "/userprofile",
+    },
   ];
 </script>
 
