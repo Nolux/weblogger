@@ -15,7 +15,7 @@ function createUser() {
     onAuthStateChanged(auth, (user) => {
       if (user == null) {
         set({ isLoggedIn: user !== null, user: user });
-        goto("/");
+        //goto("/"); TODO: OTHER WAY OF DOING IT?!
       } else {
         const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
           set({ isLoggedIn: user !== null, user: { ...user, ...doc.data() } });
