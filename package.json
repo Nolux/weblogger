@@ -2,7 +2,7 @@
   "name": "weblogger",
   "version": "2.0.0",
   "scripts": {
-    "dev": "svelte-kit dev",
+    "dev": "vite dev",
     "build": "svelte-kit build",
     "package": "svelte-kit package",
     "preview": "svelte-kit preview",
@@ -25,6 +25,7 @@
     "dayjs": "^1.11.0",
     "firebase": "^9.6.9",
     "firebase-admin": "^11.0.0",
-    "hotkeys-js": "^3.8.7"
+    "hotkeys-js": "^3.8.7",
+    "vite": "^3.0.0"
   }
 }
