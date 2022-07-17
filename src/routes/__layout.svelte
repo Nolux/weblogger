@@ -10,6 +10,7 @@
   import { theme } from "$lib/store/themeStore";
 
   onMount(() => {
+    console.log(app, auth);
     let htmlSelector = document.documentElement;
     // Change theme on store update
     theme.subscribe((theme) => {
