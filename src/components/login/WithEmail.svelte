@@ -4,6 +4,7 @@
 
   import { auth } from "$lib/store/firebase";
   import { user } from "$lib/store/userStore";
+  import { alertStore } from "$lib/store/alertStore";
   let userInput = { email: "", password: "" };
 </script>
 
@@ -31,7 +32,9 @@
           // Signed in successfully.
           goto("/");
         })
-        .catch((err) => console.log(err));
+        .catch((err) =>
+          alertStore.add({ type: "error", message: err.message })
+        );
     }}>Sign in</button
   >
   <button
