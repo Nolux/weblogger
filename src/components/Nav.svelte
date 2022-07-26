@@ -79,7 +79,9 @@
               {/if}
             </div>
           {:else}
-            <div class="w-14 " />
+            <div class="w-14 ">
+              <button tabindex="0" class="btn btn-ghost">Menu</button>
+            </div>
           {/if}
         </div></button
       >
