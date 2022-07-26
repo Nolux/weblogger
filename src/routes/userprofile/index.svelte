@@ -6,9 +6,11 @@
   dayjs.extend(relativeTime);
 
   import { user } from "$lib/store/userStore";
+
   import EmailVerified from "../../components/userprofile/EmailVerified.svelte";
   import DeleteUser from "../../components/userprofile/DeleteUser.svelte";
-  console.log($user);
+  import Avatar from "../../components/userprofile/Avatar.svelte";
+
   let userInput = {
     displayName: "",
     email: "",
@@ -33,7 +35,7 @@
     {#if !$user.user.emailVerified}
       <EmailVerified />
     {/if}
-    <img src={$user.user.photoURL} />
+    <Avatar size={"12"} />
     <div>{dayjs($user.user.metadata.creationTime).fromNow()}</div>
     <DeleteUser />
   {/if}
