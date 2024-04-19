@@ -1,8 +1,10 @@
 <script>
   import "../app.css";
   import Icon from "@iconify/svelte";
-  let loggedIn = true;
-  let admin = false;
+
+  export let data;
+
+  $: user = data.user;
 </script>
 
 <div class="drawer lg:drawer-open">
@@ -49,29 +51,41 @@
       <div>
         <li class="text-3xl"><a>Weblogger</a></li>
 
-        {#if loggedIn}
+        {#if user}
           <li><a href="/logger/">Logger</a></li>
           <li><a href="/postlogger/">Post Logger</a></li>
           <li><a href="/viewer/">Viewer</a></li>
           <li><a href="/search/">Search</a></li>
-          {#if admin}
-            <li><a>Admin</a></li>
+          {#if user.isAdmin}
+            <li><a href="/admin">Admin</a></li>
           {/if}
         {:else}
           <li><a href="/login/">Sign In</a></li>
           <li><a href="/login/register">Register</a></li>
         {/if}
       </div>
-      <div class="flex w-full mb-4">
-        <div class="avatar">
-          <div class="h-12 w-12 mx-2 rounded-full">
-            <img
-              src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-            />
+      {#if user}
+        <div class="flex items-center justify-between w-full mb-4">
+          <div class="avatar">
+            <div class="h-12 w-12 mx-2 rounded-full">
+              <img
+                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+              />
+            </div>
+          </div>
+          <div class="text-2xl">name nameson</div>
+          <div>
+            <a href="/login/signout">
+              <Icon
+                icon="mdi:exit-to-app"
+                width="24"
+                height="24"
+                style="color: white"
+              ></Icon>
+            </a>
           </div>
         </div>
-        <div class="leading-10 text-2xl">name nameson</div>
-      </div>
+      {/if}
     </ul>
   </div>
 </div>
