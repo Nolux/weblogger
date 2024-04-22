@@ -6,7 +6,6 @@ import { db } from "$lib/db.js";
 
 export async function handle({ event, resolve }) {
   const requestedPath = event.url.pathname;
-  console.log(requestedPath);
   const { headers } = event.request;
 
   const authCookie = event.cookies.get("AuthorizationToken");
