@@ -10,8 +10,6 @@ export async function handle({ event, resolve }) {
 
   const authCookie = event.cookies.get("AuthorizationToken");
 
-  console.log(authCookie);
-
   if (authCookie) {
     // Remove Bearer prefix
 
@@ -41,7 +39,6 @@ export async function handle({ event, resolve }) {
       };
 
       event.locals.user = sessionUser;
-      console.log(sessionUser);
     } catch (error) {
       console.error(error);
     }
@@ -63,6 +60,13 @@ export async function handle({ event, resolve }) {
     }
   }
 
-  const response = await resolve(event);
-  return response;
+  const theme = event.cookies.get("theme");
+
+  console.log(theme);
+
+  return await resolve(event, {
+    transformPageChunk: ({ html }) => {
+      return html.replace('data-theme=""', `data-theme="${theme}"`);
+    },
+  });
 }
