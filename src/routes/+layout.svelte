@@ -41,7 +41,7 @@
     <ul
       class="menu p-4 w-80 min-h-full bg-base-200 text-base-content h-screen flex flex-col justify-between"
     >
-      <div>
+      <div class="flex flex-col gap-2">
         <li class="text-3xl">
           <a class="font-bold">Weblogger <span class="text-xs">2.0</span></a>
         </li>
@@ -69,7 +69,7 @@
               />
             </div>
           </div>
-          <div class="text-2xl">name nameson</div>
+          <div class="text-2xl">{user.fullName}</div>
           <div>
             <a href="/login/signout">
               <Icon

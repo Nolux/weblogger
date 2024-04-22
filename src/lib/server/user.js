@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 import { db } from "$lib/db.js";
 
-export const createUser = async (email, password) => {
+export const createUser = async (email, password, firstName, lastName) => {
   email = email.toLowerCase();
   // Check if user exists
   const user = await db.user.findUnique({
@@ -19,11 +19,20 @@ export const createUser = async (email, password) => {
     };
   }
 
+  firstName = firstName.toLowerCase();
+  firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+
+  lastName = lastName.toLowerCase();
+  lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
+
   try {
     const user = await db.user.create({
       data: {
         email,
         password: await bcrypt.hash(password, 10),
+        firstName,
+        lastName,
+        fullName: firstName + " " + lastName,
       },
     });
 

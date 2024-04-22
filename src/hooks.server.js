@@ -6,6 +6,7 @@ import { db } from "$lib/db.js";
 
 export async function handle({ event, resolve }) {
   const requestedPath = event.url.pathname;
+  console.log(requestedPath);
   const { headers } = event.request;
 
   const authCookie = event.cookies.get("AuthorizationToken");
@@ -35,6 +36,9 @@ export async function handle({ event, resolve }) {
       const sessionUser = {
         id: user.id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        fullName: user.fullName,
         isAdmin: user.isAdmin,
       };
 
@@ -60,9 +64,16 @@ export async function handle({ event, resolve }) {
     }
   }
 
-  const theme = event.cookies.get("theme");
+  let theme = event.cookies.get("theme");
 
-  console.log(theme);
+  if (!theme) {
+    event.cookies.set("theme", "dark", {
+      path: "/",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24 * 365,
+    });
+    theme = "dark";
+  }
 
   return await resolve(event, {
     transformPageChunk: ({ html }) => {
