@@ -14,11 +14,11 @@ export const actions = {
       });
     }
 
-    const { email, password } = formData;
+    const { email, password, firstName, lastName } = formData;
 
     // Create a new user
 
-    const { error } = await createUser(email, password);
+    const { error } = await createUser(email, password, firstName, lastName);
 
     // If there was an error, return an invalid response
 
