@@ -1,6 +1,8 @@
 <script>
   import { goto, invalidateAll } from "$app/navigation";
+  import { onMount } from "svelte";
 
-  invalidateAll();
-  goto("/");
+  onMount(() => {
+    goto("/", { invalidateAll: true });
+  });
 </script>

@@ -41,7 +41,7 @@
     <ul
       class="menu p-4 w-80 min-h-full bg-base-200 text-base-content h-screen flex flex-col justify-between"
     >
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4 text-lg font-semibold">
         <li class="text-3xl">
           <a class="font-bold">Weblogger <span class="text-xs">2.0</span></a>
         </li>
@@ -62,16 +62,16 @@
       </div>
       {#if user}
         <div class="flex items-center justify-between w-full mb-4">
-          <div class="avatar">
-            <div class="h-12 w-12 mx-2 rounded-full">
-              <img
-                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-              />
+          <div class="avatar placeholder">
+            <div class="bg-primary text-neutral-content rounded-full w-14">
+              <span class="text-3xl"
+                >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
+              >
             </div>
           </div>
           <div class="text-2xl">{user.fullName}</div>
           <div>
-            <a href="/login/signout">
+            <a class="btn btn-ghost rounded-full" href="/login/signout">
               <Icon
                 icon="mdi:exit-to-app"
                 width="24"
