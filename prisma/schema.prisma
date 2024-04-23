@@ -2,25 +2,68 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-
-
 model User {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  password  String
-  firstName String
-  lastName String
-  fullName String
-  isAdmin Boolean @default(false)
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  email            String    @unique
+  password         String
+  firstName        String
+  lastName         String
+  fullName         String
+  isAdmin          Boolean   @default(false)
+  projectIds       String[]  @db.ObjectId
+  assignedProjects Project[] @relation(fields: [projectIds], references: [id])
 }
 
+model Log {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deleted   Boolean   @default(false)
+  body      String
+  timecode  Timecode
+  localDate LocalDate
+  postLog   Boolean   @default(false)
+  Project   Project   @relation(fields: [projectId], references: [id])
+  projectId String    @db.ObjectId
+}
+
+model Project {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  name          String
+  Log           Log[]
+  contact       Contact
+  userIds       String[] @db.ObjectId
+  assignedUsers User[]   @relation(fields: [userIds], references: [id])
+}
+
+type Timecode {
+  hours   Int
+  minutes Int
+  seconds Int
+  frames  Int
+}
+
+type LocalDate {
+  year  String
+  month String
+  day   String
+}
+
+type Contact {
+  name      String
+  email     String
+  telephone String
+}
