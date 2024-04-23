@@ -48,20 +48,6 @@ export async function handle({ event, resolve }) {
   } else {
     event.locals.user = null;
   }
-  /* 
-  if (requestedPath == "/" || requestedPath.startsWith("/login")) {
-    // Un-auth routes here
-    const response = await resolve(event);
-    return response;
-  }
- */
-
-  // Restrict all routes under /admin
-  if (requestedPath.includes("/admin")) {
-    if (!event.locals.user.admin) {
-      throw redirect(303, "/");
-    }
-  }
 
   let theme = event.cookies.get("theme");
 
@@ -72,6 +58,26 @@ export async function handle({ event, resolve }) {
       maxAge: 60 * 60 * 24 * 365,
     });
     theme = "dark";
+  }
+
+  if (requestedPath == "/" || requestedPath.startsWith("/login")) {
+    // Un-auth routes here
+    return await resolve(event, {
+      transformPageChunk: ({ html }) => {
+        return html.replace('data-theme=""', `data-theme="${theme}"`);
+      },
+    });
+  }
+
+  if (!event.locals.user) {
+    throw redirect(303, "/");
+  }
+
+  // Restrict all routes under /admin
+  if (requestedPath.includes("/admin")) {
+    if (!event.locals.user.admin) {
+      throw redirect(303, "/");
+    }
   }
 
   return await resolve(event, {
