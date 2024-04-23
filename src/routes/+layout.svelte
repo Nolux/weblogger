@@ -5,38 +5,47 @@
 
   export let data;
   let sideBarOpen = false;
-  $: console.log(sideBarOpen);
 
   $: user = data.user;
+  $: console.log(user);
 </script>
 
 <div class="drawer lg:drawer-open">
   <input
     bind:checked={sideBarOpen}
-    id="my-drawer-2"
+    id="sidebar"
     type="checkbox"
     class="drawer-toggle"
   />
   <div class="drawer-content flex flex-col">
     <label
-      for="my-drawer-2"
+      for="sidebar"
       class="btn absolute left-2 top-2 btn-ghost drawer-button lg:hidden"
     >
       <Icon icon="mdi-light:menu" width="34"></Icon></label
     >
-    <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"
+    <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
-    <div class="lg:hidden flex justify-center py-4 select-none border">
+    <div class="lg:hidden flex justify-around py-4 select-none border">
       <a class="font-bold text-3xl"
         >Weblogger <span class="text-xs">2.0</span></a
       >
+      {#if user}
+        <div class="avatar placeholder absolute top-4 right-2">
+          <div class="bg-primary text-neutral-content rounded-full w-10">
+            <span class="text-xl"
+              >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
+            >
+          </div>
+        </div>
+      {/if}
     </div>
     <div class="mt-8 mx-4">
       <slot />
     </div>
   </div>
   <div class="drawer-side">
-    <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"
+    <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
       class="menu p-4 w-80 min-h-full bg-base-200 text-base-content h-screen flex flex-col justify-between"
