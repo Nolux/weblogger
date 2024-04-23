@@ -6,6 +6,7 @@ import { db } from "$lib/db.js";
 
 export async function handle({ event, resolve }) {
   const requestedPath = event.url.pathname;
+  console.log(requestedPath);
   const { headers } = event.request;
 
   const authCookie = event.cookies.get("AuthorizationToken");
@@ -26,6 +27,9 @@ export async function handle({ event, resolve }) {
         where: {
           id: jwtUser.id,
         },
+        include: {
+          assignedProjects: { select: { id: true, name: true, contact: true } },
+        },
       });
 
       if (!user) {
@@ -39,6 +43,7 @@ export async function handle({ event, resolve }) {
         lastName: user.lastName,
         fullName: user.fullName,
         isAdmin: user.isAdmin,
+        assignedProjects: user.assignedProjects ? user?.assignedProjects : null,
       };
 
       event.locals.user = sessionUser;
@@ -67,6 +72,12 @@ export async function handle({ event, resolve }) {
         return html.replace('data-theme=""', `data-theme="${theme}"`);
       },
     });
+  }
+
+  if (requestedPath.startsWith("/api")) {
+    if (!event.locals.user) {
+      return new Response("error");
+    }
   }
 
   if (!event.locals.user) {
