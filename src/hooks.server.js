@@ -44,6 +44,7 @@ export async function handle({ event, resolve }) {
         fullName: user.fullName,
         isAdmin: user.isAdmin,
         assignedProjects: user.assignedProjects ? user?.assignedProjects : null,
+        projectIds: user.projectIds,
       };
 
       event.locals.user = sessionUser;
