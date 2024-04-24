@@ -1,0 +1,77 @@
+import { json, error } from "@sveltejs/kit";
+import { db } from "$lib/db.js";
+import { checkIfAdmin, checkIfOwner } from "$lib/server/auth.js";
+
+export const GET = async ({ url, locals }) => {
+  const projectId = url.searchParams.get("projectId");
+  const perPage = url.searchParams.get("perPage");
+  const page = url.searchParams.get("page");
+
+  if (!perPage || !page || !projectId) {
+    return error(400, "Missing input");
+  }
+
+  // Check if user is assigned to project
+  if (!locals.user.projectIds?.includes(projectId)) {
+    return error(402, "Auth error");
+  }
+
+  const count = await db.log.count({
+    where: { projectId: projectId },
+  });
+
+  const logs = await db.log.findMany({
+    where: { projectId: projectId },
+    skip: perPage * page,
+    take: parseInt(perPage),
+  });
+
+  return json({
+    logs,
+    page: { page, totalCount: count, totalPages: Math.floor(count / perPage) }, // <--- TODO: WRONG
+  });
+};
+
+export const POST = async ({ request, locals }) => {
+  const { body, timecode, localDate, projectId } = await request.json();
+
+  console.log(body, timecode, localDate, projectId);
+
+  if (!body || !timecode || !localDate || !projectId) {
+    return error(400, "Missing input");
+  }
+
+  const user = locals.user;
+
+  const log = await db.log.create({
+    data: {
+      body,
+      timecode,
+      localDate,
+      createdById: user.id,
+      createdByFullName: user.fullName,
+      project: { connect: { id: projectId } },
+    },
+  });
+
+  return json(log);
+};
+
+export const DELETE = async ({ request, locals }) => {
+  const { logId } = await request.json();
+
+  if (!logId) {
+    return error(400, "Missing input");
+  }
+
+  const log = await db.log.findUnique({ where: { id: logId } });
+
+  // Check if admin
+  if (!checkIfAdmin(locals) || !checkIfOwner(log.createdById, locals)) {
+    return error(401, "Missing auth");
+  }
+
+  const deletedLog = await db.log.delete({ where: { id: logId } });
+
+  return json("ok");
+};
