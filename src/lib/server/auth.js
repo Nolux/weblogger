@@ -3,5 +3,9 @@ export const validateToken = (token) => {
 };
 
 export const checkIfAdmin = (locals) => {
-  return locals.user.isAdmin ? true : false;
+  return locals.user.isAdmin;
+};
+
+export const checkIfOwner = (id, locals) => {
+  return id == locals.user.id;
 };
