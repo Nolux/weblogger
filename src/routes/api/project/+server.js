@@ -56,10 +56,10 @@ export const DELETE = async ({ request, locals }) => {
   });
 
   // Remove all connections to current users
-  const removeConnectedUsers = db.project.update({
+  const removeConnectedUsers = await db.project.update({
     where: { id: projectId },
     data: {
-      assingedUsers: {
+      assignedUsers: {
         disconnect: [
           ...project.userIds.map((userId) => {
             return { id: userId };
@@ -74,5 +74,5 @@ export const DELETE = async ({ request, locals }) => {
   // Finally remove Project
   const deletedProject = await db.project.delete({ where: { id: projectId } });
 
-  return json("ok");
+  return json(deletedProject);
 };

@@ -34,10 +34,10 @@ export const DELETE = async ({ request, locals }) => {
     return error(400, "Missing input");
   }
 
-  const project = await db.project.update({
+  const deletedProject = await db.project.update({
     where: { id: projectId },
     data: { assignedUsers: { disconnect: { id: userId } } },
   });
 
-  return json(project);
+  return json(deletedProject);
 };
