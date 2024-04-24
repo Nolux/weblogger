@@ -26,16 +26,18 @@ model User {
 }
 
 model Log {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deleted   Boolean   @default(false)
-  body      String
-  timecode  Timecode
-  localDate LocalDate
-  postLog   Boolean   @default(false)
-  Project   Project   @relation(fields: [projectId], references: [id])
-  projectId String    @db.ObjectId
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  createdById       String    @db.ObjectId
+  createdByFullName String
+  deleted           Boolean   @default(false)
+  body              String
+  timecode          Timecode
+  localDate         LocalDate
+  postLog           Boolean   @default(false)
+  project           Project   @relation(fields: [projectId], references: [id])
+  projectId         String    @db.ObjectId
 }
 
 model Project {
@@ -43,7 +45,7 @@ model Project {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   name          String
-  Log           Log[]
+  log           Log[]
   contact       Contact
   userIds       String[] @db.ObjectId
   assignedUsers User[]   @relation(fields: [userIds], references: [id])
@@ -57,9 +59,9 @@ type Timecode {
 }
 
 type LocalDate {
-  year  String
-  month String
-  day   String
+  year  Int
+  month Int
+  day   Int
 }
 
 type Contact {
