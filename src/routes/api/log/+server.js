@@ -3,7 +3,7 @@ import { db } from "$lib/db.js";
 import { checkIfAdmin, checkIfOwner } from "$lib/server/auth.js";
 
 export const GET = async ({ url, locals }) => {
-  const projectId = url.searchParams.get("projectId");
+  const projectId = locals.user.selectedProjectId;
   const perPage = url.searchParams.get("perPage");
   const page = url.searchParams.get("page");
 
