@@ -9,10 +9,7 @@ export const DELETE = async ({ request, locals }) => {
     return error(400, "Missing input");
   }
 
-  console.log(userId, locals.user.id);
-  console.log(!checkIfAdmin(locals));
-  console.log(checkIfOwner(userId, locals));
-  // Check if admin
+  // Check if admin or owner
   if (!checkIfAdmin(locals)) {
     if (!checkIfOwner(userId, locals)) {
       return error(401, "Missing auth");
