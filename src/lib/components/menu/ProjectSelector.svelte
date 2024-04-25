@@ -1,6 +1,5 @@
 <script>
   export let user;
-  $: console.log(user);
 
   const submitChangeProject = async (projectId) => {
     const response = await fetch("/api/user/selectProject", {
