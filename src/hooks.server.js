@@ -45,11 +45,15 @@ export async function handle({ event, resolve }) {
         isAdmin: user.isAdmin,
         assignedProjects: user.assignedProjects ? user?.assignedProjects : null,
         projectIds: user.projectIds,
+        selectedProjectId: user.selectedProjectId,
       };
 
       event.locals.user = sessionUser;
     } catch (error) {
+      // JWT error
+      event.cookies.delete("AuthorizationToken", { path: "/" });
       console.error(error);
+      throw redirect(303, "/");
     }
   } else {
     event.locals.user = null;
@@ -66,7 +70,11 @@ export async function handle({ event, resolve }) {
     theme = "dark";
   }
 
-  if (requestedPath == "/" || requestedPath.startsWith("/login")) {
+  if (
+    requestedPath == "/" ||
+    requestedPath.startsWith("/login") ||
+    requestedPath == "/api/user/login"
+  ) {
     // Un-auth routes here
     return await resolve(event, {
       transformPageChunk: ({ html }) => {

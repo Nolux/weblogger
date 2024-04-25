@@ -45,7 +45,6 @@ export const createUser = async (email, password, firstName, lastName) => {
 };
 
 export const loginUser = async (email, password) => {
-  console.log(PRIVATE_JWT_ACCESS_SECRET);
   email = email.toLowerCase();
   // Check if user exists
   const user = await db.user.findUnique({
