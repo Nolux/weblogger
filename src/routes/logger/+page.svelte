@@ -65,16 +65,16 @@
     <thead>
       <tr class="flex">
         <td class="grow">Logg</td>
-        <td>time</td>
-        <td>written by</td>
+        <td class="w-40">time</td>
+        <td class="w-40">written by</td>
       </tr>
     </thead>
     <tbody>
       {#each recentLogs as log}
         <tr class="flex">
           <td class="grow">{log.body}</td>
-          <td>{dayjs(log.createdAt).fromNow()}</td>
-          <td>{log.createdBy}</td>
+          <td class="w-40">{dayjs(log.createdAt).fromNow()}</td>
+          <td class="w-40">{log.createdByFullName}</td>
         </tr>
       {/each}
     </tbody>
