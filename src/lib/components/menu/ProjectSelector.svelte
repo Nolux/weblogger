@@ -1,4 +1,6 @@
 <script>
+  import { goto } from "$app/navigation";
+
   export let user;
 
   const submitChangeProject = async (projectId) => {
@@ -7,6 +9,7 @@
       body: JSON.stringify({ projectId }),
       credentials: "include",
     });
+    goto("/");
   };
 </script>
 
