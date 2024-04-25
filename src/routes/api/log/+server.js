@@ -22,6 +22,7 @@ export const GET = async ({ url, locals }) => {
 
   const logs = await db.log.findMany({
     where: { projectId: projectId },
+    orderBy: { createdAt: "desc" },
     skip: perPage * page,
     take: parseInt(perPage),
   });
@@ -33,7 +34,8 @@ export const GET = async ({ url, locals }) => {
 };
 
 export const POST = async ({ request, locals }) => {
-  const { body, timecode, localDate, projectId } = await request.json();
+  const { body, timecode, localDate } = await request.json();
+  const projectId = locals.user.selectedProjectId;
 
   console.log(body, timecode, localDate, projectId);
 
