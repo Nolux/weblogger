@@ -7,5 +7,5 @@ export const checkIfAdmin = (locals) => {
 };
 
 export const checkIfOwner = (id, locals) => {
-  return id == locals.user.id;
+  return id === locals.user.id;
 };

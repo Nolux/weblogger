@@ -66,9 +66,11 @@ export const DELETE = async ({ request, locals }) => {
 
   const log = await db.log.findUnique({ where: { id: logId } });
 
-  // Check if admin
-  if (!checkIfAdmin(locals) || !checkIfOwner(log.createdById, locals)) {
-    return error(401, "Missing auth");
+  // Check if admin or owner
+  if (!checkIfAdmin(locals)) {
+    if (!checkIfOwner(log.createdById, locals)) {
+      return error(401, "Missing auth");
+    }
   }
 
   const deletedLog = await db.log.delete({ where: { id: logId } });
