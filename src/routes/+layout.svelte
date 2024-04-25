@@ -1,4 +1,5 @@
 <script>
+  import ProjectSelector from "$lib/components/menu/ProjectSelector.svelte";
   import ThemeSelector from "$lib/components/theme/themeSelector.svelte";
   import "../app.css";
   import Icon from "@iconify/svelte";
@@ -60,6 +61,7 @@
           <li><a href="/postlogger/">Post Logger</a></li>
           <li><a href="/viewer/">Viewer</a></li>
           <li><a href="/search/">Search</a></li>
+          <ProjectSelector {user} />
           {#if user.isAdmin}
             <li><a href="/admin">Admin</a></li>
           {/if}
