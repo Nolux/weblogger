@@ -23,7 +23,7 @@ model User {
   isAdmin          Boolean   @default(false)
   projectIds       String[]  @db.ObjectId
   assignedProjects Project[] @relation(fields: [projectIds], references: [id])
-  selectedProjectId  String @db.ObjectId @default("")
+  selectedProjectId  String? @db.ObjectId
 }
 
 model Log {
