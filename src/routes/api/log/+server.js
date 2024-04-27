@@ -6,6 +6,9 @@ export const GET = async ({ url, locals }) => {
   const projectId = locals.user.selectedProjectId;
   const perPage = url.searchParams.get("perPage");
   const page = url.searchParams.get("page");
+  const localDate = url.searchParams.get("localDate");
+
+  console.log(localDate);
 
   if (!perPage || !page || !projectId) {
     return error(400, "Missing input");
@@ -16,25 +19,44 @@ export const GET = async ({ url, locals }) => {
     return error(402, "Auth error");
   }
 
-  const count = await db.log.count({
-    where: { projectId: projectId },
-  });
+  let count = 0;
 
-  const logs = await db.log.findMany({
-    where: { projectId: projectId },
-    orderBy: { createdAt: "desc" },
-    skip: perPage * page,
-    take: parseInt(perPage),
-  });
+  if (localDate) {
+    count = await db.log.count({
+      where: { projectId: projectId, localDateString: localDate },
+    });
+  } else {
+    count = await db.log.count({
+      where: { projectId: projectId },
+    });
+  }
+
+  let logs = [];
+
+  if (localDate) {
+    logs = await db.log.findMany({
+      where: { projectId: projectId, localDateString: localDate },
+      orderBy: { createdAt: "desc" },
+      skip: perPage * page,
+      take: parseInt(perPage),
+    });
+  } else {
+    logs = await db.log.findMany({
+      where: { projectId: projectId },
+      orderBy: { createdAt: "desc" },
+      skip: perPage * page,
+      take: parseInt(perPage),
+    });
+  }
 
   return json({
     logs,
-    page: { page, totalCount: count, totalPages: Math.floor(count / perPage) }, // <--- TODO: WRONG
+    page: { page, totalCount: count, totalPages: Math.ceil(count / perPage) }, // <--- TODO: WRONG
   });
 };
 
 export const POST = async ({ request, locals }) => {
-  const { body, timecode, localDate } = await request.json();
+  let { body, timecode, localDate } = await request.json();
 
   const user = locals.user;
   const projectId = user.selectedProjectId;
@@ -45,15 +67,47 @@ export const POST = async ({ request, locals }) => {
     return error(400, "Missing input");
   }
 
-  // assign tags?
-  // Create localdate obj
-  // Tell socketIO that there are new logs
+  // Look for capital words and marker words ending with:
+  const tags = body.match(/[A-Z|\d]+[\s|:]/g);
 
+  // Create localdate obj
+
+  const localDateString = `${localDate.year
+    .toString()
+    .padStart(4, "0")}.${localDate.month
+    .toString()
+    .padStart(2, "0")}.${localDate.day.toString().padStart(2, "0")}`;
+
+  // Create timecode obj
+  const timecodeString = `${timecode.hours
+    .toString()
+    .padStart(2, "0")}:${timecode.minutes
+    .toString()
+    .padStart(2, "0")}:${timecode.seconds
+    .toString()
+    .padStart(2, "0")}:${timecode.frames.toString().padStart(2, "0")}`;
+
+  // Check if project has this day?
+  const project = await db.project.findUnique({
+    where: { id: projectId, projectDays: { has: localDateString } },
+  });
+
+  if (!project) {
+    const project = await db.project.update({
+      where: { id: projectId },
+      data: { projectDays: { push: localDateString } },
+    });
+  }
+
+  // Write to db
   const log = await db.log.create({
     data: {
       body,
+      tags: tags ? tags : [],
       timecode,
+      timecodeString,
       localDate,
+      localDateString,
       createdById: user.id,
       createdByFullName: user.fullName,
       project: { connect: { id: projectId } },

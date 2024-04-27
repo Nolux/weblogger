@@ -45,17 +45,29 @@
   }, 50);
 
   const submitLog = async () => {
+    const now = dayjs();
     if (inTimecode == "XX:XX:XX:XX") {
       inTimecode =
-        dayjs().format("HH:mm:ss:") +
-        Math.floor(dayjs().millisecond() / 40)
+        now.format("HH:mm:ss:") +
+        Math.floor(now.millisecond() / 40) // TODO: check frame rate?
           .toString()
           .padStart(2, "0");
     }
-    input.timecode.hours = parseInt(inTimecode.split(":")[0]);
-    input.timecode.minutes = parseInt(inTimecode.split(":")[1]);
-    input.timecode.seconds = parseInt(inTimecode.split(":")[2]);
-    input.timecode.frames = parseInt(inTimecode.split(":")[3]);
+
+    input.localDate = {
+      year: now.year(),
+      month: now.month() + 1,
+      day: now.date(),
+    };
+
+    input.timecode = {
+      hours: parseInt(inTimecode.split(":")[0]),
+      minutes: parseInt(inTimecode.split(":")[1]),
+      seconds: parseInt(inTimecode.split(":")[2]),
+      frames: parseInt(inTimecode.split(":")[3]),
+    };
+
+    console.log(input);
     await fetch("/api/log", { method: "POST", body: JSON.stringify(input) });
     socket.emit("newData", user.selectedProjectId);
     inTimecode = "XX:XX:XX:XX";
@@ -66,13 +78,6 @@
       localDate: { year: 2024, month: 1, day: 1 },
     };
   };
-  /* 
-  setInterval(async () => {
-    const res = await fetch("/api/log?page=0&perPage=10");
-    const data = await res.json();
-    console.log(data);
-    logs = data.logs;
-  }, 30000); */
 </script>
 
 <div class="h-screen flex flex-col gap-8">
