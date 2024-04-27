@@ -2,6 +2,9 @@
   export let data;
 
   $: logs = data.logs;
+  $: user = data.user;
+
+  $: console.log(user);
 
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
@@ -16,6 +19,23 @@
     localDate: { year: 2024, month: 1, day: 1 },
   };
 
+  import { io } from "socket.io-client";
+
+  const socket = io();
+
+  socket.on("eventFromServer", (message) => {
+    console.log(message); // will log '✅ Connected';
+  });
+
+  socket.on("fetchNewData", async (projectId) => {
+    if (projectId == user.selectedProjectId) {
+      const res = await fetch("/api/log?page=0&perPage=10");
+      const data = await res.json();
+      console.log(data);
+      logs = data.logs;
+    }
+  });
+
   setInterval(() => {
     timecode =
       dayjs().format("HH:mm:ss:") +
@@ -25,23 +45,34 @@
   }, 50);
 
   const submitLog = async () => {
+    if (inTimecode == "XX:XX:XX:XX") {
+      inTimecode =
+        dayjs().format("HH:mm:ss:") +
+        Math.floor(dayjs().millisecond() / 40)
+          .toString()
+          .padStart(2, "0");
+    }
     input.timecode.hours = parseInt(inTimecode.split(":")[0]);
     input.timecode.minutes = parseInt(inTimecode.split(":")[1]);
     input.timecode.seconds = parseInt(inTimecode.split(":")[2]);
     input.timecode.frames = parseInt(inTimecode.split(":")[3]);
     await fetch("/api/log", { method: "POST", body: JSON.stringify(input) });
-    const res = await fetch("/api/log?page=0&perPage=10");
-    const data = await res.json();
-    console.log(data);
-    logs = data.logs;
-  };
+    socket.emit("newData", user.selectedProjectId);
+    inTimecode = "XX:XX:XX:XX";
 
+    input = {
+      timecode: {},
+      body: "",
+      localDate: { year: 2024, month: 1, day: 1 },
+    };
+  };
+  /* 
   setInterval(async () => {
     const res = await fetch("/api/log?page=0&perPage=10");
     const data = await res.json();
     console.log(data);
     logs = data.logs;
-  }, 30000);
+  }, 30000); */
 </script>
 
 <div class="h-screen flex flex-col gap-8">
@@ -77,11 +108,11 @@
       <div class="divider"></div>
       <div class="flex gap-2">
         <button
-          class="btn btn-lg grow"
+          class="btn text-xl w-1/2"
           on:click={() => {
             submitLog();
           }}>Submit</button
-        ><button class="btn btn-lg">Reset</button>
+        ><button class="btn text-xl w-1/2">Reset</button>
       </div>
     </div>
   </div>

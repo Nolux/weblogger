@@ -20,7 +20,11 @@
     submitChangeProject(e.target.value);
   }}
 >
-  {#each user.assignedProjects as project}
-    <option value={project.id}>{project.name}</option>
-  {/each}
+  {#if user.assignedProjects.length > 0}
+    {#each user.assignedProjects as project}
+      <option value={project.id}>{project.name}</option>
+    {/each}
+  {:else}
+    <option disabled value="No assigned projects">No assigned projects</option>
+  {/if}
 </select>

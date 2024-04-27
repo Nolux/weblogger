@@ -1,6 +1,5 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
-import { eventEmitter } from "/src/lib/event.js";
 
 import { Server } from "socket.io";
 
@@ -12,12 +11,12 @@ const webSocketServer = {
     const io = new Server(server.httpServer);
 
     io.on("connection", (socket) => {
+      socket.on("newData", (projectId) => {
+        io.emit("fetchNewData", projectId);
+      });
+
       console.log("connected: ", socket.id);
       socket.emit("eventFromServer", "✅ Connected");
-      eventEmitter.on("newLog", () => {
-        console.log("Helloooo! first listener");
-        socket.emit("eventFromServer", "event");
-      });
     });
   },
 };

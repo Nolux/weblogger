@@ -6,7 +6,8 @@
     "build": "vite build && npm run package",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
-    "prepublishOnly": "npm run package"
+    "prepublishOnly": "npm run package",
+    "server": "node -r dotenv/config server.js"
   },
   "exports": {
     ".": {
@@ -48,6 +49,8 @@
     "@tailwindcss/typography": "^0.5.12",
     "bcryptjs": "^2.4.3",
     "dayjs": "^1.11.10",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "prisma": "^5.12.1",
     "socket.io": "^4.7.5",

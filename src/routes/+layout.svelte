@@ -4,17 +4,6 @@
   import "../app.css";
   import Icon from "@iconify/svelte";
 
-  import { io } from "socket.io-client";
-
-  const websocket = io();
-
-  websocket.on("eventFromServer", (message) => {
-    console.log(message); // will log '✅ Connected';
-  });
-
-  let currentMessage = "";
-  $: currentMessage, websocket.emit("eventFromClient", currentMessage);
-
   export let data;
   let sideBarOpen = false;
 
