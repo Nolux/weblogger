@@ -74,7 +74,7 @@ export const loginUser = async (email, password) => {
   };
 
   const token = jwt.sign(jwtUser, PRIVATE_JWT_ACCESS_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "30d",
   });
 
   return { token };

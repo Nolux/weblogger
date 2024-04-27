@@ -35,7 +35,9 @@ export const GET = async ({ url, locals }) => {
 
 export const POST = async ({ request, locals }) => {
   const { body, timecode, localDate } = await request.json();
-  const projectId = locals.user.selectedProjectId;
+
+  const user = locals.user;
+  const projectId = user.selectedProjectId;
 
   console.log(body, timecode, localDate, projectId);
 
@@ -43,7 +45,9 @@ export const POST = async ({ request, locals }) => {
     return error(400, "Missing input");
   }
 
-  const user = locals.user;
+  // assign tags?
+  // Create localdate obj
+  // Tell socketIO that there are new logs
 
   const log = await db.log.create({
     data: {
