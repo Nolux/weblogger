@@ -42,31 +42,39 @@
       {/each}
     </div>
     <div class="grow p-2 flex flex-col gap-4">
-      {#each logs as log}
+      {#if logs.length < 1}
         <div class="flex flex-col lg:flex-row gap-2 border rounded p-2">
-          <div class="w-full text-xl">
-            {log.body}
-          </div>
-          <div class="divider divider-horizontal w-2"></div>
-          <div class="flex justify-between flex-row lg:flex-col gap-2 lg:w-40">
-            <div class="text-xl">
-              Timecode:
-              <span class="font-bold">
-                {log.timecode.hours
-                  .toString()
-                  .padStart(2, "0")}:{log.timecode.minutes
-                  .toString()
-                  .padStart(2, "0")}:{log.timecode.seconds
-                  .toString()
-                  .padStart(2, "0")}:{log.timecode.frames
-                  .toString()
-                  .padStart(2, "0")}
-              </span>
-            </div>
-            <div>Created by: {log.createdByFullName}</div>
-          </div>
+          <div class="w-full text-xl text-center">No logs for date</div>
         </div>
-      {/each}
+      {:else}
+        {#each logs as log}
+          <div class="flex flex-col lg:flex-row gap-2 border rounded p-2">
+            <div class="w-full text-xl">
+              {log.body}
+            </div>
+            <div class="divider divider-horizontal w-2"></div>
+            <div
+              class="flex justify-between flex-row lg:flex-col gap-2 lg:w-40"
+            >
+              <div class="text-xl">
+                Timecode:
+                <span class="font-bold">
+                  {log.timecode.hours
+                    .toString()
+                    .padStart(2, "0")}:{log.timecode.minutes
+                    .toString()
+                    .padStart(2, "0")}:{log.timecode.seconds
+                    .toString()
+                    .padStart(2, "0")}:{log.timecode.frames
+                    .toString()
+                    .padStart(2, "0")}
+                </span>
+              </div>
+              <div>Created by: {log.createdByFullName}</div>
+            </div>
+          </div>
+        {/each}
+      {/if}
     </div>
     <div class="flex justify-around">
       <div class="join">
