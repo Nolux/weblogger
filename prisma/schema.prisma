@@ -12,18 +12,18 @@ datasource db {
 }
 
 model User {
-  id               String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  email            String    @unique
-  password         String
-  firstName        String
-  lastName         String
-  fullName         String
-  isAdmin          Boolean   @default(false)
-  projectIds       String[]  @db.ObjectId
-  assignedProjects Project[] @relation(fields: [projectIds], references: [id])
-  selectedProjectId  String? @db.ObjectId
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  email             String    @unique
+  password          String
+  firstName         String
+  lastName          String
+  fullName          String
+  isAdmin           Boolean   @default(false)
+  projectIds        String[]  @db.ObjectId
+  assignedProjects  Project[] @relation(fields: [projectIds], references: [id])
+  selectedProjectId String?   @db.ObjectId
 }
 
 model Log {
@@ -34,8 +34,11 @@ model Log {
   createdByFullName String
   deleted           Boolean   @default(false)
   body              String
+  tags              String[]  @default([])
   timecode          Timecode
+  timecodeString    String
   localDate         LocalDate
+  localDateString   String
   postLog           Boolean   @default(false)
   project           Project   @relation(fields: [projectId], references: [id])
   projectId         String    @db.ObjectId
@@ -50,6 +53,7 @@ model Project {
   contact       Contact
   userIds       String[] @db.ObjectId
   assignedUsers User[]   @relation(fields: [userIds], references: [id])
+  projectDays   String[]
 }
 
 type Timecode {
