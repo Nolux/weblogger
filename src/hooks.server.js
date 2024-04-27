@@ -28,7 +28,15 @@ export async function handle({ event, resolve }) {
           id: jwtUser.id,
         },
         include: {
-          assignedProjects: { select: { id: true, name: true, contact: true } },
+          assignedProjects: {
+            select: {
+              id: true,
+              createdAt: true,
+              name: true,
+              contact: true,
+              projectDays: true,
+            },
+          },
         },
       });
 
