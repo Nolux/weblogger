@@ -1,4 +1,6 @@
 <script>
+  import Icon from "@iconify/svelte";
+
   export let data;
 
   $: logs = data.logs;
@@ -8,11 +10,14 @@
   $: selectedDate = data.selectedDate;
   $: perPage = data.perPage;
 
+  $: console.log(data);
+
   let currentPage = 0;
+  $: filters = [];
 
   const getNewData = async () => {
     const res = await fetch(
-      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${projectDays[selectedDate]}`
+      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${projectDays[selectedDate]}&filters=${filters.join(",")}`
     );
     const data = await res.json();
     logs = data.logs;
@@ -24,6 +29,28 @@
   <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
     Viewer
   </h1>
+  <div class="flex justify-end gap-2">
+    {#each filters as filter}
+      <div
+        class="badge {filter.includes(':')
+          ? 'badge-primary'
+          : 'badge-secondary'}"
+      >
+        {filter}
+      </div>
+    {/each}
+    {#if filters.length > 0}
+      <div
+        class="badge badge-warning hover:brightness-50 cursor-pointer"
+        on:click={() => {
+          filters = [];
+          getNewData();
+        }}
+      >
+        X
+      </div>
+    {/if}
+  </div>
   <div class="flex flex-col gap-4 w-full justify-between">
     <div class="text-2xl w-full flex">
       {#each projectDays as date, i}
@@ -53,6 +80,35 @@
               {log.body}
             </div>
             <div class="divider divider-horizontal w-2"></div>
+            <div class="w-20 mt-1 text-center">
+              {#if log.tags.length > 0}
+                {#each log.tags as tag}
+                  <div
+                    on:click={() => {
+                      let newFilters = filters;
+                      if (!filters.includes(tag)) {
+                        console.log(tag);
+                        newFilters.push(tag);
+                        filters = newFilters;
+                      } else {
+                        filters = newFilters.filter((x) => x != tag);
+                      }
+                      getNewData();
+                    }}
+                    class="badge {filters.includes(tag)
+                      ? 'badge-ghost'
+                      : ''} {tag.includes(':')
+                      ? 'badge-primary'
+                      : 'badge-secondary'} hover:brightness-50 cursor-pointer mb-2"
+                  >
+                    {tag}
+                  </div>
+                {/each}
+              {:else}
+                <div class="badge badge-ghost">no tags</div>
+              {/if}
+            </div>
+            <div class="divider divider-horizontal w-2"></div>
             <div
               class="flex justify-between flex-row lg:flex-col gap-2 lg:w-40"
             >
@@ -70,16 +126,45 @@
                     .padStart(2, "0")}
                 </span>
               </div>
-              <div>Created by: {log.createdByFullName}</div>
+              <div class="text-xs">
+                Created by: <span class="font-bold"
+                  >{log.createdByFullName}</span
+                >
+              </div>
+            </div>
+            <div class="divider divider-horizontal w-2"></div>
+            <div class="flex gap-2 flex-col w-12">
+              <button class="btn"> <Icon icon="mdi:pencil"></Icon></button>
+              <button
+                class="btn {log.confirmDelete ? 'btn-error' : ''}"
+                on:click={async () => {
+                  if (!log.confirmDelete) {
+                    log.confirmDelete = true;
+                    setTimeout(() => {
+                      log.confirmDelete = false;
+                    }, 4000);
+                  } else {
+                    await fetch("/api/log/delete", {
+                      method: "DELETE",
+                      body: JSON.stringify({ logId: log.id }),
+                    });
+                    getNewData();
+                  }
+                }}><Icon icon="mdi:trash"></Icon></button
+              >
             </div>
           </div>
         {/each}
       {/if}
     </div>
+
     <div class="flex justify-around">
       <div class="join">
         {#each { length: page.totalPages } as _, i}<button
-            class="join-item btn {currentPage == i ? 'btn-active' : ''}"
+            class="{page.totalPages > 1 ? 'join-item' : ''} btn {currentPage ==
+            i
+              ? 'btn-active'
+              : ''}"
             on:click={() => {
               currentPage = i;
               getNewData();

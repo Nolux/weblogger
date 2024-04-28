@@ -7,6 +7,11 @@ export const GET = async ({ url, locals }) => {
   const perPage = url.searchParams.get("perPage");
   const page = url.searchParams.get("page");
   const localDate = url.searchParams.get("localDate");
+  let filters = url.searchParams.get("filters");
+
+  if (filters) {
+    filters = filters.split(",");
+  }
 
   console.log(localDate);
 
@@ -20,34 +25,26 @@ export const GET = async ({ url, locals }) => {
   }
 
   let count = 0;
-
-  if (localDate) {
-    count = await db.log.count({
-      where: { projectId: projectId, localDateString: localDate },
-    });
-  } else {
-    count = await db.log.count({
-      where: { projectId: projectId },
-    });
-  }
-
   let logs = [];
 
-  if (localDate) {
-    logs = await db.log.findMany({
-      where: { projectId: projectId, localDateString: localDate },
-      orderBy: { createdAt: "desc" },
-      skip: perPage * page,
-      take: parseInt(perPage),
-    });
-  } else {
-    logs = await db.log.findMany({
-      where: { projectId: projectId },
-      orderBy: { createdAt: "desc" },
-      skip: perPage * page,
-      take: parseInt(perPage),
-    });
+  let searchObj = { projectId: projectId, deleted: false };
+  if (filters) {
+    searchObj.tags = { hasEvery: filters };
   }
+  if (localDate) {
+    searchObj.localDateString = localDate;
+  }
+
+  count = await db.log.count({
+    where: searchObj,
+  });
+
+  logs = await db.log.findMany({
+    where: searchObj,
+    orderBy: { createdAt: "desc" },
+    skip: perPage * page,
+    take: parseInt(perPage),
+  });
 
   return json({
     logs,
@@ -68,7 +65,11 @@ export const POST = async ({ request, locals }) => {
   }
 
   // Look for capital words and marker words ending with:
-  const tags = body.match(/[A-Z|\d]+[\s|:]/g);
+  const tags = body.match(/\b[A-Z0-9]{2,}\b/g);
+  const marker = body.match(/\b[A-Z0-9]{2,}\b:/)[0];
+  if (marker) {
+    tags[tags.indexOf(marker.split(":")[0])] = marker;
+  }
 
   // Create localdate obj
 
