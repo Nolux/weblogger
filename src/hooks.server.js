@@ -51,6 +51,7 @@ export async function handle({ event, resolve }) {
         lastName: user.lastName,
         fullName: user.fullName,
         isAdmin: user.isAdmin,
+        projectController: user.projectController,
         assignedProjects: user.assignedProjects ? user?.assignedProjects : null,
         projectIds: user.projectIds,
         selectedProjectId: user.selectedProjectId,

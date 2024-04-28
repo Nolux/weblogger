@@ -21,6 +21,7 @@ model User {
   lastName          String
   fullName          String
   isAdmin           Boolean   @default(false)
+  projectController String[]  @db.ObjectId
   projectIds        String[]  @db.ObjectId
   assignedProjects  Project[] @relation(fields: [projectIds], references: [id])
   selectedProjectId String?   @db.ObjectId
