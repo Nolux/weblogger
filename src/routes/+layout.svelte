@@ -1,6 +1,5 @@
 <script>
-  import ProjectSelector from "$lib/components/menu/ProjectSelector.svelte";
-  import ThemeSelector from "$lib/components/theme/themeSelector.svelte";
+  import SettingsModal from "$lib/components/menu/SettingsModal.svelte";
   import "../app.css";
   import Icon from "@iconify/svelte";
 
@@ -49,9 +48,9 @@
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
-      class="menu p-4 w-80 min-h-full bg-base-200 text-base-content h-screen flex flex-col justify-between"
+      class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col justify-between"
     >
-      <div class="flex flex-col gap-4 text-lg font-semibold">
+      <div class="grow w-full flex flex-col gap-4 text-lg font-semibold">
         <li class="text-3xl">
           <a class="font-bold">Weblogger <span class="text-xs">2.0</span></a>
         </li>
@@ -60,19 +59,19 @@
           <li><a href="/logger/">Logger</a></li>
           <li><a href="/postlogger/">Post Logger</a></li>
           <li><a href="/viewer/">Viewer</a></li>
-          <li><a href="/search/">Search</a></li>
-          <ProjectSelector {user} />
           {#if user.isAdmin}
+            <div class="w-full divider"></div>
             <li><a href="/admin">Admin</a></li>
           {/if}
         {:else}
           <li><a href="/login/">Sign In</a></li>
           <li><a href="/login/register">Register</a></li>
         {/if}
-        <ThemeSelector />
+        <div class="w-full divider"></div>
+        <SettingsModal {user} />
       </div>
       {#if user}
-        <div class="flex items-center justify-between w-full mb-4">
+        <div class="flex items-center justify-between w-full pb-4">
           <div class="avatar placeholder">
             <div class="bg-primary text-neutral-content rounded-full w-14">
               <span class="text-3xl"
