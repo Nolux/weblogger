@@ -5,7 +5,11 @@
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
 
-  import { submitHotkey, resetHotkey } from "$lib/stores/hotkeysStore.js";
+  import {
+    submitHotkey,
+    resetHotkey,
+    timecodeHotkey,
+  } from "$lib/stores/hotkeysStore.js";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -97,6 +101,12 @@
       </div>
       <div class="tooltip lg:tooltip-left" data-tip="In-point for log TC">
         <div
+          use:shortcut={{
+            shift: $timecodeHotkey.modifiers.shift,
+            control: $timecodeHotkey.modifiers.control,
+            alt: $timecodeHotkey.modifiers.alt,
+            code: $timecodeHotkey.key,
+          }}
           on:click={() => {
             inTimecode =
               dayjs().format("HH:mm:ss:") +

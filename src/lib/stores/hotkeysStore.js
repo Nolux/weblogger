@@ -39,3 +39,8 @@ export const resetHotkey = persisted("resetHotkey", {
   key: "F2",
   modifiers: { control: true, shift: true, alt: false },
 });
+
+export const timecodeHotkey = persisted("timecodeHotkey", {
+  key: "F3",
+  modifiers: { control: true, shift: true, alt: false },
+});
