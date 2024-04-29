@@ -36,7 +36,6 @@
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
     <div class="text-2xl w-full flex flex-col gap-4">
-      <h1 class="w-full text-center text-4xl">Date:</h1>
       <DatePicker
         enableFutureDates={false}
         showYearControls={true}
@@ -49,7 +48,7 @@
         theme="custom-datepicker"
         bind:isOpen
         enabledDates={projectDays}
-        ><div class="tooltip tooltip-info w-full" data-tip="Select Date">
+        ><div class="tooltip tooltip-accent w-full" data-tip="Select Date">
           <input
             class="input input-accent w-full text-4xl input-lg text-center"
             type="text"
@@ -92,88 +91,98 @@
         </div>
       {:else}
         {#each logs as log}
-          <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
-            <div class="w-full text-xl">
+          <div
+            class="grid grid-cols-12 lg:flex-row gap-2 border border-accent p-2"
+          >
+            <div class="w-full text-xl col-span-12 lg:col-span-8">
               {log.body}
             </div>
-            <div class="divider divider-horizontal w-2"></div>
-            <div class="w-20 mt-1 text-center">
-              {#if log.tags.length > 0}
-                {#each log.tags as tag}
-                  <div
-                    class="tooltip tooltip-left w-full"
-                    data-tip="Click to apply filter"
-                  >
-                    <div
-                      on:click={() => {
-                        let newFilters = filters;
-                        if (!filters.includes(tag)) {
-                          console.log(tag);
-                          newFilters.push(tag);
-                          filters = newFilters;
-                        } else {
-                          filters = newFilters.filter((x) => x != tag);
-                        }
-                        getNewData();
-                      }}
-                      class="badge {filters.includes(tag)
-                        ? 'badge-ghost'
-                        : ''} {tag.includes(':')
-                        ? 'badge-primary'
-                        : 'badge-secondary'} hover:brightness-50 cursor-pointer mb-2"
-                    >
-                      {tag}
-                    </div>
-                  </div>
-                {/each}
-              {:else}
-                <div class="badge badge-ghost">n/a</div>
-              {/if}
-            </div>
-            <div class="divider divider-horizontal w-2"></div>
             <div
-              class="flex justify-between flex-row lg:flex-col gap-2 lg:w-40"
+              class="flex col-span-12 lg:col-span-4 items-center justify-center lg:justify-end"
             >
-              <div class="text-xl">
-                Timecode:
-                <span class="font-bold">
-                  {log.timecode.hours
-                    .toString()
-                    .padStart(2, "0")}:{log.timecode.minutes
-                    .toString()
-                    .padStart(2, "0")}:{log.timecode.seconds
-                    .toString()
-                    .padStart(2, "0")}:{log.timecode.frames
-                    .toString()
-                    .padStart(2, "0")}
-                </span>
+              <div
+                class="divider divider-horizontal w-2 visible lg:invisible"
+              ></div>
+              <div class="w-20 mt-1 text-center">
+                {#if log.tags.length > 0}
+                  {#each log.tags as tag}
+                    <div
+                      class="tooltip tooltip-left w-full"
+                      data-tip="Click to apply filter"
+                    >
+                      <div
+                        on:click={() => {
+                          let newFilters = filters;
+                          if (!filters.includes(tag)) {
+                            console.log(tag);
+                            newFilters.push(tag);
+                            filters = newFilters;
+                          } else {
+                            filters = newFilters.filter((x) => x != tag);
+                          }
+                          getNewData();
+                        }}
+                        class="badge {filters.includes(tag)
+                          ? 'badge-ghost'
+                          : ''} {tag.includes(':')
+                          ? 'badge-primary'
+                          : 'badge-secondary'} hover:brightness-50 cursor-pointer mb-2"
+                      >
+                        {tag}
+                      </div>
+                    </div>
+                  {/each}
+                {:else}
+                  <div class="badge badge-ghost">n/a</div>
+                {/if}
               </div>
-              <div class="text-xs">
-                Created by: <span class="font-bold"
-                  >{log.createdByFullName}</span
+              <div
+                class="divider divider-horizontal w-2 visible lg:invisible"
+              ></div>
+              <div class="flex justify-between flex-col gap-2 lg:w-40">
+                <div class="text-xl">
+                  Timecode:
+                  <span class="font-bold">
+                    {log.timecode.hours
+                      .toString()
+                      .padStart(2, "0")}:{log.timecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:{log.timecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:{log.timecode.frames
+                      .toString()
+                      .padStart(2, "0")}
+                  </span>
+                </div>
+                <div class="text-xs">
+                  Created by: <span class="font-bold"
+                    >{log.createdByFullName}</span
+                  >
+                </div>
+              </div>
+              <div
+                class="divider divider-horizontal w-2 visible lg:invisible"
+              ></div>
+              <div class="flex gap-2 flex-col w-12">
+                <button class="btn"> <Icon icon="mdi:pencil"></Icon></button>
+                <button
+                  class="btn {log.confirmDelete ? 'btn-error' : ''}"
+                  on:click={async () => {
+                    if (!log.confirmDelete) {
+                      log.confirmDelete = true;
+                      setTimeout(() => {
+                        log.confirmDelete = false;
+                      }, 4000);
+                    } else {
+                      await fetch("/api/log/delete", {
+                        method: "DELETE",
+                        body: JSON.stringify({ logId: log.id }),
+                      });
+                      getNewData();
+                    }
+                  }}><Icon icon="mdi:trash"></Icon></button
                 >
               </div>
-            </div>
-            <div class="divider divider-horizontal w-2"></div>
-            <div class="flex gap-2 flex-col w-12">
-              <button class="btn"> <Icon icon="mdi:pencil"></Icon></button>
-              <button
-                class="btn {log.confirmDelete ? 'btn-error' : ''}"
-                on:click={async () => {
-                  if (!log.confirmDelete) {
-                    log.confirmDelete = true;
-                    setTimeout(() => {
-                      log.confirmDelete = false;
-                    }, 4000);
-                  } else {
-                    await fetch("/api/log/delete", {
-                      method: "DELETE",
-                      body: JSON.stringify({ logId: log.id }),
-                    });
-                    getNewData();
-                  }
-                }}><Icon icon="mdi:trash"></Icon></button
-              >
             </div>
           </div>
         {/each}
