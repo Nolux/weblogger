@@ -35,32 +35,50 @@
     Viewer
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
-    <div class="text-2xl w-full flex flex-col gap-4">
-      <DatePicker
-        enableFutureDates={false}
-        showYearControls={true}
-        align="right"
-        onDayClick={(e) => {
-          console.log(e);
-          selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
-          getNewData();
-        }}
-        theme="custom-datepicker"
-        bind:isOpen
-        enabledDates={projectDays}
-        ><div class="tooltip tooltip-accent w-full" data-tip="Select Date">
-          <input
-            class="input input-accent w-full text-4xl input-lg text-center"
-            type="text"
-            placeholder="Select date"
-            on:click={toggleDatePicker}
-            on:change={() => {
-              console.log("object");
-            }}
-            bind:value={selectedDate}
-          />
-        </div>
-      </DatePicker>
+    <div class="grid grid-cols-4 gap-4">
+      <div class="col-span-4 lg:col-span-2">
+        <DatePicker
+          enableFutureDates={false}
+          showYearControls={true}
+          align="right"
+          onDayClick={(e) => {
+            console.log(e);
+            selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
+            getNewData();
+          }}
+          theme="custom-datepicker"
+          bind:isOpen
+          enabledDates={projectDays}
+          ><div class="tooltip tooltip-accent w-full" data-tip="Select Date">
+            <input
+              class="h-full input input-accent w-full text-4xl input-lg text-center"
+              type="text"
+              placeholder="Select date"
+              on:click={toggleDatePicker}
+              on:change={() => {
+                console.log("object");
+              }}
+              bind:value={selectedDate}
+            />
+          </div>
+        </DatePicker>
+      </div>
+      <div
+        class="col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
+      >
+        <button class="m-1 btn btn-lg">Print</button>
+        <details class="dropdown">
+          <summary class="m-1 btn btn-lg">Exports</summary>
+          <ul
+            class="p-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
+          >
+            <a class="btn join-item">Avid</a>
+            <a class="btn join-item">Premiere Pro</a>
+            <a class="btn join-item" disabled>Final Cut X</a>
+            <a class="btn join-item">CSV</a>
+          </ul>
+        </details>
+      </div>
     </div>
     <div class="flex justify-end h-4 gap-2">
       {#each filters as filter}

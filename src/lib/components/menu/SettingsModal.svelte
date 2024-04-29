@@ -1,6 +1,7 @@
 <script>
   export let user;
   import ThemeSelector from "../theme/themeSelector.svelte";
+  import HotkeysSettings from "./HotkeysSettings.svelte";
   import ProjectSelector from "./ProjectSelector.svelte";
 </script>
 
@@ -9,17 +10,21 @@
 </li>
 <dialog id="settingsModal" class="modal">
   <div class="modal-box">
-    <h3 class="font-bold text-lg">Settings</h3>
+    <h3 class="font-bold text-xl mb-4">Settings</h3>
     <div class="flex flex-col gap-4">
       {#if user}
         <div>
           <h1 class="font-bold text-lg">Project</h1>
-          <ProjectSelector {user}></ProjectSelector>
+          <ProjectSelector {user} />
         </div>
       {/if}
       <div>
         <h1 class="font-bold text-lg">Theme</h1>
-        <ThemeSelector></ThemeSelector>
+        <ThemeSelector />
+      </div>
+      <div>
+        <h1 class="font-bold text-lg">Hotkeys</h1>
+        <HotkeysSettings />
       </div>
     </div>
     <div class="modal-action">

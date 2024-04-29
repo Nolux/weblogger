@@ -26,7 +26,7 @@
     >
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
-    <div class="lg:hidden flex justify-around py-4 select-none border">
+    <div class="lg:hidden flex justify-around py-4 select-none">
       <a class="font-bold text-3xl"
         >Weblogger <span class="text-xs">2.0</span></a
       >
