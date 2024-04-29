@@ -3,6 +3,7 @@
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import { writable } from "svelte/store";
+  import { DatePicker } from "@svelte-plugins/datepicker";
 
   import { socket } from "$lib/socket.js";
   import { submitHotkey, resetHotkey } from "$lib/stores/hotkeysStore.js";
@@ -57,6 +58,10 @@
       }
     }
   };
+
+  let isOpen = false;
+
+  const toggleDatePicker = () => (isOpen = !isOpen);
 </script>
 
 <div class="h-screen flex flex-col gap-8">
@@ -74,25 +79,40 @@
       class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
     >
       <div class="flex flex-col gap-2">
-        <div class="tooltip lg:tooltip-left" data-tip="TC right now">
-          <input
-            type="date"
-            max={dayjs().format("YYYY-MM-DD")}
-            id="date"
-            class="input"
-            bind:value={dateInput}
-          />
-          <div>
-            TC: {input.timecode.hours
-              .toString()
-              .padStart(2, "0")}:{input.timecode.minutes
-              .toString()
-              .padStart(2, "0")}:{input.timecode.seconds
-              .toString()
-              .padStart(2, "0")}:{input.timecode.frames
-              .toString()
-              .padStart(2, "0")}
+        <DatePicker
+          enableFutureDates={false}
+          showYearControls={true}
+          align="right"
+          onDayClick={(e) => {
+            console.log(e);
+            dateInput = dayjs(e.startDate).format("YYYY-MM-DD");
+          }}
+          theme="postlogger-datepicker"
+          bind:isOpen
+          ><div class="tooltip tooltip-info w-full" data-tip="Select Date">
+            <input
+              class="input w-full text-4xl input-lg text-center"
+              type="text"
+              placeholder="Select date"
+              on:click={toggleDatePicker}
+              on:change={() => {
+                console.log("object");
+              }}
+              bind:value={dateInput}
+            />
           </div>
+        </DatePicker>
+
+        <div>
+          TC: {input.timecode.hours
+            .toString()
+            .padStart(2, "0")}:{input.timecode.minutes
+            .toString()
+            .padStart(2, "0")}:{input.timecode.seconds
+            .toString()
+            .padStart(2, "0")}:{input.timecode.frames
+            .toString()
+            .padStart(2, "0")}
         </div>
         <div class="w-full grid grid-cols-4">
           <input
@@ -230,3 +250,39 @@
     </tbody>
   </table>
 </div>
+
+<style>
+  :global(.datepicker) {
+    width: 100%;
+  }
+  :global(.datepicker[data-picker-theme="postlogger-datepicker"]) {
+    --datepicker-container-background: oklch(var(--b1));
+    --datepicker-container-border: 1px solid oklch(var(--s));
+
+    --datepicker-calendar-header-text-color: oklch(var(--bc));
+    --datepicker-calendar-dow-color: oklch(var(--bc));
+    --datepicker-calendar-day-color: oklch(var(--s));
+    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
+    --datepicker-calendar-range-selected-background: oklch(var(--s));
+
+    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--s));
+    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
+    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+
+    --datepicker-calendar-split-border: 1px solid pink;
+
+    --datepicker-presets-border: 1px solid pink;
+    --datepicker-presets-button-background-active: #ff1683;
+    --datepicker-presets-button-color: oklch(var(--s));
+    --datepicker-presets-button-color-active: oklch(var(--s));
+    --datepicker-presets-button-color-hover: #333;
+    --datepicker-presets-button-color-focus: #333;
+  }
+  :global(.datepicker .calendars-container.right) {
+    margin-top: 1em;
+    left: 35% !important;
+    right: auto !important;
+  }
+</style>
