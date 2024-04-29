@@ -18,7 +18,10 @@ export async function load({ fetch, locals }) {
     ...data,
     user: locals.user,
     projectDays: currentProject.projectDays.sort(),
-    selectedDate: currentProject.projectDays.sort().length - 1,
+    selectedDate:
+      currentProject.projectDays.sort()[
+        currentProject.projectDays.sort().length - 1
+      ],
     perPage: perPage,
   };
 }
