@@ -44,10 +44,12 @@
         document.documentElement.setAttribute("data-theme", theme);
         current_theme = theme;
       }
-      if (!theme) {
+      /*    
+       if (!theme) {
         console.log("setting theme");
         set_theme({ event: { target: { value: "dim" } } });
-      }
+      } 
+      */
     }
   });
 
