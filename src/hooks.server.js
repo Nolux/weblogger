@@ -71,12 +71,12 @@ export async function handle({ event, resolve }) {
   let theme = event.cookies.get("theme");
 
   if (!theme) {
-    event.cookies.set("theme", "dark", {
+    event.cookies.set("theme", "dim", {
       path: "/",
       sameSite: "strict",
       maxAge: 60 * 60 * 24 * 365,
     });
-    theme = "dark";
+    theme = "dim";
   }
 
   if (
