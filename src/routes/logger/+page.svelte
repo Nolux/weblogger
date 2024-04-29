@@ -1,5 +1,11 @@
 <script>
   export let data;
+  import { socket } from "$lib/socket.js";
+
+  import { shortcut } from "$lib/components/hotkeys/shortcut.js";
+  import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
+
+  import { submitHotkey, resetHotkey } from "$lib/stores/hotkeysStore.js";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -18,14 +24,6 @@
     body: "",
     localDate: { year: 2024, month: 1, day: 1 },
   };
-
-  import { io } from "socket.io-client";
-
-  const socket = io();
-
-  socket.on("eventFromServer", (message) => {
-    console.log(message); // will log '✅ Connected';
-  });
 
   socket.on("fetchNewData", async (projectId) => {
     if (projectId == user.selectedProjectId) {
@@ -113,21 +111,62 @@
       <div class="divider"></div>
       <div class="flex gap-2">
         <button
-          class="btn text-xl w-1/2"
+          class="btn w-1/2"
+          use:shortcut={{
+            shift: $submitHotkey.modifiers.shift,
+            control: $submitHotkey.modifiers.control,
+            alt: $submitHotkey.modifiers.alt,
+            code: $submitHotkey.key,
+          }}
           on:click={() => {
             submitLog();
-          }}>Submit</button
-        ><button class="btn text-xl w-1/2">Reset</button>
+          }}
+        >
+          <div class="flex flex-col">
+            <div>Submit</div>
+            <div class="text-xs">
+              {$submitHotkey.modifiers.control ? "CTL + " : ""}
+              {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
+              {$submitHotkey.modifiers.alt ? "ALT + " : ""}
+              {$submitHotkey.key}
+            </div>
+          </div>
+        </button>
+        <button
+          class="btn w-1/2"
+          use:shortcut={{
+            shift: $resetHotkey.modifiers.shift,
+            control: $resetHotkey.modifiers.control,
+            alt: $resetHotkey.modifiers.alt,
+            code: $resetHotkey.key,
+          }}
+          on:click={() => {
+            input = {
+              timecode: {},
+              body: "",
+              localDate: { year: 2024, month: 1, day: 1 },
+            };
+            inTimecode = "XX:XX:XX:XX";
+          }}
+        >
+          <div class="flex flex-col">
+            <div>Reset</div>
+            <div class="text-xs">
+              {$resetHotkey.modifiers.control ? "CTL + " : ""}
+              {$resetHotkey.modifiers.shift ? "SHIFT + " : ""}
+              {$resetHotkey.modifiers.alt ? "ALT + " : ""}
+              {$resetHotkey.key}
+            </div>
+          </div></button
+        >
       </div>
     </div>
   </div>
-  <div class="w-full grid gap-2 grid-cols-2 lg:grid-cols-5 justify-around">
-    <button class="btn">1: tekst her</button><button class="btn"
-      >2: tekst her</button
-    ><button class="btn">3: tekst her</button><button class="btn"
-      >4: tekst her</button
-    ><button class="btn">5: tekst her</button>
-  </div>
+  <Hotkeys
+    replaceBody={(hotkey) => {
+      input.body = input.body + hotkey;
+    }}
+  />
 
   <table class="table">
     <thead>

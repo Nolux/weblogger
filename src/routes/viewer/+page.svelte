@@ -70,12 +70,12 @@
     </div>
     <div class="grow p-2 flex flex-col gap-4">
       {#if logs.length < 1}
-        <div class="flex flex-col lg:flex-row gap-2 border rounded p-2">
+        <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
           <div class="w-full text-xl text-center">No logs for date</div>
         </div>
       {:else}
         {#each logs as log}
-          <div class="flex flex-col lg:flex-row gap-2 border rounded p-2">
+          <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
             <div class="w-full text-xl">
               {log.body}
             </div>
@@ -105,7 +105,7 @@
                   </div>
                 {/each}
               {:else}
-                <div class="badge badge-ghost">no tags</div>
+                <div class="badge badge-ghost">n/a</div>
               {/if}
             </div>
             <div class="divider divider-horizontal w-2"></div>
