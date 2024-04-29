@@ -13,8 +13,6 @@ export const GET = async ({ url, locals }) => {
     filters = filters.split(",");
   }
 
-  console.log(localDate);
-
   if (!perPage || !page || !projectId) {
     return error(400, "Missing input");
   }
@@ -41,7 +39,7 @@ export const GET = async ({ url, locals }) => {
 
   logs = await db.log.findMany({
     where: searchObj,
-    orderBy: { createdAt: "desc" },
+    orderBy: { timecodeString: "desc" },
     skip: perPage * page,
     take: parseInt(perPage),
   });
@@ -66,8 +64,9 @@ export const POST = async ({ request, locals }) => {
 
   // Look for capital words and marker words ending with:
   const tags = body.match(/\b[A-Z0-9]{2,}\b/g);
-  const marker = body.match(/\b[A-Z0-9]{2,}\b:/)[0];
+  let marker = body.match(/\b[A-Z0-9]{2,}\b:/);
   if (marker) {
+    marker = marker[0];
     tags[tags.indexOf(marker.split(":")[0])] = marker;
   }
 
