@@ -86,15 +86,15 @@
   <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
     Logger
   </h1>
-  <div class="grid lg:grid-cols-4 w-full gap-4">
+  <div class="grid grid-cols-4 w-full gap-4">
     <textarea
       bind:value={input.body}
-      class="lg:col-span-3 grow text-xl textarea textarea-lg textarea-primary p-2"
+      class="col-span-4 lg:col-span-2 grow text-xl textarea textarea-lg textarea-primary p-2"
       placeholder="Logger"
       rows={8}
     ></textarea>
     <div
-      class="border border-primary p-4 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
+      class="col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
     >
       <div class="tooltip lg:tooltip-left" data-tip="TC right now">
         <div>TC: {timecode}</div>
