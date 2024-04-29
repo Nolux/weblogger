@@ -89,7 +89,7 @@
           }}
           theme="postlogger-datepicker"
           bind:isOpen
-          ><div class="tooltip tooltip-info w-full" data-tip="Select Date">
+          ><div class="tooltip tooltip-secondary w-full" data-tip="Select Date">
             <input
               class="input w-full text-4xl input-lg text-center"
               type="text"
