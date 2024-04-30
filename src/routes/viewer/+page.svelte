@@ -66,7 +66,11 @@
       <div
         class="col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
       >
-        <button class="m-1 btn btn-lg">Print</button>
+        <a
+          class="m-1 btn btn-lg"
+          target="_blank"
+          href="/api/exports/pdf?localDate={selectedDate}">Print</a
+        >
         <details class="dropdown">
           <summary class="m-1 btn btn-lg">Exports</summary>
           <ul
