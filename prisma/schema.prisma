@@ -36,6 +36,7 @@ model Log {
   deleted           Boolean   @default(false)
   body              String
   tags              String[]  @default([])
+  marker            String?
   timecode          Timecode
   timecodeString    String
   localDate         LocalDate
