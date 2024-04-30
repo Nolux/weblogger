@@ -104,6 +104,7 @@ export const POST = async ({ request, locals }) => {
     data: {
       body,
       tags: tags ? tags : [],
+      marker,
       timecode,
       timecodeString,
       localDate,
