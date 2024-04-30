@@ -79,7 +79,11 @@
             <a class="btn join-item">Avid</a>
             <a class="btn join-item">Premiere Pro</a>
             <a class="btn join-item" disabled>Final Cut X</a>
-            <a class="btn join-item">CSV</a>
+            <a
+              class="btn join-item"
+              target="_blank"
+              href="/api/exports/csv?localDate={selectedDate}">CSV</a
+            >
           </ul>
         </details>
       </div>
