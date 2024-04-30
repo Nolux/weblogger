@@ -45,7 +45,7 @@
   "type": "module",
   "dependencies": {
     "@mdi/js": "^7.4.47",
-    "@prisma/client": "^5.12.1",
+    "@prisma/client": "^5.13.0",
     "@svelte-plugins/datepicker": "^1.0.9",
     "@tailwindcss/typography": "^0.5.12",
     "bcryptjs": "^2.4.3",
