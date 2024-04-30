@@ -31,7 +31,9 @@
 
   socket.on("fetchNewData", async (projectId) => {
     if (projectId == user.selectedProjectId) {
-      const res = await fetch("/api/log?page=0&perPage=10");
+      const res = await fetch(
+        "/api/log?page=0&perPage=10&localDate=" + dayjs().format("YYYY.MM.DD")
+      );
       const data = await res.json();
       console.log(data);
       logs = data.logs;
