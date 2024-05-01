@@ -65,7 +65,7 @@
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
+  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Post-Logger
   </h1>
   <div class="grid lg:grid-cols-4 w-full gap-4">
@@ -76,7 +76,7 @@
       rows={8}
     ></textarea>
     <div
-      class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
+      class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl font-bold select-none"
     >
       <div class="flex flex-col gap-2">
         <DatePicker

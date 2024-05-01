@@ -99,7 +99,7 @@
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
+  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Logger
   </h1>
   <div class="grid grid-cols-4 w-full gap-4">
@@ -116,13 +116,13 @@
         <TcOffsetModal />
       </div>
       <div
-        class="text-center font-mono xl:text-3xl text-2xl text-bold select-none tooltip lg:tooltip-left"
+        class="text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="TC right now"
       >
         <div>TC: {timecode}</div>
       </div>
       <div
-        class="text-center font-mono xl:text-3xl text-2xl text-bold select-none tooltip lg:tooltip-left"
+        class="text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="In-point for log TC"
       >
         <div

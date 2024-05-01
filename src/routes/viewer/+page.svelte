@@ -31,12 +31,12 @@
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
+  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Viewer
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
-    <div class="grid grid-cols-4 gap-4">
-      <div class="col-span-4 lg:col-span-2">
+    <div class="grid grid-cols-4 gap-4 items-stretch">
+      <div class="col-span-4 lg:col-span-2 self-stretch">
         <DatePicker
           enableFutureDates={false}
           showYearControls={true}
@@ -49,7 +49,10 @@
           theme="custom-datepicker"
           bind:isOpen
           enabledDates={projectDays}
-          ><div class="tooltip tooltip-accent w-full" data-tip="Select Date">
+          ><div
+            class="tooltip tooltip-accent w-full h-full"
+            data-tip="Select Date"
+          >
             <input
               class="h-full input input-accent w-full text-4xl input-lg text-center"
               type="text"
@@ -87,7 +90,7 @@
               class="btn join-item"
               target="_blank"
               href="/api/exports/ppro?localDate={selectedDate}"
-              >Premiere Pro XML</a
+              disabled>Premiere Pro XML</a
             >
             <a class="btn join-item" disabled>Final Cut X XML</a>
             <a
@@ -205,7 +208,9 @@
                 class="divider divider-horizontal w-2 visible lg:invisible"
               ></div>
               <div class="flex gap-2 flex-col w-12">
-                <button class="btn"> <Icon icon="mdi:pencil"></Icon></button>
+                <a class="btn" href={`/viewer/${log.id}/`}>
+                  <Icon icon="mdi:pencil"></Icon></a
+                >
                 <button
                   class="btn {log.confirmDelete ? 'btn-error' : ''}"
                   on:click={async () => {
@@ -252,6 +257,7 @@
     width: 100%;
   }
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
+    height: 100%;
     --datepicker-container-background: oklch(var(--b1));
     --datepicker-container-border: 1px solid oklch(var(--a));
 
