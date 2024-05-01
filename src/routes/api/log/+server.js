@@ -1,12 +1,14 @@
 import { json, error } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
 import { checkIfAdmin, checkIfOwner } from "$lib/server/auth.js";
+import { editColors } from "$lib/helpers/editColors.js";
 
 export const GET = async ({ url, locals }) => {
   const projectId = locals.user.selectedProjectId;
   const perPage = url.searchParams.get("perPage");
   const page = url.searchParams.get("page");
   const localDate = url.searchParams.get("localDate");
+  const asc = url.searchParams.get("asc") || "desc";
   let filters = url.searchParams.get("filters");
 
   if (filters) {
@@ -39,9 +41,29 @@ export const GET = async ({ url, locals }) => {
 
   logs = await db.log.findMany({
     where: searchObj,
-    orderBy: { timecodeString: "desc" },
+    orderBy: { timecodeString: asc },
     skip: perPage * page,
     take: parseInt(perPage),
+  });
+
+  const find = locals.user.assignedProjects.findIndex(
+    (x) => x.id == locals.user.selectedProjectId
+  );
+
+  const currentProject = locals.user.assignedProjects[find];
+
+  logs.map((log) => {
+    if (log.marker) {
+      log.markerColor = "";
+
+      let foundColor =
+        currentProject.markerColors[
+          currentProject.markerColors.findIndex((x) => x.text == log.marker)
+        ];
+      if (foundColor) {
+        log.markerColor = editColors[foundColor.color].css;
+      }
+    }
   });
 
   return json({

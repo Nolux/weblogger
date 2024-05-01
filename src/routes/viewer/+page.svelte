@@ -19,7 +19,7 @@
 
   const getNewData = async () => {
     const res = await fetch(
-      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}`
+      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=asc`
     );
     const data = await res.json();
     logs = data.logs;
@@ -30,7 +30,7 @@
   const toggleDatePicker = () => (isOpen = !isOpen);
 </script>
 
-<div class="h-screen flex flex-col gap-8">
+<div class="flex flex-col gap-8">
   <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
     Viewer
   </h1>
@@ -67,9 +67,10 @@
         class="col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
       >
         <a
-          class="m-1 btn btn-lg"
+          class="m-1 btn btn-lg aspect-square"
           target="_blank"
-          href="/api/exports/pdf?localDate={selectedDate}">Print</a
+          href="/api/exports/pdf?localDate={selectedDate}"
+          ><Icon icon="mdi:printer"></Icon></a
         >
         <details class="dropdown">
           <summary class="m-1 btn btn-lg">Exports</summary>
@@ -79,14 +80,16 @@
             <a
               class="btn join-item"
               target="_blank"
-              href="/api/exports/avid?localDate={selectedDate}">Avid</a
+              href="/api/exports/avid?localDate={selectedDate}"
+              >AVID Markers TXT</a
             >
             <a
               class="btn join-item"
               target="_blank"
-              href="/api/exports/ppro?localDate={selectedDate}">Premiere Pro</a
+              href="/api/exports/ppro?localDate={selectedDate}"
+              >Premiere Pro XML</a
             >
-            <a class="btn join-item" disabled>Final Cut X</a>
+            <a class="btn join-item" disabled>Final Cut X XML</a>
             <a
               class="btn join-item"
               target="_blank"
@@ -100,7 +103,7 @@
       {#each filters as filter}
         <div
           class="badge {filter.includes(':')
-            ? 'badge-primary'
+            ? `badge-green`
             : 'badge-secondary'}"
         >
           {filter}
@@ -159,10 +162,14 @@
                         class="badge {filters.includes(tag)
                           ? 'badge-ghost'
                           : ''} {tag.includes(':')
-                          ? 'badge-primary'
-                          : 'badge-secondary'} hover:brightness-50 cursor-pointer mb-2"
+                          ? `bg-${log.markerColor}`
+                          : 'badge-accent'} hover:brightness-50 cursor-pointer mb-2"
                       >
-                        {tag}
+                        <span
+                          class={tag.includes(":")
+                            ? "mix-blend-difference font-bold"
+                            : ""}>{tag}</span
+                        >
                       </div>
                     </div>
                   {/each}

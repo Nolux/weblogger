@@ -41,4 +41,9 @@ export default {
       "sunset",
     ],
   },
+  safelist: [
+    {
+      pattern: /bg-.+/,
+    },
+  ],
 };

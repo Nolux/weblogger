@@ -4,12 +4,12 @@ export async function load({ fetch, locals }) {
   );
 
   const currentProject = locals.user.assignedProjects[find];
-  const perPage = 5;
+  const perPage = 10;
 
   const res = await fetch(
     `/api/log?page=0&perPage=${perPage}&localDate=${
       currentProject.projectDays.sort()[currentProject.projectDays.length - 1]
-    }`
+    }&asc=asc`
   );
 
   const data = await res.json();
