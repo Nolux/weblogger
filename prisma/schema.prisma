@@ -47,15 +47,16 @@ model Log {
 }
 
 model Project {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   name          String
   log           Log[]
   contact       Contact
-  userIds       String[] @db.ObjectId
-  assignedUsers User[]   @relation(fields: [userIds], references: [id])
+  userIds       String[]       @db.ObjectId
+  assignedUsers User[]         @relation(fields: [userIds], references: [id])
   projectDays   String[]
+  markerColors  MarkerColors[]
 }
 
 type Timecode {
@@ -75,4 +76,20 @@ type Contact {
   name      String
   email     String
   telephone String
+}
+
+type MarkerColors {
+  text  String
+  color availableColors
+}
+
+enum availableColors {
+  blue
+  cyan
+  green
+  yellow
+  red
+  pink
+  black
+  white
 }
