@@ -12,7 +12,7 @@
 
 <dialog id="tcOffsetModal" class="modal">
   <div class="modal-box flex flex-col gap-4">
-    <h1>Timecode offset:</h1>
+    <h1 class="font-bold text-xl mb-4">Timecode offset:</h1>
     <label class="input input-bordered flex items-center gap-2">
       Hours: <input
         max="23"

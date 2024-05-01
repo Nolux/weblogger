@@ -110,15 +110,21 @@
       rows={8}
     ></textarea>
     <div
-      class="relative col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
+      class="relative col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4"
     >
       <div class="absolute top-2 right-2 z-10">
         <TcOffsetModal />
       </div>
-      <div class="tooltip lg:tooltip-left" data-tip="TC right now">
+      <div
+        class="text-center font-mono xl:text-3xl text-2xl text-bold select-none tooltip lg:tooltip-left"
+        data-tip="TC right now"
+      >
         <div>TC: {timecode}</div>
       </div>
-      <div class="tooltip lg:tooltip-left" data-tip="In-point for log TC">
+      <div
+        class="text-center font-mono xl:text-3xl text-2xl text-bold select-none tooltip lg:tooltip-left"
+        data-tip="In-point for log TC"
+      >
         <div
           use:shortcut={{
             shift: $timecodeHotkey.modifiers.shift,

@@ -17,14 +17,14 @@
           <h1 class="font-bold text-lg">Project</h1>
           <ProjectSelector {user} />
         </div>
+        <div>
+          <h1 class="font-bold text-lg">Hotkeys</h1>
+          <HotkeysSettings />
+        </div>
       {/if}
       <div>
         <h1 class="font-bold text-lg">Theme</h1>
         <ThemeSelector />
-      </div>
-      <div>
-        <h1 class="font-bold text-lg">Hotkeys</h1>
-        <HotkeysSettings />
       </div>
     </div>
     <div class="modal-action">
