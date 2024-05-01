@@ -35,6 +35,7 @@ export async function handle({ event, resolve }) {
               name: true,
               contact: true,
               projectDays: true,
+              markerColors: true,
             },
           },
         },

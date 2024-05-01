@@ -76,8 +76,16 @@
           <ul
             class="p-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
           >
-            <a class="btn join-item">Avid</a>
-            <a class="btn join-item">Premiere Pro</a>
+            <a
+              class="btn join-item"
+              target="_blank"
+              href="/api/exports/avid?localDate={selectedDate}">Avid</a
+            >
+            <a
+              class="btn join-item"
+              target="_blank"
+              href="/api/exports/ppro?localDate={selectedDate}">Premiere Pro</a
+            >
             <a class="btn join-item" disabled>Final Cut X</a>
             <a
               class="btn join-item"
