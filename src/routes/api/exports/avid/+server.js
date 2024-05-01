@@ -29,21 +29,24 @@ export const GET = async ({ locals, url }) => {
     //body = body.replace(/[^a-zA-Z0-9!@#$%^&*: ]/g, "");
 
     let color = false;
+    let avidColor = false;
 
     if (log.marker) {
       color =
         currentProject.markerColors[
           currentProject.markerColors.findIndex((x) => x.text == log.marker)
         ]?.color;
+
+      avidColor = editColors[color].avid || "green";
     }
 
     // Change color based on marker here
 
     retrunString =
       retrunString +
-      `${log.marker ? log.marker : "NA:"}\t${log.timecodeString}\tV1\t${
-        color ? editColors[color].avid : "green"
-      }\t${body}\n`;
+      `${log.marker ? log.marker : "NA:"}\t${
+        log.timecodeString
+      }\tV1\t${avidColor}\t${body}\n`;
   });
 
   return new Response(retrunString, {
