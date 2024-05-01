@@ -48,15 +48,15 @@
   };
 
   const imposeMinMax = (el, value) => {
-    console.log(el);
     if (value != "") {
       if (parseInt(input.timecode[value]) < parseInt(el.min)) {
-        input.timecode[value] = el.min;
+        input.timecode[value] = parseInt(el.min);
       }
       if (parseInt(input.timecode[value]) > parseInt(el.max)) {
-        input.timecode[value] = el.max;
+        input.timecode[value] = parseInt(el.max);
       }
     }
+    console.log(input.timecode);
   };
 
   let isOpen = false;
