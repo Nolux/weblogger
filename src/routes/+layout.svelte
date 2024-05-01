@@ -24,7 +24,10 @@
     >
       <Icon icon="mdi-light:menu" width="34"></Icon></label
     >
-    <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
+    <label
+      for="sidebar"
+      aria-label="close sidebar"
+      class="drawer-overlay lg:hidden"
     ></label>
     <div class="lg:hidden flex justify-around py-4 select-none">
       <a class="font-bold text-3xl"
@@ -40,8 +43,10 @@
         </div>
       {/if}
     </div>
-    <div class="mt-8 mx-4">
-      <slot />
+    <div class="grow overflow-scroll m-4">
+      <div class="">
+        <slot />
+      </div>
     </div>
   </div>
   <div class="drawer-side">

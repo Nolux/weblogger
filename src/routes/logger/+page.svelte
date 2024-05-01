@@ -84,7 +84,7 @@
   };
 </script>
 
-<div class="h-screen flex flex-col gap-8">
+<div class="flex flex-col gap-8">
   <h1 class="text-3xl text-bold text-center hidden lg:block lg:text-left">
     Logger
   </h1>
