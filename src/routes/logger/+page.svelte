@@ -3,7 +3,10 @@
   import { socket } from "$lib/socket.js";
 
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
+  import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
+
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
+  import TcOffsetModal from "$lib/components/logger/TcOffsetModal.svelte";
 
   import {
     submitHotkey,
@@ -30,9 +33,13 @@
   };
 
   socket.on("fetchNewData", async (projectId) => {
+    let now = dayjs()
+      .add($tcOffsets.hours, "hour")
+      .add($tcOffsets.minutes, "minute")
+      .add($tcOffsets.seconds, "second");
     if (projectId == user.selectedProjectId) {
       const res = await fetch(
-        "/api/log?page=0&perPage=10&localDate=" + dayjs().format("YYYY.MM.DD")
+        "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD")
       );
       const data = await res.json();
       console.log(data);
@@ -41,15 +48,22 @@
   });
 
   setInterval(() => {
+    let time = dayjs()
+      .add($tcOffsets.hours, "hour")
+      .add($tcOffsets.minutes, "minute")
+      .add($tcOffsets.seconds, "second");
     timecode =
-      dayjs().format("HH:mm:ss:") +
-      Math.floor(dayjs().millisecond() / 40)
+      time.format("HH:mm:ss:") +
+      Math.floor(time.millisecond() / 40)
         .toString()
         .padStart(2, "0");
   }, 50);
 
   const submitLog = async () => {
-    const now = dayjs();
+    let now = dayjs()
+      .add($tcOffsets.hours, "hour")
+      .add($tcOffsets.minutes, "minute")
+      .add($tcOffsets.seconds, "second");
     if (inTimecode == "XX:XX:XX:XX") {
       inTimecode =
         now.format("HH:mm:ss:") +
@@ -96,8 +110,11 @@
       rows={8}
     ></textarea>
     <div
-      class="col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
+      class="relative col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl text-bold select-none"
     >
+      <div class="absolute top-2 right-2 z-10">
+        <TcOffsetModal />
+      </div>
       <div class="tooltip lg:tooltip-left" data-tip="TC right now">
         <div>TC: {timecode}</div>
       </div>
@@ -110,8 +127,12 @@
             code: $timecodeHotkey.key,
           }}
           on:click={() => {
+            let now = dayjs()
+              .add($tcOffsets.hours, "hour")
+              .add($tcOffsets.minutes, "minute")
+              .add($tcOffsets.seconds, "second");
             inTimecode =
-              dayjs().format("HH:mm:ss:") +
+              now.format("HH:mm:ss:") +
               Math.floor(dayjs().millisecond() / 40)
                 .toString()
                 .padStart(2, "0");
