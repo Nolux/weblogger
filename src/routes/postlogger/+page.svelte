@@ -183,7 +183,8 @@
           >
             <div class="flex flex-col">
               {#if submittingLog}
-                <span class="loading loading-spinner loading-sm"></span>
+                <span class="loading loading-spinner text-secondary loading-sm"
+                ></span>
               {:else}
                 <div>Submit</div>
                 <div class="text-xs">
