@@ -1,5 +1,5 @@
 <script>
-  import { goto } from "$app/navigation";
+  import { goto, invalidateAll } from "$app/navigation";
 
   export let user;
 
@@ -9,7 +9,7 @@
       body: JSON.stringify({ projectId }),
       credentials: "include",
     });
-    goto("/");
+    goto("/", { invalidateAll: true });
   };
 </script>
 
