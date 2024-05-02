@@ -26,7 +26,10 @@
 
   let recentLogs = writable([]);
 
+  let submittingLog = false;
+
   const submitLog = async () => {
+    submittingLog = true;
     input.localDate = {
       year: parseInt(dateInput.split("-")[0]),
       month: parseInt(dateInput.split("-")[1]),
@@ -45,6 +48,7 @@
     newLogs.push(await returnedLog.json());
     recentLogs.set(newLogs);
     console.log($recentLogs);
+    submittingLog = false;
   };
 
   const imposeMinMax = (el, value) => {
@@ -178,13 +182,17 @@
             }}
           >
             <div class="flex flex-col">
-              <div>Submit</div>
-              <div class="text-xs">
-                {$submitHotkey.modifiers.control ? "CTL + " : ""}
-                {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
-                {$submitHotkey.modifiers.alt ? "ALT + " : ""}
-                {$submitHotkey.key}
-              </div>
+              {#if submittingLog}
+                <span class="loading loading-spinner loading-sm"></span>
+              {:else}
+                <div>Submit</div>
+                <div class="text-xs">
+                  {$submitHotkey.modifiers.control ? "CTL + " : ""}
+                  {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
+                  {$submitHotkey.modifiers.alt ? "ALT + " : ""}
+                  {$submitHotkey.key}
+                </div>
+              {/if}
             </div>
           </button>
           <button

@@ -25,6 +25,7 @@
 
   let timecode = "00:00:00:00";
   let inTimecode = "XX:XX:XX:XX";
+  let submittingLog = false;
 
   let input = {
     timecode: {},
@@ -60,6 +61,7 @@
   }, 50);
 
   const submitLog = async () => {
+    submittingLog = true;
     let now = dayjs()
       .add($tcOffsets.hours, "hour")
       .add($tcOffsets.minutes, "minute")
@@ -95,6 +97,7 @@
       body: "",
       localDate: { year: 2024, month: 1, day: 1 },
     };
+    submittingLog = false;
   };
 </script>
 
@@ -162,13 +165,17 @@
           }}
         >
           <div class="flex flex-col">
-            <div>Submit</div>
-            <div class="text-xs">
-              {$submitHotkey.modifiers.control ? "CTL + " : ""}
-              {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
-              {$submitHotkey.modifiers.alt ? "ALT + " : ""}
-              {$submitHotkey.key}
-            </div>
+            {#if submittingLog}
+              <span class="loading loading-spinner loading-sm"></span>
+            {:else}
+              <div>Submit</div>
+              <div class="text-xs">
+                {$submitHotkey.modifiers.control ? "CTL + " : ""}
+                {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
+                {$submitHotkey.modifiers.alt ? "ALT + " : ""}
+                {$submitHotkey.key}
+              </div>
+            {/if}
           </div>
         </button>
         <button
