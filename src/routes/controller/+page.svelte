@@ -17,14 +17,14 @@
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Project Controller
   </h1>
-  <div class="grid gap-2">
-    <div class="collapse collapse-arrow border border-info">
-      <input type="radio" name="my-accordion-2" />
+  <div class="grid gap-4">
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" checked="checked" />
       <h1 class="collapse-title text-xl font-medium">Edit Project</h1>
       <form
         method="POST"
         action="?/editProject"
-        class="flex flex-col gap-4 collapse-content"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
         <label class="flex items-center justify-between">
@@ -69,18 +69,18 @@
         >
       </form>
     </div>
-    <div class="collapse collapse-arrow border border-info">
-      <input type="radio" name="my-accordion-2" />
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
       <h1 class="collapse-title text-xl font-medium">Edit Markers</h1>
       <form
         method="POST"
         action="?/editMarkers"
-        class="flex flex-col gap-4 collapse-content"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
         {#each $markerColorsStore as markerColor, i}
           <div class="flex flex-col gap-2">
-            <span class="text-xl">Marker {i}</span>
+            <span class="text-xl">Marker {i + 1}</span>
             <label class="flex items-center justify-between">
               Marker Text: <input
                 name={"markerText"}
@@ -122,17 +122,17 @@
         >
       </form>
     </div>
-    <div class="collapse collapse-arrow border border-info">
-      <input type="radio" name="my-accordion-2" />
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
       <h1 class="collapse-title text-xl font-medium">Assign Users</h1>
       <form
         method="POST"
         action="?/assignUser"
-        class="flex flex-col gap-4 collapse-content"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
         <label class="flex items-center justify-between">
-          Marker Text: <input
+          User email: <input
             name="email"
             class="input input-bordered"
             type="text"
@@ -143,13 +143,13 @@
         >
       </form>
     </div>
-    <div class="collapse collapse-arrow border border-info">
-      <input type="radio" name="my-accordion-2" />
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
       <h1 class="collapse-title text-xl font-medium">Unassign Users</h1>
       <form
         method="POST"
         action="?/unassignUser"
-        class="flex flex-col gap-4 collapse-content"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
         <label class="flex items-center justify-between">
@@ -164,13 +164,13 @@
         >
       </form>
     </div>
-    <div class="collapse collapse-arrow border border-info">
-      <input type="radio" name="my-accordion-2" />
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
       <h1 class="collapse-title text-xl font-medium">Delete Project</h1>
       <form
         method="POST"
         action="?/deleteProject"
-        class="flex flex-col gap-4 collapse-content"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
         <button class="btn w-1/2 btn-error max-w-xs m-auto"
