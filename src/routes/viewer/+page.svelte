@@ -90,7 +90,7 @@
               class="btn join-item"
               target="_blank"
               href="/api/exports/ppro?localDate={selectedDate}"
-              disabled>Premiere Pro XML</a
+              >Premiere Pro XML</a
             >
             <a class="btn join-item" disabled>Final Cut X XML</a>
             <a

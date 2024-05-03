@@ -16,7 +16,7 @@ export const editColors = {
   green: {
     css: "green-500",
     avid: "green",
-    ppro: false,
+    ppro: "4281828977",
     davinci: "ResolveColorGreen",
     fcpx: "",
   },
@@ -37,14 +37,14 @@ export const editColors = {
   pink: {
     css: "pink-500",
     avid: "magenta",
-    ppro: false,
+    ppro: "4289825711",
     davinci: false,
     fcpx: "",
   },
   black: {
     css: "neutral-800",
     avid: "black",
-    ppro: false,
+    ppro: " ",
     davinci: false,
     fcpx: "",
   },
