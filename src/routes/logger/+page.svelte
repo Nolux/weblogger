@@ -126,7 +126,14 @@
       </div>
       <div
         class="text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
-        data-tip="In-point for log TC"
+        data-tip="In-point for log TC click or {$timecodeHotkey.modifiers
+          .control
+          ? 'CTL + '
+          : ''}{$timecodeHotkey.modifiers.shift
+          ? 'SHIFT + '
+          : ''}{$timecodeHotkey.modifiers.alt
+          ? 'ALT + '
+          : ''}{$timecodeHotkey.key} to SET"
       >
         <div
           use:shortcut={{
