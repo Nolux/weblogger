@@ -79,7 +79,10 @@
         <SettingsModal {user} />
       </div>
       {#if user}
-        <div class="flex items-center justify-between w-full pb-4">
+        <a
+          class="flex items-center justify-between w-full pb-4"
+          href="/profile"
+        >
           <div class="avatar placeholder">
             <div class="bg-primary text-neutral-content rounded-full w-14">
               <span class="text-3xl"
@@ -98,7 +101,7 @@
               ></Icon>
             </a>
           </div>
-        </div>
+        </a>
       {/if}
     </ul>
   </div>
