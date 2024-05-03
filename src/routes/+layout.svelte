@@ -43,7 +43,7 @@
         </div>
       {/if}
     </div>
-    <div class="grow overflow-scroll m-4">
+    <div class="grow overflow-scroll no-scrollbar m-4">
       <div class="">
         <slot />
       </div>
