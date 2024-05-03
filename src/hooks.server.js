@@ -103,6 +103,17 @@ export async function handle({ event, resolve }) {
     throw redirect(303, "/");
   }
 
+  // Check if user has access to project management
+  if (requestedPath.includes("/controller")) {
+    if (
+      !event.locals.user.projectController.includes(
+        event.locals.user.selectedProjectId
+      )
+    ) {
+      throw redirect(303, "/");
+    }
+  }
+
   // Restrict all routes under /admin
   if (requestedPath.includes("/admin")) {
     if (!event.locals.user.admin) {
