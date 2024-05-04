@@ -103,8 +103,20 @@ export async function handle({ event, resolve }) {
     throw redirect(303, "/");
   }
 
-  // Check if user has access to project management
+  // PROTECTED ROUTES
+
+  // Send trough if admin
+  if (event.locals.user.isAdmin) {
+    return await resolve(event, {
+      transformPageChunk: ({ html }) => {
+        return html.replace('data-theme=""', `data-theme="${theme}"`);
+      },
+    });
+  }
+
+  // CONTROLLER
   if (requestedPath.includes("/controller")) {
+    // Check if user has access to project management
     if (
       !event.locals.user.projectController.includes(
         event.locals.user.selectedProjectId
@@ -114,9 +126,9 @@ export async function handle({ event, resolve }) {
     }
   }
 
-  // Restrict all routes under /admin
+  // ADMIN
   if (requestedPath.includes("/admin")) {
-    if (!event.locals.user.admin) {
+    if (!event.locals.user.isAdmin) {
       throw redirect(303, "/");
     }
   }

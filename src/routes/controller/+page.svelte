@@ -11,9 +11,14 @@
   $: assignedUsers = data.assignedUsers;
 
   export let form;
+
+  let copied = false;
 </script>
 
-<div class="flex flex-col gap-8">
+<div class="relative flex flex-col gap-8">
+  <div role="alert" class="absolute top-0 w-full flex justify-center">
+    {#if form?.error}<div class="alert alert-error">{form?.errorMsg}</div>{/if}
+  </div>
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Project Controller
   </h1>
@@ -108,7 +113,7 @@
             if ($markerColorsStore.length < 8) {
               markerColorsStore.update((store) => {
                 store.push({
-                  text: `K${$markerColorsStore.length + 1}: `,
+                  text: `K${$markerColorsStore.length + 1}:`,
                   color: Object.keys(editColors)[$markerColorsStore.length],
                 });
                 return store;
@@ -124,7 +129,46 @@
     </div>
     <div class="collapse collapse-arrow border border-info rounded-none">
       <input type="radio" name="controller-accordion" />
-      <h1 class="collapse-title text-xl font-medium">Assign Users</h1>
+      <h1 class="collapse-title text-xl font-medium">Make registration link</h1>
+      <form
+        method="POST"
+        action="?/makeRegisterLink"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
+        use:enhance
+      >
+        {#if form?.registerLink}
+          <h1 class="text-lg">Link:</h1>
+          <div
+            class="tooltip"
+            data-tip={copied ? "Copied" : "Click to copy"}
+            on:click={() => {
+              copied = true;
+              navigator.clipboard.writeText(form.registerLink);
+              setTimeout(() => {
+                copied = false;
+              }, 5000);
+            }}
+          >
+            <input
+              class="input input-bordered"
+              type="text"
+              bind:value={form.registerLink}
+            />
+          </div>
+        {:else}
+          <div>
+            Make a registration link, to add user to your project. Each link is
+            valid for 1 day.
+          </div>
+        {/if}
+        <button type="submit" class="btn w-1/2 btn-info max-w-xs m-auto"
+          >Make registration link</button
+        >
+      </form>
+    </div>
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
+      <h1 class="collapse-title text-xl font-medium">Assign existing users</h1>
       <form
         method="POST"
         action="?/assignUser"
@@ -173,7 +217,7 @@
         class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
         use:enhance
       >
-        <button class="btn w-1/2 btn-error max-w-xs m-auto"
+        <button disabled class="btn w-1/2 btn-error max-w-xs m-auto"
           >DELETE PROJECT</button
         >
       </form>

@@ -1,4 +1,8 @@
+import { fail } from "@sveltejs/kit";
+
 import { db } from "$lib/db.js";
+import { PRIVATE_JWT_ACCESS_SECRET } from "$env/static/private";
+import jwt from "jsonwebtoken";
 
 export async function load({ fetch, locals }) {
   const find = locals.user.assignedProjects.findIndex(
@@ -18,6 +22,21 @@ export async function load({ fetch, locals }) {
 }
 
 export const actions = {
+  makeRegisterLink: async ({ request, locals, url }) => {
+    const jwtUser = {
+      issuerId: locals.user.id,
+      issuerEmail: locals.user.email,
+      projectId: locals.user.selectedProjectId,
+    };
+
+    const token = jwt.sign(jwtUser, PRIVATE_JWT_ACCESS_SECRET, {
+      expiresIn: "1d",
+    });
+
+    return {
+      registerLink: `${url.origin}/login/register?token=${token}`,
+    };
+  },
   editProject: async ({ request, locals }) => {
     const data = await request.formData();
     const name = data.get("name");
@@ -62,15 +81,17 @@ export const actions = {
     return { success: true };
   },
   assignUser: async ({ request, locals }) => {
-    const data = await request.formData();
+    const formData = Object.fromEntries(await request.formData());
 
-    const userEmail = data.get("email");
-    console.log(userEmail);
+    const { email } = formData;
+    console.log(email);
 
-    const user = await db.user.findUnique({ where: { email: userEmail } });
+    const lowerCaseEmail = email.toLowerCase();
+
+    const user = await db.user.findUnique({ where: { email: lowerCaseEmail } });
 
     if (!user) {
-      // throw error
+      return fail(400, { error: true, errorMsg: "No user found" });
     }
 
     const project = await db.project.update({
@@ -87,7 +108,7 @@ export const actions = {
     const user = await db.user.findUnique({ where: { email: userEmail } });
 
     if (!user) {
-      // throw error
+      return fail(400, { error: true, errorMsg: "No user found" });
     }
 
     const project = await db.project.update({
