@@ -43,10 +43,8 @@
         </div>
       {/if}
     </div>
-    <div class="grow overflow-scroll no-scrollbar m-4">
-      <div class="">
-        <slot />
-      </div>
+    <div class="grow overflow-scroll no-scrollbar p-4">
+      <slot />
     </div>
   </div>
   <div class="drawer-side">
