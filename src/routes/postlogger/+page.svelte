@@ -13,6 +13,7 @@
 
   $: logs = data.logs;
   $: user = data.user;
+  $: currentProject = data.currentProject;
 
   dayjs.extend(relativeTime);
 
@@ -227,6 +228,7 @@
     replaceBody={(hotkey) => {
       input.body = input.body + hotkey;
     }}
+    markerColors={currentProject.markerColors}
     {submitLog}
   />
   <table class="table">

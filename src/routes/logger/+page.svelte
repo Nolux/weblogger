@@ -16,8 +16,9 @@
 
   $: logs = data.logs;
   $: user = data.user;
+  $: currentProject = data.currentProject;
 
-  $: console.log(user);
+  $: console.log(user, currentProject);
 
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
@@ -220,6 +221,7 @@
     replaceBody={(hotkey) => {
       input.body = input.body + hotkey;
     }}
+    markerColors={currentProject.markerColors}
   />
 
   <table class="table">

@@ -5,27 +5,34 @@ import { persisted } from "svelte-persisted-store";
 export const hotkeys = persisted("hotkeys", [
   {
     key: "F1",
-    text: "K1: ",
     modifiers: { control: true, shift: false, alt: false },
   },
   {
     key: "F2",
-    text: "K2: ",
     modifiers: { control: true, shift: false, alt: false },
   },
   {
     key: "F3",
-    text: "K3: ",
     modifiers: { control: true, shift: false, alt: false },
   },
   {
     key: "F4",
-    text: "K4: ",
     modifiers: { control: true, shift: false, alt: false },
   },
   {
     key: "F5",
-    text: "K5: ",
+    modifiers: { control: true, shift: false, alt: false },
+  },
+  {
+    key: "F6",
+    modifiers: { control: true, shift: false, alt: false },
+  },
+  {
+    key: "F7",
+    modifiers: { control: true, shift: false, alt: false },
+  },
+  {
+    key: "F8",
     modifiers: { control: true, shift: false, alt: false },
   },
 ]);
