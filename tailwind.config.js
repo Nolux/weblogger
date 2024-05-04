@@ -45,5 +45,6 @@ export default {
     {
       pattern: /bg-.+/,
     },
+    { pattern: /text-.+/ },
   ],
 };

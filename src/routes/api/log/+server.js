@@ -62,6 +62,7 @@ export const GET = async ({ url, locals }) => {
         ];
       if (foundColor) {
         log.markerColor = editColors[foundColor.color].css;
+        log.markerTextColor = editColors[foundColor.color].cssText;
       }
     }
   });

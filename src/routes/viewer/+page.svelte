@@ -175,12 +175,12 @@
                         class="badge {filters.includes(tag)
                           ? 'badge-ghost'
                           : ''} {tag.includes(':')
-                          ? `bg-${log.markerColor}`
+                          ? `bg-${log.markerColor} `
                           : 'badge-accent'} hover:brightness-50 cursor-pointer mb-2"
                       >
                         <span
                           class={tag.includes(":")
-                            ? "mix-blend-difference font-bold"
+                            ? `text-${log.markerTextColor} font-bold`
                             : ""}>{tag}</span
                         >
                       </div>
