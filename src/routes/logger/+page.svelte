@@ -119,7 +119,7 @@
         <TcOffsetModal />
       </div>
       <div
-        class="text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+        class="mt-4 text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="TC right now"
       >
         <div>TC: {timecode}</div>

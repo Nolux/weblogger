@@ -95,7 +95,7 @@
           bind:isOpen
           ><div class="tooltip tooltip-secondary w-full" data-tip="Select Date">
             <input
-              class="input w-full text-4xl input-lg text-center"
+              class="input input-ghost w-full input-lg text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
               on:click={toggleDatePicker}
@@ -168,6 +168,7 @@
             }}
           />
         </div>
+        <div class="divider"></div>
         <div class="flex gap-2">
           <button
             class="btn w-1/2"
