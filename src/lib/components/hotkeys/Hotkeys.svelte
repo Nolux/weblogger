@@ -19,7 +19,7 @@
           }}
           on:click={() => {
             console.log("CLICK", hotkey);
-            replaceBody(markerColors[i].text);
+            replaceBody(markerColors[i].text + " ");
           }}
         >
           <div class="flex flex-col">
