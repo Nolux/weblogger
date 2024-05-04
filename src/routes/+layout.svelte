@@ -68,12 +68,11 @@
             <div class="w-full divider"></div>
             <li><a href="/admin">Admin</a></li>
           {/if}
-          {#if user.projectController?.includes(user.selectedProjectId)}
+          {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
             <li><a href="/controller">Project Controller</a></li>
           {/if}
         {:else}
           <li><a href="/login/">Sign In</a></li>
-          <li><a href="/login/register">Register</a></li>
         {/if}
         <div class="w-full divider"></div>
         <SettingsModal {user} />
