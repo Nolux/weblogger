@@ -1,4 +1,5 @@
 <script>
+  import Icon from "@iconify/svelte";
   import dayjs from "dayjs";
 
   export let data;
@@ -12,6 +13,35 @@
 >
   Viewer
 </h1>
+<div class="flex justify-between">
+  <button
+    class="btn btn-lg btn-ghost mb-4"
+    on:click={() => window.history.back()}
+    ><Icon icon="mdi:arrow-back" /></button
+  >
+  <div>
+    <button
+      class="btn transition-all {log.confirmDelete ? 'btn-error' : ''}"
+      on:click={async () => {
+        if (!log.confirmDelete) {
+          log.confirmDelete = true;
+          setTimeout(() => {
+            log.confirmDelete = false;
+          }, 4000);
+        } else {
+          await fetch("/api/log/delete", {
+            method: "DELETE",
+            body: JSON.stringify({ logId: log.id }),
+          });
+          window.history.back();
+        }
+      }}
+      ><Icon icon="mdi:trash"></Icon>{log.confirmDelete
+        ? "Are you sure?"
+        : ""}</button
+    >
+  </div>
+</div>
 {#if log}
   <div class="grid grid-cols-4 gap-8 border border-accent rounded p-2">
     <div class="col-span-3">{log.body}</div>

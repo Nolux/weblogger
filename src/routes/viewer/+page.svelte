@@ -11,6 +11,7 @@
   $: projectDays = data.projectDays;
   $: selectedDate = data.selectedDate;
   $: perPage = data.perPage;
+  let asc = true;
 
   $: console.log(data);
 
@@ -19,7 +20,7 @@
 
   const getNewData = async () => {
     const res = await fetch(
-      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=asc`
+      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
     );
     const data = await res.json();
     logs = data.logs;
@@ -42,7 +43,6 @@
           showYearControls={true}
           align="right"
           onDayClick={(e) => {
-            console.log(e);
             selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
             getNewData();
           }}
@@ -67,8 +67,18 @@
         </DatePicker>
       </div>
       <div
-        class="col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
+        class="flex justify-between items-center col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
       >
+        <div class="tooltip" data-tip="Oldest first">
+          <input
+            type="checkbox"
+            class="toggle"
+            bind:checked={asc}
+            on:change={() => {
+              getNewData();
+            }}
+          />
+        </div>
         <a
           class="m-1 btn btn-lg aspect-square"
           target="_blank"
