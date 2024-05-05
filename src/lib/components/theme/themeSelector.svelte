@@ -64,12 +64,15 @@
   };
 </script>
 
-<select
-  bind:value={current_theme}
-  class="select w-full max-w-xs"
-  on:change={(e) => set_theme(e)}
->
-  {#each themes as theme}
-    <option value={theme}>{theme}</option>
-  {/each}
-</select>
+<label class="flex justify-between items-center">
+  Select Theme:
+  <select
+    bind:value={current_theme}
+    class="select select-bordered w-full max-w-xs"
+    on:change={(e) => set_theme(e)}
+  >
+    {#each themes as theme}
+      <option value={theme}>{theme}</option>
+    {/each}
+  </select>
+</label>
