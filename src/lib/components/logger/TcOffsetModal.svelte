@@ -11,7 +11,12 @@
 </div>
 
 <dialog id="tcOffsetModal" class="modal">
-  <div class="modal-box flex flex-col gap-4">
+  <div class="modal-box flex flex-col gap-4 relative">
+    <div class="modal-action absolute top-0 right-6">
+      <form method="dialog">
+        <button class="btn btn-ghost btn-xs">x</button>
+      </form>
+    </div>
     <h1 class="font-bold text-xl mb-4">Timecode offset:</h1>
     <label class="input input-bordered flex items-center gap-2">
       Hours: <input
@@ -53,11 +58,8 @@
         bind:value={$tcOffsets.frames}
       /></label
     >
-    <div class="modal-action">
-      <form method="dialog">
-        <!-- if there is a button in form, it will close the modal -->
-        <button class="btn">Close</button>
-      </form>
-    </div>
   </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
 </dialog>
