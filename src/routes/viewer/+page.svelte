@@ -17,6 +17,7 @@
 
   let currentPage = 0;
   $: filters = [];
+  let filterColors = [];
 
   const getNewData = async () => {
     const res = await fetch(
@@ -115,11 +116,19 @@
     <div class="flex justify-end h-4 gap-2">
       {#each filters as filter}
         <div
-          class="badge {filter.includes(':')
-            ? `badge-green`
-            : 'badge-secondary'}"
+          class={`badge ${
+            filter.includes(":")
+              ? `bg-${filterColors[filter].markerColor} font-bold`
+              : "badge-accent"
+          }`}
         >
-          {filter}
+          <span
+            class={filter.includes(":")
+              ? `text-${filterColors[filter].markerTextColor} font-bold`
+              : ""}
+          >
+            {filter}</span
+          >
         </div>
       {/each}
       {#if filters.length > 0}
@@ -166,6 +175,10 @@
                           if (!filters.includes(tag)) {
                             console.log(tag);
                             newFilters.push(tag);
+                            filterColors[tag] = {
+                              markerColor: log.markerColor,
+                              markerTextColor: log.markerTextColor,
+                            };
                             filters = newFilters;
                           } else {
                             filters = newFilters.filter((x) => x != tag);
@@ -186,9 +199,7 @@
                       </div>
                     </div>
                   {/each}
-                {:else}
-                  <div class="badge badge-ghost">n/a</div>
-                {/if}
+                {:else}{/if}
               </div>
               <div
                 class="divider divider-horizontal w-2 visible lg:invisible"
