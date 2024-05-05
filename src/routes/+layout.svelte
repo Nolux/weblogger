@@ -1,4 +1,5 @@
 <script>
+  import { goto } from "$app/navigation";
   import SettingsModal from "$lib/components/menu/SettingsModal.svelte";
   import "../app.css";
   import Icon from "@iconify/svelte";
@@ -8,6 +9,11 @@
 
   $: user = data.user;
   $: console.log(user);
+
+  const gotoLink = (e) => {
+    sideBarOpen = false;
+    goto(e.target.href);
+  };
 </script>
 
 <div class="drawer lg:drawer-open">
@@ -59,24 +65,27 @@
         </li>
 
         {#if user}
-          <li><a href="/logger/">Logger</a></li>
-          <li><a href="/postlogger/">Post Logger</a></li>
-          <li><a href="/viewer/">Viewer</a></li>
+          <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
+          <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
+          <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
           {#if user.isAdmin}
             <div class="w-full divider"></div>
-            <li><a href="/admin">Admin</a></li>
+            <li><a on:click={gotoLink} href="/admin">Admin</a></li>
           {/if}
           {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
-            <li><a href="/controller">Project Controller</a></li>
+            <li>
+              <a on:click={gotoLink} href="/controller">Project Controller</a>
+            </li>
           {/if}
         {:else}
-          <li><a href="/login/">Sign In</a></li>
+          <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
         {/if}
         <div class="w-full divider"></div>
         <SettingsModal {user} />
       </div>
       {#if user}
         <a
+          on:click={gotoLink}
           class="flex items-center justify-between w-full pb-4"
           href="/profile"
         >
