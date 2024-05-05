@@ -51,13 +51,15 @@
       <slot />
     </div>
   </div>
-  <div class="drawer-side z-50">
+  <div class="drawer-side z-50 border-r border-base-300">
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
       class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col justify-between"
     >
-      <div class="grow w-full flex flex-col gap-4 text-lg font-semibold">
+      <div
+        class="overflow-scroll w-full flex flex-col gap-4 lg:text-lg font-semibold"
+      >
         <li class="text-3xl">
           <a class="font-bold" on:click={gotoLink} href="/"
             >Weblogger <span class="text-xs">2.0</span></a
@@ -69,7 +71,7 @@
           <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
           <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
           {#if user.isAdmin}
-            <div class="w-full divider"></div>
+            <div class="w-full divider hidden lg:block"></div>
             <li><a on:click={gotoLink} href="/admin">Admin</a></li>
           {/if}
           {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
@@ -80,7 +82,7 @@
         {:else}
           <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
         {/if}
-        <div class="w-full divider"></div>
+        <div class="w-full divider hidden lg:block"></div>
         <SettingsModal {user} />
       </div>
       {#if user}
