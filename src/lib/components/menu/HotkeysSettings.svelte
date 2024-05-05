@@ -1,6 +1,4 @@
 <script>
-  import { page } from "$app/stores";
-  import { goto } from "$app/navigation";
   import {
     hotkeys,
     submitHotkey,
@@ -157,7 +155,7 @@
           ><button
             class="btn btn-xs"
             on:click={() => {
-              goto($page.url.pathname, { invalidateAll: true });
+              window.location.reload();
             }}>Save</button
           >
         </td>
