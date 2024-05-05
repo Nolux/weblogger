@@ -26,34 +26,32 @@
   <div class="drawer-content flex flex-col">
     <label
       for="sidebar"
-      class="btn absolute left-2 top-2 btn-ghost drawer-button lg:hidden"
-    >
-      <Icon icon="mdi-light:menu" width="34"></Icon></label
-    >
-    <label
-      for="sidebar"
       aria-label="close sidebar"
       class="drawer-overlay lg:hidden"
     ></label>
-    <div class="lg:hidden flex justify-around py-4 select-none">
-      <a class="font-bold text-3xl"
-        >Weblogger <span class="text-xs">2.0</span></a
-      >
-      {#if user}
-        <div class="avatar placeholder absolute top-4 right-2">
-          <div class="bg-primary text-neutral-content rounded-full w-10">
-            <span class="text-xl"
-              >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
-            >
-          </div>
-        </div>
-      {/if}
-    </div>
+
     <div class="grow overflow-scroll no-scrollbar p-4">
+      <div class="lg:hidden flex items-center justify-between pb-4 select-none">
+        <label for="sidebar" class="btn btn-ghost drawer-button lg:hidden z-40">
+          <Icon icon="mdi-light:menu" width="34"></Icon></label
+        >
+        <a class="font-bold text-3xl"
+          >Weblogger <span class="text-xs">2.0</span></a
+        >
+        {#if user}
+          <div class="avatar placeholder aspect-square">
+            <div class="bg-primary text-neutral-content rounded-full w-12">
+              <span class="text-xl"
+                >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
+              >
+            </div>
+          </div>
+        {/if}
+      </div>
       <slot />
     </div>
   </div>
-  <div class="drawer-side">
+  <div class="drawer-side z-50">
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
@@ -61,7 +59,9 @@
     >
       <div class="grow w-full flex flex-col gap-4 text-lg font-semibold">
         <li class="text-3xl">
-          <a class="font-bold">Weblogger <span class="text-xs">2.0</span></a>
+          <a class="font-bold" on:click={gotoLink} href="/"
+            >Weblogger <span class="text-xs">2.0</span></a
+          >
         </li>
 
         {#if user}
