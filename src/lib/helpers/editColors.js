@@ -17,7 +17,7 @@ export const editColors = {
   },
   green: {
     css: "green-500",
-    cssText: "white",
+    cssText: "black",
     avid: "green",
     ppro: "4281828977",
     davinci: "ResolveColorGreen",
