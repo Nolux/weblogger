@@ -5,12 +5,12 @@
   export let markerColors = [];
 </script>
 
-<div class={`w-full grid gap-2 grid-cols-2 lg:grid-cols-8 justify-around`}>
+<div class={`w-full grid gap-2 grid-cols-4 lg:grid-cols-8 justify-around`}>
   {#if $hotkeys}
     {#each $hotkeys as hotkey, i}
       {#if markerColors[i]}
         <button
-          class="btn"
+          class="btn lg:btn-lg"
           use:shortcut={{
             shift: hotkey.modifiers.shift,
             control: hotkey.modifiers.control,
@@ -23,7 +23,7 @@
           }}
         >
           <div class="flex flex-col">
-            <div class="text-lg">{markerColors[i].text}</div>
+            <div class="lg:text-lg">{markerColors[i].text}</div>
             <div class="text-xs">
               {hotkey.modifiers.control ? "CTL + " : ""}
               {hotkey.modifiers.shift ? "SHIFT + " : ""}
