@@ -3,36 +3,20 @@
   const themes = [
     "light",
     "dark",
-    "cupcake",
-    "bumblebee",
     "emerald",
     "corporate",
-    "synthwave",
     "retro",
-    "cyberpunk",
-    "valentine",
     "halloween",
     "garden",
-    "forest",
     "aqua",
     "lofi",
-    "pastel",
     "fantasy",
-    "wireframe",
-    "black",
-    "luxury",
     "dracula",
     "cmyk",
-    "autumn",
     "business",
-    "acid",
-    "lemonade",
-    "night",
     "coffee",
     "winter",
     "dim",
-    "nord",
-    "sunset",
   ];
 
   let current_theme = "";
@@ -44,12 +28,15 @@
         document.documentElement.setAttribute("data-theme", theme);
         current_theme = theme;
       }
-      /*    
-       if (!theme) {
+
+      if (!theme) {
         console.log("setting theme");
-        set_theme({ event: { target: { value: "dim" } } });
-      } 
-      */
+        const theme = "dim";
+        document.documentElement.setAttribute("data-theme", theme);
+        window.localStorage.setItem("theme", theme);
+        current_theme = theme;
+      }
+      console.log(current_theme);
     }
   });
 
