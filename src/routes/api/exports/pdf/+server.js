@@ -1,6 +1,9 @@
-import PDFDocument from "pdfkit";
+import PdfPrinter from "pdfmake";
+import dayjs from "dayjs";
+
 import { db } from "$lib/db.js";
 import { error } from "@sveltejs/kit";
+import { editColors } from "$lib/helpers/editColors.js";
 
 export const GET = async ({ locals, url }) => {
   const projectId = locals.user.selectedProjectId;
@@ -16,101 +19,147 @@ export const GET = async ({ locals, url }) => {
 
   const currentProject = locals.user.assignedProjects[find];
 
-  const logs = await db.log.findMany({
+  let logs = await db.log.findMany({
     where: { projectId, localDateString: localDate, deleted: false },
     orderBy: { timecodeString: "asc" },
   });
 
-  const doc = new PDFDocument({ size: "A4" });
-  doc.info.Title = `${localDate}, ${currentProject.name}`;
-  doc.info.Author = locals.user.fullName;
-
-  let bottom = doc.page.margins.bottom;
-  let pageNumber = 1;
-  doc.page.margins.bottom = 0;
-  doc
-    .fontSize("10")
-    .text(pageNumber, 0.5 * (doc.page.width / 2), doc.page.height - 30, {
-      width: 250,
-      align: "center",
-      lineBreak: false,
-    });
-  doc
-    .fontSize("6")
-    .text(
-      "Generated with Weblogger.io",
-      0.5 * (doc.page.width / 2),
-      doc.page.height - 15,
-      {
-        width: 250,
-        align: "center",
-        lineBreak: false,
-      }
-    );
-
-  // Reset text writer position
-
-  doc.text("", 50, 50);
-  doc.page.margins.bottom = bottom;
-
-  doc.on("pageAdded", () => {
-    pageNumber++;
-    let bottom = doc.page.margins.bottom;
-    doc.page.margins.bottom = 0;
-
-    doc
-      .fontSize("10")
-      .text(pageNumber, 0.5 * (doc.page.width / 2), doc.page.height - 30, {
-        width: 250,
-        align: "center",
-        lineBreak: false,
-      });
-    doc
-      .fontSize("6")
-      .text(
-        "Generated with Weblogger.io",
-        0.5 * (doc.page.width / 2),
-        doc.page.height - 15,
-        {
-          width: 250,
-          align: "center",
-          lineBreak: false,
-        }
-      );
-    // Reset text writer position
-    doc.fontSize("14").text("", 50, 50);
-    doc.page.margins.bottom = bottom;
-  });
-
-  doc
-    .fontSize("20")
-    .font("Helvetica-Bold")
-    .text(`${localDate} - ${currentProject.name}`)
-    .text("\n");
-
   logs.map((log) => {
-    doc
-      .fontSize(10)
-      .font("Helvetica")
-      .text("TC :")
-      .font("Helvetica-Bold")
-      .text(log.timecodeString)
-      .fontSize(8)
-      .font("Helvetica")
-      .text("Created by:")
-      .font("Helvetica-Bold")
-      .text(log.createdByFullName)
-      .text("\n")
-      .fontSize("12")
-      .font("Helvetica")
-      .text(log.body)
-      .text("\n")
-      .text("\n");
+    if (log.marker) {
+      log.markerColor = "";
+
+      let foundColor =
+        currentProject.markerColors[
+          currentProject.markerColors.findIndex((x) => x.text == log.marker)
+        ];
+      if (foundColor) {
+        log.markerColor = editColors[foundColor.color].hex;
+        log.markerTextColor = editColors[foundColor.color].textHex;
+      }
+    }
   });
 
-  doc.end();
+  // Define font files
+  let fonts = {
+    Helvetica: {
+      normal: "Helvetica",
+      bold: "Helvetica-Bold",
+      italics: "Helvetica-Oblique",
+      bolditalics: "Helvetica-BoldOblique",
+    },
+  };
 
-  return new Response(doc, {
+  const printer = new PdfPrinter(fonts);
+  let content = [];
+
+  content.push({
+    text: `Logs for: ${localDate}`,
+    fontSize: 16,
+    bold: true,
+    lineHeight: 2,
+  });
+
+  content.push(
+    logs.map((log) => {
+      let returnArray = [];
+
+      const tagsArray = log.tags.map((tag) => {
+        return {
+          text: " " + tag + " " + "\n",
+          color: tag.includes(":") ? log.markerTextColor : "black",
+          background: tag.includes(":") ? log.markerColor : "white",
+          lineHeight: 1,
+          bold: true,
+        };
+      });
+
+      returnArray.push({
+        stack: [
+          {
+            unbreakable: true,
+            columns: [
+              {
+                width: "33%",
+                text: [
+                  { text: "TIMECODE: \n", fontSize: 8 },
+                  { text: log.timecodeString, bold: true },
+                ],
+              },
+              {
+                width: "33%",
+                alignment: "center",
+                text: tagsArray,
+              },
+              {
+                width: "33%",
+                text: `${log.createdByFullName}\n${dayjs(log.createdAt).format(
+                  "YYYY.MM.DD HH:MM"
+                )}`,
+                alignment: "right",
+                fontSize: 6,
+              },
+            ],
+          },
+          { text: " ", lineHeight: 2 },
+          { text: log.body },
+          { text: " ", lineHeight: 4 },
+        ],
+        headlineLevel: 1,
+      });
+
+      return returnArray;
+    })
+  );
+
+  let docDefinition = {
+    pageSize: "A4",
+    pageMargins: [40, 60, 40, 40],
+    info: {
+      title: `${localDate} - ${currentProject.name}`,
+      author: locals.user.fullName,
+    },
+    content,
+    footer: (currentPage, pageCount, pageSize) => {
+      return [
+        {
+          text: currentPage + "/" + pageCount,
+          alignment: "center",
+          fontSize: 12,
+          lineHeight: 1,
+        },
+
+        {
+          text: "Made with Weblogger.io",
+          fontSize: "5",
+          alignment: "center",
+          lineHeight: 1,
+        },
+      ];
+    },
+    pageBreakBefore: function (
+      currentNode,
+      followingNodesOnPage,
+      nodesOnNextPage,
+      previousNodesOnPage
+    ) {
+      return (
+        currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0
+      );
+    },
+    defaultStyle: {
+      font: "Helvetica",
+      lineHeight: 1.5,
+    },
+  };
+
+  let options = {
+    font: "Helvetica",
+  };
+
+  let pdfDoc = printer.createPdfKitDocument(docDefinition, options);
+  pdfDoc.end();
+
+  return new Response(pdfDoc, {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition":
