@@ -114,9 +114,9 @@
           /></td
         >
       </tr>
-      {#each $hotkeys as hotkey}
+      {#each $hotkeys as hotkey, i}
         <tr>
-          <td>hotkey</td>
+          <td>Hotkey {i + 1}</td>
           <td>
             <input
               class="input input-xs w-16 input-bordered"
