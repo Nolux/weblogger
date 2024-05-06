@@ -120,13 +120,17 @@
         <TcOffsetModal />
       </div>
       <div
-        class="mt-4 text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+        class="mt-4 text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="TC right now"
       >
-        <div>TC: {timecode}</div>
+        <div>
+          TC: <span class="font-mono">
+            {timecode}
+          </span>
+        </div>
       </div>
       <div
-        class="text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+        class="text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="In-point for log TC click or {$timecodeHotkey.modifiers
           .control
           ? 'CTL + '
@@ -155,7 +159,7 @@
                 .padStart(2, "0");
           }}
         >
-          IN: {inTimecode}
+          IN: <span class="font-mono">{inTimecode}</span>
         </div>
       </div>
       <div class="divider"></div>

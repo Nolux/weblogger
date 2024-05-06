@@ -81,7 +81,7 @@
       rows={8}
     ></textarea>
     <div
-      class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center font-mono xl:text-3xl text-2xl font-bold select-none"
+      class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center xl:text-3xl text-2xl font-bold select-none"
     >
       <div class="flex flex-col gap-2">
         <DatePicker
@@ -96,7 +96,7 @@
           bind:isOpen
           ><div class="tooltip tooltip-secondary w-full" data-tip="Select Date">
             <input
-              class="input input-ghost w-full input-lg text-center font-mono xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+              class="input input-ghost w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
               on:click={toggleDatePicker}
@@ -109,15 +109,17 @@
         </DatePicker>
 
         <div>
-          TC: {input.timecode.hours
-            .toString()
-            .padStart(2, "0")}:{input.timecode.minutes
-            .toString()
-            .padStart(2, "0")}:{input.timecode.seconds
-            .toString()
-            .padStart(2, "0")}:{input.timecode.frames
-            .toString()
-            .padStart(2, "0")}
+          TC: <span class="font-mono">
+            {input.timecode.hours
+              .toString()
+              .padStart(2, "0")}:{input.timecode.minutes
+              .toString()
+              .padStart(2, "0")}:{input.timecode.seconds
+              .toString()
+              .padStart(2, "0")}:{input.timecode.frames
+              .toString()
+              .padStart(2, "0")}
+          </span>
         </div>
         <div class="w-full grid grid-cols-4">
           <input
