@@ -3,12 +3,18 @@
 
   import { enhance } from "$app/forms";
 
+  export let data;
+  $: project = data.project;
+
   export let form;
 </script>
 
 <section>
   <form method="post" class="flex flex-col gap-4" use:enhance>
-    <h1 class="text-3xl">Register</h1>
+    <h1 class="text-3xl text-center">Register</h1>
+    {#if project}
+      <h1 class="text-xl text-center">Project: {project.name}</h1>
+    {/if}
     <label for="email" class="input input-bordered flex items-center gap-2">
       <Icon icon="mdi-light:email" width="24" height="24" style="fill-current"
       ></Icon>
