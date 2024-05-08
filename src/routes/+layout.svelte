@@ -35,7 +35,7 @@
         <label for="sidebar" class="btn btn-ghost drawer-button lg:hidden z-40">
           <Icon icon="mdi-light:menu" width="34"></Icon></label
         >
-        <a class="font-bold text-3xl"
+        <a href="/" class="font-bold text-3xl"
           >Weblogger <span class="text-xs">2.0</span></a
         >
         {#if user}
