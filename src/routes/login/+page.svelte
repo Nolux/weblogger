@@ -53,6 +53,12 @@
       >
     </div>
 
+    <div>
+      <a class="btn btn-outline hover:btn-warning w-full" href="/login/forgot">
+        Forgot password?</a
+      >
+    </div>
+
     {#if form?.error}
       <div class="notice error">
         {form.error}
