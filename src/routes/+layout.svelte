@@ -86,11 +86,7 @@
         <SettingsModal {user} />
       </div>
       {#if user}
-        <a
-          on:click={gotoLink}
-          class="flex items-center justify-between w-full pb-4"
-          href="/profile"
-        >
+        <div class="flex items-center justify-between w-full pb-4">
           <div class="avatar placeholder">
             <div class="bg-primary text-neutral-content rounded-full w-14">
               <span class="text-3xl"
@@ -98,7 +94,11 @@
               >
             </div>
           </div>
-          <div class="text-2xl">{user.fullName}</div>
+          <div class="text-2xl">
+            <a on:click={gotoLink} href="/profile">
+              {user.fullName}
+            </a>
+          </div>
           <div>
             <a class="btn btn-ghost rounded-full" href="/login/signout">
               <Icon
@@ -109,7 +109,7 @@
               ></Icon>
             </a>
           </div>
-        </a>
+        </div>
       {/if}
     </ul>
   </div>
