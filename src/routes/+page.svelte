@@ -10,7 +10,7 @@
   </h1>
   {#if user}
     <h2 class="text-xl text-center">Select module:</h2>
-    <div class="flex flex-col lg:flex-row justify-around items-center gap-4">
+    <div class="flex flex-col lg:flex-row justify-around items-stretch gap-4">
       <a
         href="/logger"
         class="text-center flex-1 bg-base-300 p-4 w-full rounded hover:bg-base-200"
@@ -36,7 +36,7 @@
       </a>
     </div>
   {:else}
-    <div class="flex flex-col lg:flex-row justify-around items-center gap-4">
+    <div class="flex flex-col lg:flex-row justify-around items-stretch gap-4">
       <a
         href="/login"
         class="text-center flex-1 bg-base-300 p-4 w-full rounded hover:bg-base-200"
