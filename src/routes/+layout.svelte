@@ -94,7 +94,7 @@
               >
             </div>
           </div>
-          <div class="text-2xl">
+          <div class="text-2xl tooltip" data-tip="Open profile">
             <a on:click={gotoLink} href="/profile">
               {user.fullName}
             </a>
