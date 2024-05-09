@@ -85,7 +85,7 @@ export const actions = {
     }
 
     const project = await db.project.update({
-      where: { id: locals.user.selectedProjectId },
+      where: { id: projectId },
       data: { assignedUsers: { connect: { id: user.id } } },
     });
   },
