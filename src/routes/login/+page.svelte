@@ -2,10 +2,17 @@
   import Icon from "@iconify/svelte";
 
   import { enhance } from "$app/forms";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   export let form;
 
   let loading = false;
+
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+  }
 </script>
 
 <section>
@@ -58,11 +65,5 @@
         Forgot password?</a
       >
     </div>
-
-    {#if form?.error}
-      <div class="notice error">
-        {form.error}
-      </div>
-    {/if}
   </form>
 </section>

@@ -58,7 +58,7 @@ export const actions = {
       },
     });
 
-    return { success: true };
+    return { success: "Project saved" };
   },
   editMarkers: async ({ request, locals }) => {
     const data = await request.formData();
@@ -78,7 +78,7 @@ export const actions = {
       where: { id: locals.user.selectedProjectId },
       data: { markerColors: makerColorsArray },
     });
-    return { success: true };
+    return { success: "Markers saved" };
   },
   assignUser: async ({ request, locals }) => {
     const formData = Object.fromEntries(await request.formData());
@@ -98,6 +98,8 @@ export const actions = {
       where: { id: locals.user.selectedProjectId },
       data: { assignedUsers: { connect: { id: user.id } } },
     });
+
+    return { success: `${user.email} assigned` };
   },
   unassignUser: async ({ request, locals }) => {
     const data = await request.formData();
@@ -115,5 +117,7 @@ export const actions = {
       where: { id: locals.user.selectedProjectId },
       data: { assignedUsers: { disconnect: { id: user.id } } },
     });
+
+    return { success: `${user.email} unassigned` };
   },
 };

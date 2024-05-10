@@ -2,11 +2,19 @@
   import Icon from "@iconify/svelte";
 
   import { enhance } from "$app/forms";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   export let data;
+
   $: project = data.project;
 
   export let form;
+
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+  }
 </script>
 
 <section>
@@ -67,10 +75,5 @@
     <div class="submit-container">
       <button type="submit" class="btn btn-primary w-full">Register</button>
     </div>
-    {#if form?.error}
-      <div class="notice error">
-        {form.error}
-      </div>
-    {/if}
   </form>
 </section>

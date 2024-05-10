@@ -1,9 +1,16 @@
 <script>
   import { enhance } from "$app/forms";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   export let form;
 
   let passwordInput = { password: "", passwordConfirm: "" };
+
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+  }
 </script>
 
 <section>
@@ -39,10 +46,5 @@
         class="btn btn-primary w-full">Submit</button
       >
     </div>
-    {#if form?.error}
-      <div role="alert" class="alert alert-error">
-        {form.error}
-      </div>
-    {/if}
   </form>
 </section>

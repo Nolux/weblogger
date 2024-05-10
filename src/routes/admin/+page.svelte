@@ -1,11 +1,23 @@
 <script>
   import { enhance } from "$app/forms";
+
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
+
   export let data;
 
   $: projects = data.projects;
 
   $: console.log(projects);
   export let form;
+
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+    if (form?.success) {
+      AlertsStore.addAlert(form?.success, "success");
+    }
+  }
 
   let copied = false;
   let confirm = false;

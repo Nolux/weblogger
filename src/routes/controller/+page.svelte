@@ -1,7 +1,10 @@
 <script>
   import { enhance } from "$app/forms";
-  import { editColors } from "$lib/helpers/editColors.js";
   import { writable } from "svelte/store";
+
+  import { editColors } from "$lib/helpers/editColors.js";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
+
   export let data;
 
   const markerColorsStore = writable(data.currentProject.markerColors);
@@ -12,13 +15,20 @@
 
   export let form;
 
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+    if (form?.success) {
+      AlertsStore.addAlert(form?.success, "success");
+    }
+  }
+
   let copied = false;
 </script>
 
 <div class="relative flex flex-col gap-8">
-  <div role="alert" class="absolute top-0 w-full flex justify-center">
-    {#if form?.error}<div class="alert alert-error">{form?.errorMsg}</div>{/if}
-  </div>
+  <div role="alert" class="absolute top-0 w-full flex justify-center"></div>
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Project Controller
   </h1>

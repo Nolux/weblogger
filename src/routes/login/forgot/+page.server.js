@@ -37,7 +37,7 @@ export const actions = {
     const user = await db.user.findUnique({ where: { email: email } });
 
     if (!user) {
-      return { success: false };
+      return { success: true };
     }
 
     const jwtUser = {

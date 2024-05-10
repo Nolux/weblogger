@@ -31,7 +31,7 @@ export const actions = {
       },
     });
 
-    return { sucess: true };
+    return { success: `Project added ${project.name}` };
   },
   deleteProject: async ({ request, locals, url }) => {
     const formData = Object.fromEntries(await request.formData());
@@ -66,6 +66,8 @@ export const actions = {
     const deletedProject = await db.project.delete({
       where: { id: projectId },
     });
+
+    return { success: `Project deleted ${deletedProject.name}` };
   },
   assignUserToProject: async ({ request, locals, url }) => {
     const formData = Object.fromEntries(await request.formData());
@@ -88,6 +90,7 @@ export const actions = {
       where: { id: projectId },
       data: { assignedUsers: { connect: { id: user.id } } },
     });
+    return { success: `${user.email} assigned to ${project.name}` };
   },
   makeRegisterLink: async ({ request, locals, url }) => {
     const formData = Object.fromEntries(await request.formData());

@@ -2,8 +2,21 @@
   import Icon from "@iconify/svelte";
 
   import { enhance } from "$app/forms";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   export let form;
+
+  $: {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+    if (form?.success) {
+      AlertsStore.addAlert(
+        "Password reset email sent! Check your spam folder.",
+        "success"
+      );
+    }
+  }
 </script>
 
 <section>
@@ -24,15 +37,5 @@
     <div class="submit-container">
       <button type="submit" class="btn btn-primary w-full">Submit</button>
     </div>
-    {#if form?.error}
-      <div role="alert" class="alert alert-error">
-        {form.error}
-      </div>
-    {/if}
-    {#if form?.success}
-      <div role="alert" class="alert alert-success">
-        Password reset email sent! Check your spam folder.
-      </div>
-    {/if}
   </form>
 </section>
