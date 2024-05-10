@@ -24,9 +24,6 @@
 </script>
 
 <div class="relative flex flex-col gap-8">
-  <div role="alert" class="absolute top-0 w-full flex justify-center">
-    {#if form?.error}<div class="alert alert-error">{form?.errorMsg}</div>{/if}
-  </div>
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Admin
   </h1>
@@ -71,7 +68,7 @@
       </form>
     </div>
     <div class="collapse collapse-arrow border border-info rounded-none">
-      <input type="radio" name="controller-accordion" checked="checked" />
+      <input type="radio" name="controller-accordion" />
       <h1 class="collapse-title text-xl font-medium">Delete Project</h1>
       <form
         method="POST"
