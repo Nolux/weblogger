@@ -1,7 +1,7 @@
 import { fail } from "@sveltejs/kit";
 
 import { db } from "$lib/db.js";
-import { PRIVATE_JWT_ACCESS_SECRET } from "$env/static/private";
+import { PRIVATE_JWT_USER_SECRET } from "$env/static/private";
 import jwt from "jsonwebtoken";
 
 export async function load({ fetch, locals }) {
@@ -29,7 +29,7 @@ export const actions = {
       projectId: locals.user.selectedProjectId,
     };
 
-    const token = jwt.sign(jwtUser, PRIVATE_JWT_ACCESS_SECRET, {
+    const token = jwt.sign(jwtUser, PRIVATE_JWT_USER_SECRET, {
       expiresIn: "1d",
     });
 
