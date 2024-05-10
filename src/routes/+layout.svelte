@@ -1,5 +1,6 @@
 <script>
   import { goto } from "$app/navigation";
+  import Alerts from "$lib/components/alerts/Alerts.svelte";
   import SettingsModal from "$lib/components/menu/SettingsModal.svelte";
   import "../app.css";
   import Icon from "@iconify/svelte";
@@ -23,7 +24,9 @@
     type="checkbox"
     class="drawer-toggle"
   />
-  <div class="drawer-content flex flex-col">
+  <div class="drawer-content flex flex-col relative">
+    <Alerts />
+
     <label
       for="sidebar"
       aria-label="close sidebar"

@@ -30,5 +30,6 @@ export default {
       pattern: /bg-.+/,
     },
     { pattern: /text-.+/ },
+    { pattern: /alert-.+/ },
   ],
 };
