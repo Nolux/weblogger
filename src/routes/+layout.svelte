@@ -9,7 +9,7 @@
   let sideBarOpen = false;
 
   $: user = data.user;
-  $: console.log(user);
+  $: currentProject = data.currentProject;
 
   const gotoLink = (e) => {
     sideBarOpen = false;
@@ -70,6 +70,10 @@
         </li>
 
         {#if user}
+          <li>
+            <a disabled class="text-md">Project: {currentProject.name}</a>
+          </li>
+          <div class="w-full divider hidden lg:block"></div>
           <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
           <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
           <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>

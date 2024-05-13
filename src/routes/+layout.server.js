@@ -1,8 +1,14 @@
-export async function load(event) {
-  const user = event.locals.user;
+export async function load({ locals }) {
+  const user = locals.user;
   if (!user) {
     return;
   }
 
-  return { user };
+  const find = locals.user.assignedProjects.findIndex(
+    (x) => x.id == locals.user.selectedProjectId
+  );
+
+  const currentProject = locals.user.assignedProjects[find];
+
+  return { user, currentProject };
 }
