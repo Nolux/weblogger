@@ -58,27 +58,24 @@
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
-      class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col justify-between"
+      class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col gap-4 lg:justify-between lg:text-xl"
     >
-      <div
-        class="overflow-scroll w-full flex flex-col gap-4 lg:text-lg font-semibold"
-      >
-        <li class="text-3xl">
-          <a class="font-bold" on:click={gotoLink} href="/"
-            >Weblogger <span class="text-xs">2.0</span></a
-          >
-        </li>
-
-        {#if user}
+      <li class="text-3xl">
+        <a class="font-bold" on:click={gotoLink} href="/"
+          >Weblogger <span class="text-xs">2.0</span></a
+        >
+      </li>
+      {#if user}
+        <div class="justify-self-start">
           <li>
             <a disabled class="text-md">Project: {currentProject.name}</a>
           </li>
-          <div class="w-full divider hidden lg:block"></div>
           <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
           <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
           <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
+        </div>
+        <div>
           {#if user.isAdmin}
-            <div class="w-full divider hidden lg:block"></div>
             <li><a on:click={gotoLink} href="/admin">Admin</a></li>
           {/if}
           {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
@@ -86,35 +83,40 @@
               <a on:click={gotoLink} href="/controller">Project Controller</a>
             </li>
           {/if}
-        {:else}
+        </div>
+      {:else}
+        <div>
           <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
-        {/if}
-        <div class="w-full divider hidden lg:block"></div>
+        </div>
+      {/if}
+      <div>
         <SettingsModal {user} />
       </div>
       {#if user}
-        <div class="flex items-center justify-between w-full pb-4">
-          <div class="avatar placeholder">
-            <div class="bg-primary text-neutral-content rounded-full w-14">
-              <span class="text-3xl"
-                >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
-              >
+        <div>
+          <div class="flex items-center justify-between w-full pb-4">
+            <div class="avatar placeholder">
+              <div class="bg-primary text-neutral-content rounded-full w-14">
+                <span class="text-3xl"
+                  >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
+                >
+              </div>
             </div>
-          </div>
-          <div class="text-2xl tooltip" data-tip="Open profile">
-            <a on:click={gotoLink} href="/profile">
-              {user.fullName}
-            </a>
-          </div>
-          <div>
-            <a class="btn btn-ghost rounded-full" href="/login/signout">
-              <Icon
-                icon="mdi:exit-to-app"
-                width="24"
-                height="24"
-                style="fill-current"
-              ></Icon>
-            </a>
+            <div class="text-2xl tooltip" data-tip="Open profile">
+              <a on:click={gotoLink} href="/profile">
+                {user.fullName}
+              </a>
+            </div>
+            <div>
+              <a class="btn btn-ghost rounded-full" href="/login/signout">
+                <Icon
+                  icon="mdi:exit-to-app"
+                  width="24"
+                  height="24"
+                  style="fill-current"
+                ></Icon>
+              </a>
+            </div>
           </div>
         </div>
       {/if}
