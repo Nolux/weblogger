@@ -52,27 +52,33 @@
     submittingLog = false;
   };
 
-  const imposeMinMax = (el, value) => {
-    if (value != "") {
-      if (parseInt(input.timecode[value]) < parseInt(el.min)) {
-        input.timecode[value] = parseInt(el.min);
-      }
-      if (parseInt(input.timecode[value]) > parseInt(el.max)) {
-        input.timecode[value] = parseInt(el.max);
-      }
-    }
-    console.log(input.timecode);
-  };
-
   let isOpen = false;
 
   const toggleDatePicker = () => (isOpen = !isOpen);
+
+  function validator(node, value) {
+    return {
+      update(value) {
+        console.log(node, value);
+        if (input.timecode[value] === null) {
+          input.timecode[value] = parseInt(0);
+        }
+        if (parseInt(input.timecode[value]) < parseInt(el.min)) {
+          input.timecode[value] = parseInt(el.min);
+        }
+        if (parseInt(input.timecode[value]) > parseInt(el.max)) {
+          input.timecode[value] = parseInt(el.max);
+        }
+      },
+    };
+  }
 </script>
 
 <div class="flex flex-col gap-8">
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Post-Logger
   </h1>
+
   <div class="grid lg:grid-cols-4 w-full gap-4">
     <textarea
       bind:value={input.body}
@@ -124,15 +130,13 @@
         <div class="w-full grid grid-cols-4">
           <input
             type="number"
-            max="23"
             min="0"
+            max="23"
             id="hours"
             class="input"
             placeholder="Hours"
+            use:validator={"hours"}
             bind:value={input.timecode.hours}
-            on:keyup={(e) => {
-              imposeMinMax(e.target, "hours");
-            }}
           />
           <input
             type="number"
@@ -141,10 +145,8 @@
             id="minutes"
             class="input"
             placeholder="minutes"
+            use:validator={"hours"}
             bind:value={input.timecode.minutes}
-            on:keyup={(e) => {
-              imposeMinMax(e.target, "minutes");
-            }}
           />
           <input
             type="number"
@@ -153,10 +155,8 @@
             id="seconds"
             class="input"
             placeholder="seconds"
+            use:validator={"hours"}
             bind:value={input.timecode.seconds}
-            on:keyup={(e) => {
-              imposeMinMax(e.target, "seconds");
-            }}
           />
           <input
             type="number"
@@ -165,10 +165,8 @@
             id="frames"
             class="input"
             placeholder="frames"
+            use:validator={"hours"}
             bind:value={input.timecode.frames}
-            on:keyup={(e) => {
-              imposeMinMax(e.target, "frames");
-            }}
           />
         </div>
         <div class="divider"></div>
