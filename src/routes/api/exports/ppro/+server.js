@@ -100,7 +100,7 @@ export const GET = async ({ locals, url }) => {
       log.timecode.frames;
 
     let color = false;
-    let pproColor = false;
+    let pproColor = " ";
 
     if (log.marker) {
       color =
@@ -108,7 +108,7 @@ export const GET = async ({ locals, url }) => {
           currentProject.markerColors.findIndex((x) => x.text == log.marker)
         ]?.color;
 
-      pproColor = editColors[color].ppro || "4281828977";
+      pproColor = editColors[color]?.ppro || " ";
     }
 
     // Change color based on marker here

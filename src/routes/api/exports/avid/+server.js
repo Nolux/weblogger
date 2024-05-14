@@ -22,14 +22,14 @@ export const GET = async ({ locals, url }) => {
     orderBy: { timecodeString: "asc" },
   });
 
-  let retrunString = "";
+  let returnString = "";
 
   logs.map((log) => {
     let body = log.body.replace(/\n/g, " ");
     //body = body.replace(/[^a-zA-Z0-9!@#$%^&*: ]/g, "");
 
     let color = false;
-    let avidColor = false;
+    let avidColor = "black";
 
     if (log.marker) {
       color =
@@ -37,19 +37,19 @@ export const GET = async ({ locals, url }) => {
           currentProject.markerColors.findIndex((x) => x.text == log.marker)
         ]?.color;
 
-      avidColor = editColors[color].avid || "green";
+      avidColor = editColors[color]?.avid || "black";
     }
 
     // Change color based on marker here
 
-    retrunString =
-      retrunString +
+    returnString =
+      returnString +
       `${log.marker ? log.marker : "NA:"}\t${
         log.timecodeString
       }\tV1\t${avidColor}\t${body}\n`;
   });
 
-  return new Response(retrunString, {
+  return new Response(returnString, {
     headers: {
       "Content-Type": "text/plain",
       "Content-Disposition":
