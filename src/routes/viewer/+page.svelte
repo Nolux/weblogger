@@ -109,6 +109,11 @@
               target="_blank"
               href="/api/exports/csv?localDate={selectedDate}">CSV</a
             >
+            <a
+              class="btn join-item"
+              target="_blank"
+              href="/api/exports/text?localDate={selectedDate}">Text file</a
+            >
           </ul>
         </details>
       </div>
