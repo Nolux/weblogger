@@ -28,10 +28,15 @@
   let inTimecode = "XX:XX:XX:XX";
   let submittingLog = false;
 
+  let now = dayjs()
+    .add($tcOffsets.hours, "hour")
+    .add($tcOffsets.minutes, "minute")
+    .add($tcOffsets.seconds, "second");
+
   let input = {
     timecode: {},
     body: "",
-    localDate: { year: 2024, month: 1, day: 1 },
+    localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
   };
 
   socket.on("fetchNewData", async (projectId) => {
@@ -96,7 +101,7 @@
     input = {
       timecode: {},
       body: "",
-      localDate: { year: 2024, month: 1, day: 1 },
+      localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
     };
     submittingLog = false;
   };
@@ -123,10 +128,15 @@
         class="mt-4 text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
         data-tip="TC right now"
       >
-        <div>
-          TC: <span class="font-mono">
-            {timecode}
-          </span>
+        <div class="flex flex-col">
+          <div class="text-lg">
+            {input.localDate.year}.{input.localDate.month}.{input.localDate.day}
+          </div>
+          <div>
+            TC: <span class="font-mono">
+              {timecode}
+            </span>
+          </div>
         </div>
       </div>
       <div
