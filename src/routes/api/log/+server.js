@@ -93,6 +93,11 @@ export const POST = async ({ request, locals }) => {
     tags[tags.indexOf(marker.split(":")[0])] = marker;
   }
 
+  // Check for duplicate tags
+  const uniqueTags = tags?.filter(
+    (item, index) => tags.indexOf(item) === index
+  );
+
   // Create localdate obj
 
   const localDateString = `${localDate.year
@@ -126,7 +131,7 @@ export const POST = async ({ request, locals }) => {
   const log = await db.log.create({
     data: {
       body,
-      tags: tags ? tags : [],
+      tags: uniqueTags ? uniqueTags : [],
       marker,
       timecode,
       timecodeString,
