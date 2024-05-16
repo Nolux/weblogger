@@ -1,13 +1,16 @@
 <script>
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import Icon from "@iconify/svelte";
   import dayjs from "dayjs";
 
   export let data;
 
-  let searchInput = "";
+  let searchInput = $page.url.searchParams.get("query") || "";
 
   $: logs = data.logs || [];
-  $: page = data.page;
+  $: pages = data.page;
   $: user = data.user;
   $: projectDays = data.projectDays;
   $: selectedDate = data.selectedDate;
@@ -17,10 +20,21 @@
   $: console.log(data);
 
   let currentPage = 0;
-  $: filters = [];
+  let filters = $page.url.searchParams.get("filters") || [];
+  if (filters != "") {
+    filters = filters.split(" ");
+  }
+  $: console.log(filters);
   let filterColors = [];
 
   const getNewData = async () => {
+    $page.url.searchParams.set("query", searchInput);
+    $page.url.searchParams.set("filters", filters.join(" "));
+
+    goto(`?${$page.url.searchParams.toString()}`);
+
+    console.log("object");
+
     const res = await fetch(
       `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
     );
@@ -37,36 +51,34 @@
     Search
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
-    <div class="grid grid-cols-4 gap-4 items-stretch">
-      <div class="col-span-4 lg:col-span-4 self-stretch gap-4">
-        <label class="input input-bordered flex items-center gap-2">
-          <Icon icon="mdi-search"></Icon>
-          <input
-            class="grow"
-            type="text"
-            bind:value={searchInput}
-            placeholder="Search"
-          />
-        </label>
-      </div>
-      <div class="col-span-4">
-        <button class="btn btn-primary w-full" on:click={getNewData}
-          >Search</button
-        >
-      </div>
-    </div>
+    <form class="grid gap-4" on:submit|preventDefault={getNewData}>
+      <label class="input input-bordered flex items-center gap-2">
+        <Icon icon="mdi-search"></Icon>
+        <input
+          class="grow"
+          type="text"
+          bind:value={searchInput}
+          placeholder="Search"
+        />
+      </label>
+
+      <button class="btn btn-primary w-full" on:click={getNewData}
+        >Search</button
+      >
+    </form>
+
     <div class="flex justify-end h-4 gap-2">
       {#each filters as filter}
         <div
           class={`badge ${
             filter.includes(":")
-              ? `bg-${filterColors[filter].markerColor} font-bold`
+              ? `bg-${filterColors[filter]?.markerColor} font-bold`
               : "badge-accent"
           }`}
         >
           <span
             class={filter.includes(":")
-              ? `text-${filterColors[filter].markerTextColor} font-bold`
+              ? `text-${filterColors[filter]?.markerTextColor} font-bold`
               : ""}
           >
             {filter}</span
@@ -207,9 +219,9 @@
     <div class="flex justify-around">
       <div class="join">
         ¨
-        {#if page}
-          {#each { length: page.totalPages } as _, i}<button
-              class="{page.totalPages > 1
+        {#if pages}
+          {#each { length: pages.totalPages } as _, i}<button
+              class="{pages.totalPages > 1
                 ? 'join-item'
                 : ''} btn {currentPage == i ? 'btn-active' : ''}"
               on:click={() => {
@@ -222,40 +234,3 @@
     </div>
   </div>
 </div>
-
-<style>
-  :global(.datepicker) {
-    width: 100%;
-  }
-  :global(.datepicker[data-picker-theme="custom-datepicker"]) {
-    height: 100%;
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--a));
-
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--a));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--a));
-
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--a));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
-
-    --datepicker-calendar-split-border: 1px solid pink;
-
-    --datepicker-presets-border: 1px solid pink;
-    --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--a));
-    --datepicker-presets-button-color-active: oklch(var(--a));
-    --datepicker-presets-button-color-hover: #333;
-    --datepicker-presets-button-color-focus: #333;
-  }
-  :global(.datepicker .calendars-container.right) {
-    margin-top: 1em;
-    left: 35% !important;
-    right: auto !important;
-  }
-</style>

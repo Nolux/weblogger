@@ -1,10 +1,17 @@
 import { json } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
+import { editColors } from "$lib/helpers/editColors.js";
 
 export const GET = async ({ request, locals, url }) => {
   const projectId = locals.user.selectedProjectId;
   const query = url.searchParams.get("query");
   let filters = url.searchParams.get("filters");
+
+  const find = locals.user.assignedProjects.findIndex(
+    (x) => x.id == locals.user.selectedProjectId
+  );
+
+  const currentProject = locals.user.assignedProjects[find];
 
   if (filters) {
     filters = filters.split(",");
@@ -41,9 +48,25 @@ export const GET = async ({ request, locals, url }) => {
 
   console.log(searchObj.pipeline[0].$match);
 
-  const logs = await db.log.aggregateRaw(searchObj);
+  let logs = await db.log.aggregateRaw(searchObj);
 
-  console.log(logs);
+  logs.map((log) => {
+    if (log.marker) {
+      log.markerColor = "";
+
+      let foundColor =
+        currentProject.markerColors[
+          currentProject.markerColors.findIndex((x) => x.text == log.marker)
+        ];
+      if (foundColor) {
+        log.markerColor = editColors[foundColor.color].css;
+        log.markerTextColor = editColors[foundColor.color].cssText;
+      }
+    }
+
+    log.id = log._id["$oid"];
+    log.createdById = log.createdById["$oid"];
+  });
 
   return json({ logs });
 };
