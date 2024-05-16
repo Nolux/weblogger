@@ -65,11 +65,11 @@
           >Weblogger <span class="text-xs">2.0</span></a
         >
       </li>
-      <div class="grow flex flex-col gap-4">
+      <div class="grow flex flex-col gap-8 lg:gap-10">
         {#if user}
           <div class="justify-self-start">
-            <li>
-              <a disabled class="text-md">Project: {currentProject.name}</a>
+            <li class="text-md p-4">
+              Project: {currentProject.name}
             </li>
             <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
             <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
