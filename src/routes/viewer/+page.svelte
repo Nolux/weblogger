@@ -1,4 +1,7 @@
 <script>
+  import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
+
   import Icon from "@iconify/svelte";
   import { DatePicker } from "@svelte-plugins/datepicker";
   import dayjs from "dayjs";
@@ -6,7 +9,7 @@
   export let data;
 
   $: logs = data.logs;
-  $: page = data.page;
+  $: pages = data.page;
   $: user = data.user;
   $: projectDays = data.projectDays;
   $: selectedDate = data.selectedDate;
@@ -16,16 +19,22 @@
   $: console.log(data);
 
   let currentPage = 0;
-  $: filters = [];
+  let filters = $page.url.searchParams.get("filters") || [];
+  if (filters != "") {
+    filters = filters.split(" ");
+  }
   let filterColors = [];
 
   const getNewData = async () => {
+    $page.url.searchParams.set("selectedDate", selectedDate);
+    $page.url.searchParams.set("filters", filters);
+    goto(`?${$page.url.searchParams.toString()}`);
     const res = await fetch(
       `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
     );
     const data = await res.json();
     logs = data.logs;
-    page = data.page;
+    pages = data.page;
   };
   let isOpen = false;
 
@@ -123,13 +132,13 @@
         <div
           class={`badge ${
             filter.includes(":")
-              ? `bg-${filterColors[filter].markerColor} font-bold`
+              ? `bg-${filterColors[filter]?.markerColor} font-bold`
               : "badge-accent"
           }`}
         >
           <span
             class={filter.includes(":")
-              ? `text-${filterColors[filter].markerTextColor} font-bold`
+              ? `text-${filterColors[filter]?.markerTextColor} font-bold`
               : ""}
           >
             {filter}</span
@@ -141,6 +150,7 @@
           class="badge badge-warning hover:brightness-50 cursor-pointer"
           on:click={() => {
             filters = [];
+
             getNewData();
           }}
         >
@@ -263,8 +273,8 @@
 
     <div class="flex justify-around">
       <div class="join">
-        {#each { length: page.totalPages } as _, i}<button
-            class="{page.totalPages > 1 ? 'join-item' : ''} btn {currentPage ==
+        {#each { length: pages.totalPages } as _, i}<button
+            class="{pages.totalPages > 1 ? 'join-item' : ''} btn {currentPage ==
             i
               ? 'btn-active'
               : ''}"

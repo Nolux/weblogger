@@ -1,4 +1,4 @@
-export async function load({ fetch, locals }) {
+export async function load({ fetch, locals, url }) {
   const find = locals.user.assignedProjects.findIndex(
     (x) => x.id == locals.user.selectedProjectId
   );
@@ -6,10 +6,20 @@ export async function load({ fetch, locals }) {
   const currentProject = locals.user.assignedProjects[find];
   const perPage = 10;
 
+  const selectedDate =
+    url.searchParams.get("selectedDate") ||
+    currentProject.projectDays.sort()[currentProject.projectDays.length - 1];
+
+  let filters = url.searchParams.get("filters");
+
+  if (filters) {
+    filters = filters.split(" ");
+  } else {
+    filters = "";
+  }
+
   const res = await fetch(
-    `/api/log?page=0&perPage=${perPage}&localDate=${
-      currentProject.projectDays.sort()[currentProject.projectDays.length - 1]
-    }&asc=asc`
+    `/api/log?page=0&perPage=${perPage}&localDate=${selectedDate}&filters=${filters}&asc=asc`
   );
 
   const data = await res.json();
@@ -18,10 +28,7 @@ export async function load({ fetch, locals }) {
     ...data,
     user: locals.user,
     projectDays: currentProject.projectDays.sort(),
-    selectedDate:
-      currentProject.projectDays.sort()[
-        currentProject.projectDays.sort().length - 1
-      ],
+    selectedDate,
     perPage: perPage,
   };
 }
