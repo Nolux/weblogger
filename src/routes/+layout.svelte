@@ -68,7 +68,7 @@
       <div class="grow flex flex-col gap-8 lg:gap-10">
         {#if user}
           <div class="justify-self-start">
-            <li class="text-md p-4">
+            <li class="text-md p-4 select-none">
               Project: {currentProject.name}
             </li>
             <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
