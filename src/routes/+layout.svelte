@@ -65,32 +65,35 @@
           >Weblogger <span class="text-xs">2.0</span></a
         >
       </li>
-      {#if user}
-        <div class="justify-self-start">
-          <li>
-            <a disabled class="text-md">Project: {currentProject.name}</a>
-          </li>
-          <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
-          <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
-          <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
-        </div>
-        <div>
-          {#if user.isAdmin}
-            <li><a on:click={gotoLink} href="/admin">Admin</a></li>
-          {/if}
-          {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
+      <div class="grow flex flex-col gap-4">
+        {#if user}
+          <div class="justify-self-start">
             <li>
-              <a on:click={gotoLink} href="/controller">Project Controller</a>
+              <a disabled class="text-md">Project: {currentProject.name}</a>
             </li>
-          {/if}
-        </div>
-      {:else}
+            <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
+            <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
+            <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
+            <li><a on:click={gotoLink} href="/search/">Search</a></li>
+          </div>
+          <div>
+            {#if user.isAdmin}
+              <li><a on:click={gotoLink} href="/admin">Admin</a></li>
+            {/if}
+            {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
+              <li>
+                <a on:click={gotoLink} href="/controller">Project Controller</a>
+              </li>
+            {/if}
+          </div>
+        {:else}
+          <div>
+            <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
+          </div>
+        {/if}
         <div>
-          <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
+          <SettingsModal {user} />
         </div>
-      {/if}
-      <div>
-        <SettingsModal {user} />
       </div>
       {#if user}
         <div>
