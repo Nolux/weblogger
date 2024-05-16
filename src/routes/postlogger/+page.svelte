@@ -56,21 +56,27 @@
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
-  function validator(node, value) {
-    return {
-      update(value) {
-        console.log(node, value);
-        if (input.timecode[value] === null) {
-          input.timecode[value] = parseInt(0);
-        }
-        if (parseInt(input.timecode[value]) < parseInt(el.min)) {
-          input.timecode[value] = parseInt(el.min);
-        }
-        if (parseInt(input.timecode[value]) > parseInt(el.max)) {
-          input.timecode[value] = parseInt(el.max);
-        }
-      },
-    };
+  function enforceMinMax(el, type) {
+    const value = parseInt(el.target.value);
+
+    if (value === null || isNaN(value)) {
+      input.timecode[type] = 0;
+      el.target.value = parseInt(0);
+      return;
+    }
+
+    if (value < parseInt(el.target.min)) {
+      input.timecode[type] = parseInt(el.target.min);
+      el.target.value = parseInt(el.target.min);
+      return;
+    }
+    if (value > parseInt(el.target.max)) {
+      input.timecode[type] = parseInt(el.target.max);
+      el.target.value = parseInt(el.target.max);
+      return;
+    }
+    input.timecode[type] = value;
+    el.target.value = value;
   }
 </script>
 
@@ -135,8 +141,8 @@
             id="hours"
             class="input"
             placeholder="Hours"
-            use:validator={"hours"}
-            bind:value={input.timecode.hours}
+            on:keyup={(e) => enforceMinMax(e, "hours")}
+            value="0"
           />
           <input
             type="number"
@@ -145,8 +151,8 @@
             id="minutes"
             class="input"
             placeholder="minutes"
-            use:validator={"hours"}
-            bind:value={input.timecode.minutes}
+            on:keyup={(e) => enforceMinMax(e, "minutes")}
+            value="0"
           />
           <input
             type="number"
@@ -155,8 +161,8 @@
             id="seconds"
             class="input"
             placeholder="seconds"
-            use:validator={"hours"}
-            bind:value={input.timecode.seconds}
+            on:keyup={(e) => enforceMinMax(e, "seconds")}
+            value="0"
           />
           <input
             type="number"
@@ -165,8 +171,8 @@
             id="frames"
             class="input"
             placeholder="frames"
-            use:validator={"hours"}
-            bind:value={input.timecode.frames}
+            on:keyup={(e) => enforceMinMax(e, "frames")}
+            value="0"
           />
         </div>
         <div class="divider"></div>
