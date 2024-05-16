@@ -14,7 +14,7 @@ export const GET = async ({ request, locals, url }) => {
   console.log(splitSearch);
   let regex = "";
 
-  splitSearch.map((str) => (regex = regex + `(?=.*${str}.*)`));
+  splitSearch.map((str) => (regex = regex + `(?=.*\\b${str}\\b.*)`));
 
   console.log(filters);
 
