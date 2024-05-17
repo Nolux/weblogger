@@ -27,7 +27,11 @@
   $: console.log(filters);
   let filterColors = [];
 
+  let loading = false;
+  let firstSearchDone = false;
+
   const getNewData = async () => {
+    loading = true;
     $page.url.searchParams.set("query", searchInput);
     $page.url.searchParams.set("filters", filters.join(" "));
 
@@ -43,6 +47,8 @@
     logs = data.logs;
     console.log(logs);
     //age = data.page;
+    loading = false;
+    firstSearchDone = true;
   };
 </script>
 
@@ -98,11 +104,20 @@
       {/if}
     </div>
     <div class="grow p-2 flex flex-col gap-4">
-      {#if logs.length < 1}
+      {#if loading}
         <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
-          <div class="w-full text-xl text-center">No logs</div>
+          <div class="w-full text-xl text-center">
+            <span class="loading loading-spinner loading-md"></span>
+          </div>
         </div>
+      {:else if searchInput == ""}
+        <div class="flex flex-col"></div>
       {:else}
+        {#if logs.length < 1 && searchInput && firstSearchDone}
+          <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
+            <div class="w-full text-xl text-center">No logs found</div>
+          </div>
+        {/if}
         {#each logs as log}
           <div
             class="grid grid-cols-12 lg:flex-row gap-2 border border-accent p-2"
@@ -218,7 +233,6 @@
 
     <div class="flex justify-around">
       <div class="join">
-        ¨
         {#if pages}
           {#each { length: pages.totalPages } as _, i}<button
               class="{pages.totalPages > 1
