@@ -189,7 +189,13 @@ export const PATCH = async ({ request, locals }) => {
 
   const log = await db.log.update({
     where: { id: id },
-    data: { ...updatedLog, marker, tags, localDateString, timecodeString },
+    data: {
+      ...updatedLog,
+      marker,
+      tags: uniqueTags,
+      localDateString,
+      timecodeString,
+    },
   });
 
   const find = locals.user.assignedProjects.findIndex(
