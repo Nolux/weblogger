@@ -22,6 +22,7 @@
 
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
+  import Icon from "@iconify/svelte";
   dayjs.extend(relativeTime);
 
   let timecode = "00:00:00:00";
@@ -245,6 +246,7 @@
         <td class="w-40">TC</td>
         <td class="w-40">time</td>
         <td class="w-40">written by</td>
+        <td class="w-20">actions</td>
       </tr>
     </thead>
     <tbody>
@@ -264,6 +266,11 @@
           >
           <td class="w-40">{dayjs(log.createdAt).fromNow()}</td>
           <td class="w-40">{log.createdByFullName}</td>
+          <td class="w-20"
+            ><a class="btn btn-xs" href="/viewer/{log.id}?editmode=true"
+              ><Icon icon="mdi:pencil" /></a
+            ></td
+          >
         </tr>
       {/each}
     </tbody>

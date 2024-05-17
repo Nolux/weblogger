@@ -10,6 +10,7 @@
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
+  import Icon from "@iconify/svelte";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -263,6 +264,11 @@
           >
           <td class="w-40">{dayjs(log.createdAt).fromNow()}</td>
           <td class="w-40">{log.createdByFullName}</td>
+          <td class="w-20"
+            ><a class="btn btn-xs" href="/viewer/{log.id}/?editmode=true"
+              ><Icon icon="mdi:pencil" /></a
+            ></td
+          >
         </tr>
       {/each}
     </tbody>
