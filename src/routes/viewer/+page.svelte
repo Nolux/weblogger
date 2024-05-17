@@ -244,7 +244,7 @@
                 class="divider divider-horizontal w-2 visible lg:invisible"
               ></div>
               <div class="flex gap-2 flex-col w-12">
-                <a class="btn" href={`/viewer/${log.id}/`}>
+                <a class="btn" href={`/viewer/${log.id}?editmode=true/`}>
                   <Icon icon="mdi:pencil"></Icon></a
                 >
                 <button

@@ -146,6 +146,74 @@ export const POST = async ({ request, locals }) => {
   return json(log);
 };
 
+export const PATCH = async ({ request, locals }) => {
+  const { id, updatedLog } = await request.json();
+
+  console.log(id, updatedLog);
+
+  if (!id || !updatedLog) {
+    return error(400, "Missing input");
+  }
+
+  // Look for capital words and marker words ending with:
+  const tags = updatedLog.body.match(/\b[A-Z0-9]{2,}\b/g);
+  let marker = updatedLog.body.match(/\b[A-Z0-9]{2,}\b:/);
+  if (marker) {
+    marker = marker[0];
+    tags[tags.indexOf(marker.split(":")[0])] = marker;
+  }
+
+  // Check for duplicate tags
+  const uniqueTags = tags?.filter(
+    (item, index) => tags.indexOf(item) === index
+  );
+
+  // Create localdate obj
+
+  const localDateString = `${updatedLog.localDate.year
+    .toString()
+    .padStart(4, "0")}.${updatedLog.localDate.month
+    .toString()
+    .padStart(2, "0")}.${updatedLog.localDate.day.toString().padStart(2, "0")}`;
+
+  // Create timecode obj
+  const timecodeString = `${updatedLog.timecode.hours
+    .toString()
+    .padStart(2, "0")}:${updatedLog.timecode.minutes
+    .toString()
+    .padStart(2, "0")}:${updatedLog.timecode.seconds
+    .toString()
+    .padStart(2, "0")}:${updatedLog.timecode.frames
+    .toString()
+    .padStart(2, "0")}`;
+
+  const log = await db.log.update({
+    where: { id: id },
+    data: { ...updatedLog, marker, tags, localDateString, timecodeString },
+  });
+
+  const find = locals.user.assignedProjects.findIndex(
+    (x) => x.id == locals.user.selectedProjectId
+  );
+
+  const currentProject = locals.user.assignedProjects[find];
+
+  if (log.marker) {
+    log.markerColor = "";
+
+    let foundColor =
+      currentProject.markerColors[
+        currentProject.markerColors.findIndex((x) => x.text == log.marker)
+      ];
+    if (foundColor) {
+      log.markerColor = editColors[foundColor.color].css;
+      log.markerTextColor = editColors[foundColor.color].cssText;
+    }
+  }
+
+  return json(log);
+};
+
 export const DELETE = async ({ request, locals }) => {
   const { logId } = await request.json();
 
