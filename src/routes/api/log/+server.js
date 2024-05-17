@@ -86,7 +86,7 @@ export const POST = async ({ request, locals }) => {
   }
 
   // Look for capital words and marker words ending with:
-  const tags = body.match(/\b[A-Z0-9]{2,}\b/g);
+  const tags = body.match(/\b[A-Z0-9]{2,}\b/g) || [];
   let marker = body.match(/\b[A-Z0-9]{2,}\b:/);
   if (marker) {
     marker = marker[0];
@@ -156,7 +156,7 @@ export const PATCH = async ({ request, locals }) => {
   }
 
   // Look for capital words and marker words ending with:
-  const tags = updatedLog.body.match(/\b[A-Z0-9]{2,}\b/g);
+  const tags = updatedLog.body.match(/\b[A-Z0-9]{2,}\b/g) || [];
   let marker = updatedLog.body.match(/\b[A-Z0-9]{2,}\b:/);
   if (marker) {
     marker = marker[0];

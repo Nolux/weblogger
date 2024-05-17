@@ -108,7 +108,7 @@
         <div>{log.localDateString}</div>
         <div>{log.timecodeString}</div>
         <div class="w-20 mt-1 text-center">
-          {#if log.tags.length > 0}
+          {#if log.tags?.length > 0}
             {#each log.tags as tag}
               <div
                 class="badge w-full {tag.includes(':')
