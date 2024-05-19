@@ -40,7 +40,6 @@ model Log {
   timecodeString    String
   localDate         LocalDate
   localDateString   String
-  postLog           Boolean   @default(false)
   project           Project   @relation(fields: [projectId], references: [id])
   projectId         String    @db.ObjectId
 }
