@@ -23,6 +23,7 @@
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
+  import { persisted } from "svelte-persisted-store";
   dayjs.extend(relativeTime);
 
   let timecode = "00:00:00:00";
@@ -36,9 +37,10 @@
 
   let input = {
     timecode: {},
-    body: "",
     localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
   };
+
+  let loggerInput = persisted("loggerInput", "");
 
   socket.on("fetchNewData", async (projectId) => {
     let now = dayjs()
@@ -66,6 +68,19 @@
         .toString()
         .padStart(2, "0");
   }, 50);
+
+  setInterval(() => {
+    let now = dayjs()
+      .add($tcOffsets.hours, "hour")
+      .add($tcOffsets.minutes, "minute")
+      .add($tcOffsets.seconds, "second");
+
+    input.localDate = {
+      year: now.year(),
+      month: now.month() + 1,
+      day: now.date(),
+    };
+  }, 1000);
 
   const submitLog = async () => {
     submittingLog = true;
@@ -95,15 +110,18 @@
     };
 
     console.log(input);
-    await fetch("/api/log", { method: "POST", body: JSON.stringify(input) });
+    await fetch("/api/log", {
+      method: "POST",
+      body: JSON.stringify({ ...input, body: $loggerInput }),
+    });
     socket.emit("newData", user.selectedProjectId);
     inTimecode = "XX:XX:XX:XX";
 
     input = {
       timecode: {},
-      body: "",
       localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
     };
+    loggerInput.set("");
     submittingLog = false;
   };
 </script>
@@ -114,7 +132,7 @@
   </h1>
   <div class="grid grid-cols-4 w-full gap-4">
     <textarea
-      bind:value={input.body}
+      bind:value={$loggerInput}
       class="col-span-4 lg:col-span-2 grow text-xl textarea textarea-lg textarea-primary p-2"
       placeholder="Logger"
       rows={8}
@@ -213,9 +231,9 @@
           on:click={() => {
             input = {
               timecode: {},
-              body: "",
               localDate: { year: 2024, month: 1, day: 1 },
             };
+            loggerInput.set("");
             inTimecode = "XX:XX:XX:XX";
           }}
         >
@@ -234,7 +252,7 @@
   </div>
   <Hotkeys
     replaceBody={(hotkey) => {
-      input.body = input.body + hotkey;
+      loggerInput.set($loggerInput + hotkey);
     }}
     markerColors={currentProject.markerColors}
   />

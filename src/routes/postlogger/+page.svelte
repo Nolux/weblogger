@@ -11,6 +11,7 @@
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
   import Icon from "@iconify/svelte";
+  import { persisted } from "svelte-persisted-store";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -20,9 +21,9 @@
 
   let input = {
     timecode: { hours: 0, minutes: 0, seconds: 0, frames: 0 },
-    body: "",
     localDate: { year: 2024, month: 1, day: 1 },
   };
+  let postLoggerInput = persisted("postLoggerInput", "");
 
   let dateInput = dayjs().format("YYYY-MM-DD");
 
@@ -40,12 +41,11 @@
 
     const returnedLog = await fetch("/api/log", {
       method: "POST",
-      body: JSON.stringify(input),
+      body: JSON.stringify({ ...input, body: $postLoggerInput }),
     });
     socket.emit("newData", user.selectedProjectId);
 
-    console.log(returnedLog);
-    input.body = "";
+    postLoggerInput.set("");
     let newLogs = $recentLogs;
     newLogs.push(await returnedLog.json());
     recentLogs.set(newLogs);
@@ -88,7 +88,7 @@
 
   <div class="grid lg:grid-cols-4 w-full gap-4">
     <textarea
-      bind:value={input.body}
+      bind:value={$postLoggerInput}
       class="lg:col-span-2 grow text-xl textarea textarea-lg textarea-secondary p-2"
       placeholder="Logger"
       rows={8}
@@ -214,7 +214,7 @@
               code: $resetHotkey.key,
             }}
             on:click={() => {
-              input.body = "";
+              postLoggerInput.set("");
             }}
           >
             <div class="flex flex-col">
