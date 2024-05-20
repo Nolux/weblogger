@@ -95,6 +95,7 @@
           href="/api/exports/pdf?localDate={selectedDate}"
           ><Icon icon="mdi:printer"></Icon></a
         >
+        <a class="btn btn-lg" href="/import?date={selectedDate}">Import</a>
         <details class="dropdown">
           <summary class="m-1 btn btn-lg">Exports</summary>
           <ul

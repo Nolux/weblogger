@@ -2,6 +2,7 @@
   import { DatePicker } from "@svelte-plugins/datepicker";
   import { enhance, applyAction } from "$app/forms";
   import dayjs from "dayjs";
+  import { page } from "$app/stores";
 
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
@@ -20,7 +21,7 @@
   let loading = false;
 
   let isOpen = false;
-  let selectedDate = "";
+  let selectedDate = $page.url.searchParams.get("date") || "";
 
   const submitData = async () => {
     let logs = form.logs;
