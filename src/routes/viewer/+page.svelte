@@ -79,7 +79,7 @@
       <div
         class="flex justify-between items-center col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
       >
-        <div class="tooltip" data-tip="Oldest first">
+        <div class="tooltip btn flex items-center" data-tip="Oldest first">
           <input
             type="checkbox"
             class="toggle"
@@ -90,14 +90,14 @@
           />
         </div>
         <a
-          class="m-1 btn btn-lg aspect-square"
+          class="btn aspect-square"
           target="_blank"
           href="/api/exports/pdf?localDate={selectedDate}"
           ><Icon icon="mdi:printer"></Icon></a
         >
-        <a class="btn btn-lg" href="/import?date={selectedDate}">Import</a>
-        <details class="dropdown">
-          <summary class="m-1 btn btn-lg">Exports</summary>
+        <a class="btn" href="/import?date={selectedDate}">Import</a>
+        <details class="dropdown dropdown-left">
+          <summary class="btn">Exports</summary>
           <ul
             class="p-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
           >
