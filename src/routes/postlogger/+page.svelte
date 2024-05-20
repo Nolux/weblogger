@@ -12,6 +12,7 @@
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
   import Icon from "@iconify/svelte";
   import { persisted } from "svelte-persisted-store";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -39,21 +40,30 @@
       day: parseInt(dateInput.split("-")[2]),
     };
 
-    const returnedLog = await fetch("/api/log", {
+    const res = await fetch("/api/log", {
       method: "POST",
       body: JSON.stringify({ ...input, body: $postLoggerInput }),
     });
+
+    if (!res.ok) {
+      const json = await res.json();
+      AlertsStore.addAlert(json.message, "warning");
+      submittingLog = false;
+      return;
+    }
     socket.emit("newData", user.selectedProjectId);
 
     postLoggerInput.set("");
     let newLogs = $recentLogs;
-    newLogs.push(await returnedLog.json());
+    newLogs.push(await res.json());
     recentLogs.set(newLogs);
     console.log($recentLogs);
     submittingLog = false;
   };
 
   let isOpen = false;
+
+  $: console.log(input.timecode);
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
@@ -78,6 +88,7 @@
     }
     input.timecode[type] = value;
     el.target.value = value;
+    console.log(value);
   }
 </script>
 
@@ -134,7 +145,7 @@
               .padStart(2, "0")}
           </span>
         </div>
-        <div class="w-full grid grid-cols-4">
+        <div class="w-full grid grid-cols-4 gap-4">
           <input
             type="number"
             min="0"
@@ -143,6 +154,7 @@
             class="input"
             placeholder="Hours"
             on:keyup={(e) => enforceMinMax(e, "hours")}
+            on:change={(e) => enforceMinMax(e, "hours")}
             value="0"
           />
           <input
@@ -153,6 +165,7 @@
             class="input"
             placeholder="minutes"
             on:keyup={(e) => enforceMinMax(e, "minutes")}
+            on:change={(e) => enforceMinMax(e, "minutes")}
             value="0"
           />
           <input
@@ -163,6 +176,7 @@
             class="input"
             placeholder="seconds"
             on:keyup={(e) => enforceMinMax(e, "seconds")}
+            on:change={(e) => enforceMinMax(e, "seconds")}
             value="0"
           />
           <input
@@ -173,6 +187,7 @@
             class="input"
             placeholder="frames"
             on:keyup={(e) => enforceMinMax(e, "frames")}
+            on:change={(e) => enforceMinMax(e, "frames")}
             value="0"
           />
         </div>

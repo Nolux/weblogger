@@ -24,6 +24,7 @@
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
   import { persisted } from "svelte-persisted-store";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
   dayjs.extend(relativeTime);
 
   let timecode = "00:00:00:00";
@@ -57,6 +58,7 @@
     }
   });
 
+  // Refresh Timecode display
   setInterval(() => {
     let time = dayjs()
       .add($tcOffsets.hours, "hour")
@@ -69,6 +71,7 @@
         .padStart(2, "0");
   }, 50);
 
+  // Refresh Date
   setInterval(() => {
     let now = dayjs()
       .add($tcOffsets.hours, "hour")
@@ -110,16 +113,29 @@
     };
 
     console.log(input);
-    await fetch("/api/log", {
+
+    const res = await fetch("/api/log", {
       method: "POST",
       body: JSON.stringify({ ...input, body: $loggerInput }),
     });
+    if (!res.ok) {
+      const json = await res.json();
+      console.log(json);
+      AlertsStore.addAlert(json.message, "warning");
+      submittingLog = false;
+
+      return;
+    }
     socket.emit("newData", user.selectedProjectId);
     inTimecode = "XX:XX:XX:XX";
 
     input = {
       timecode: {},
-      localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
+      localDate: {
+        year: now.year(),
+        month: now.month() + 1,
+        day: now.date(),
+      },
     };
     loggerInput.set("");
     submittingLog = false;
