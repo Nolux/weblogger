@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -38,6 +38,8 @@ model Log {
   marker            String?
   timecode          Timecode
   timecodeString    String
+  timecodeDateObj   DateTime
+  timezone          String
   localDate         LocalDate
   localDateString   String
   project           Project   @relation(fields: [projectId], references: [id])
