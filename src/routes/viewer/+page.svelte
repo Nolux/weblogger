@@ -117,7 +117,7 @@
             <a
               class="btn join-item"
               target="_blank"
-              href="/api/exports/csv?localDate={selectedDate}">CSV</a
+              href="/api/exports/fcp?localDate={selectedDate}">CSV</a
             >
             <a
               class="btn join-item"
