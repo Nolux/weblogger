@@ -1,11 +1,12 @@
 <script>
-  import { enhance } from "$app/forms";
+  import { enhance, applyAction } from "$app/forms";
 
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   export let data;
 
   $: projects = data.projects;
+  $: users = data.users;
 
   $: console.log(projects);
   export let form;
@@ -18,6 +19,8 @@
       AlertsStore.addAlert(form?.success, "success");
     }
   }
+
+  let loading;
 
   let copied = false;
   let confirm = false;
@@ -35,7 +38,17 @@
         method="POST"
         action="?/addProject"
         class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
-        use:enhance
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
       >
         <label class="flex items-center justify-between">
           Project Name:
@@ -62,8 +75,14 @@
             type="text"
           />
         </label>
-        <button type="submit" class="btn w-1/2 btn-info max-w-xs m-auto"
-          >Add</button
+        <button
+          type="submit"
+          class="btn w-1/2 btn-info max-w-xs m-auto"
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Add
+          {/if}</button
         >
       </form>
     </div>
@@ -74,7 +93,17 @@
         method="POST"
         action="?/deleteProject"
         class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
-        use:enhance
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
       >
         <label class="flex items-center justify-between">
           Project Name:
@@ -95,7 +124,11 @@
             }
           }}
           class={`btn w-1/2 ${confirm ? "btn-error" : "btn-info"} max-w-xs m-auto`}
-          >Remove</button
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Remove
+          {/if}</button
         >
       </form>
     </div>
@@ -106,11 +139,25 @@
         method="POST"
         action="?/assignUserToProject"
         class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
-        use:enhance
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
       >
         <label class="flex items-center justify-between">
           User Email:
-          <input name="email" class="input input-bordered" type="text" />
+          <select class="select select-bordered" name="email" value="">
+            {#each users as user}
+              <option value={user.email}>{user.email}</option>
+            {/each}
+          </select>
         </label>
         <label class="flex items-center justify-between">
           Project Name:
@@ -120,8 +167,14 @@
             {/each}
           </select>
         </label>
-        <button type="submit" class="btn w-1/2 btn-info max-w-xs m-auto"
-          >Add</button
+        <button
+          type="submit"
+          class="btn w-1/2 btn-info max-w-xs m-auto"
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Add
+          {/if}</button
         >
       </form>
     </div>
@@ -132,7 +185,17 @@
         method="POST"
         action="?/makeRegisterLink"
         class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
-        use:enhance
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
       >
         {#if form?.registerLink}
           <h1 class="text-lg">Link:</h1>
@@ -162,8 +225,53 @@
             {/each}
           </select>
         </label>
-        <button type="submit" class="btn w-1/2 btn-info max-w-xs m-auto"
-          >Make registration link</button
+        <button
+          type="submit"
+          class="btn w-1/2 btn-info max-w-xs m-auto"
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Make registration link
+          {/if}</button
+        >
+      </form>
+    </div>
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
+      <h1 class="collapse-title text-xl font-medium">Delete User</h1>
+      <form
+        method="POST"
+        action="?/removeUser"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
+      >
+        <label class="flex items-center justify-between">
+          User:
+          <select class="select select-bordered" name="userId">
+            {#each users as user}
+              <option value={user.id}>{user.fullName}, {user.email}</option>
+            {/each}
+          </select>
+        </label>
+        <button
+          type="submit"
+          class="btn w-1/2 btn-error max-w-xs m-auto"
+          disabled={loading}
+        >
+          {#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Remove!
+          {/if}</button
         >
       </form>
     </div>

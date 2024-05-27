@@ -3,6 +3,7 @@ import { fail } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
 import { PRIVATE_JWT_USER_SECRET } from "$env/static/private";
 import jwt from "jsonwebtoken";
+import { checkIfAdmin } from "$lib/server/auth.js";
 
 export async function load({ fetch, locals }) {
   const projects = await db.project.findMany({
@@ -12,7 +13,8 @@ export async function load({ fetch, locals }) {
       },
     },
   });
-  return { projects };
+  const users = await db.user.findMany({});
+  return { projects, users };
 }
 export const actions = {
   addProject: async ({ request, locals, url }) => {
@@ -109,6 +111,54 @@ export const actions = {
 
     return {
       registerLink: `${url.origin}/login/register?token=${token}`,
+    };
+  },
+  removeUser: async ({ request, locals, url }) => {
+    const formData = Object.fromEntries(await request.formData());
+
+    const { userId } = formData;
+
+    if (!userId) {
+      return error(400, "Missing input");
+    }
+
+    // Check if admin or owner
+    if (!checkIfAdmin(locals)) {
+      if (!checkIfOwner(userId, locals)) {
+        return error(401, "Missing auth");
+      }
+    }
+
+    // Get project from db
+    const user = await db.user.findUnique({
+      where: { id: userId },
+    });
+
+    console.log(user);
+
+    // Remove all connections to current projects
+    const removeConnectedProjects = await db.user.update({
+      where: { id: userId },
+      data: {
+        assignedProjects: {
+          disconnect: [
+            ...user.projectIds.map((projectId) => {
+              return { id: projectId };
+            }),
+          ],
+        },
+      },
+    });
+
+    // TODO: remove logs?
+
+    // Finally remove Project
+    const deletedUser = await db.user.delete({
+      where: { id: userId },
+    });
+
+    return {
+      success: `User deleted ${deletedUser.fullName}, ${deletedUser.email}`,
     };
   },
 };
