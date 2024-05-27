@@ -17,6 +17,7 @@
   };
 </script>
 
+<Alerts />
 <div class="drawer lg:drawer-open">
   <input
     bind:checked={sideBarOpen}
@@ -25,8 +26,6 @@
     class="drawer-toggle"
   />
   <div class="drawer-content flex flex-col relative">
-    <Alerts />
-
     <label
       for="sidebar"
       aria-label="close sidebar"
@@ -54,7 +53,7 @@
       <slot />
     </div>
   </div>
-  <div class="drawer-side z-50 border-r border-base-300">
+  <div class="drawer-side z-40 border-r border-base-300">
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul

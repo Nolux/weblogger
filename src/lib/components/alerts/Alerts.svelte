@@ -5,12 +5,12 @@
 
 {#if $AlertsStore}
   <div
-    class="w-full flex flex-col gap-2 justify-center items-center absolute top-6"
+    class="fixed w-full lg:left-40 flex flex-col gap-2 justify-center items-center top-6 z-50"
   >
     {#each Object.keys($AlertsStore) as id, i (i)}
       <div
         role="alert"
-        class="alert alert-{$AlertsStore[id].type} w-5/6 top-5 z-50"
+        class="alert alert-{$AlertsStore[id].type} w-5/6 lg:w-4/6 top-5 z-50"
         transition:fade
       >
         {$AlertsStore[id].text}
@@ -18,17 +18,3 @@
     {/each}
   </div>
 {/if}
-<!-- 
-    <button
-  class="btn"
-  on:click={() => {
-    AlertsStore.addAlert("test", "success", 7000);
-    setTimeout(() => {
-      AlertsStore.addAlert("ERROR", "error");
-    }, 3000);
-    setTimeout(() => {
-      AlertsStore.addAlert("Info", "info");
-    }, 5000);
-  }}
-></button> 
--->
