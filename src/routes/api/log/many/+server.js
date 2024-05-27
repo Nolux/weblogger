@@ -1,5 +1,6 @@
 import { json, error } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
+import dayjs from "dayjs";
 
 export const POST = async ({ request, locals }) => {
   let { logs, localDateString } = await request.json();
@@ -44,12 +45,20 @@ export const POST = async ({ request, locals }) => {
       .toString()
       .padStart(2, "0")}:${log.timecode.frames.toString().padStart(2, "0")}`;
 
+    const timecodeDateObj = dayjs(localDateString)
+      .add(log.timecode.hours, "h")
+      .add(log.timecode.minutes, "m")
+      .add(log.timecode.seconds, "s")
+      .add(log.timecode.frames * 40, "ms");
+
     return {
       body: log.body,
       tags: uniqueTags ? uniqueTags : [],
       marker: log.marker,
       timecode: log.timecode,
       timecodeString,
+      timecodeDateObj: timecodeDateObj.format("YYYY-MM-DD[T]HH:mm:ss.SSSZ"),
+      timezone: timecodeDateObj.format("Z"),
       localDate: log.localDate,
       localDateString,
       createdById: user.id,
