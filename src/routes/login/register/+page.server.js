@@ -1,9 +1,10 @@
-import { fail, redirect } from "@sveltejs/kit";
+import { fail, redirect, error } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
 import { createUser } from "$lib/server/user.js";
 import { PRIVATE_JWT_USER_SECRET } from "$env/static/private";
 import { db } from "$lib/db.js";
+import { UserModel } from "$lib/Models/User.js";
 
 export async function load({ fetch, locals, url }) {
   const token = url.searchParams.get("token");
@@ -64,9 +65,17 @@ export const actions = {
 
     const { email, password, firstName, lastName } = formData;
 
+    const result = UserModel.safeParse(formData);
+
+    if (!result.success) {
+      console.log(result.error.format());
+
+      return fail(400, "Input error");
+    }
+
     // Create a new user
 
-    const { error } = await createUser(
+    const { errors } = await createUser(
       email,
       password,
       firstName,
@@ -76,9 +85,9 @@ export const actions = {
 
     // If there was an error, return an invalid response
 
-    if (error) {
+    if (errors) {
       return fail(500, {
-        error,
+        errors,
       });
     }
 
