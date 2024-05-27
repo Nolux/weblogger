@@ -1,6 +1,6 @@
 <script>
   import Icon from "@iconify/svelte";
-  import { enhance } from "$app/forms";
+  import { enhance, applyAction } from "$app/forms";
 
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   import { fade } from "svelte/transition";
@@ -10,6 +10,8 @@
   $: project = data.project;
 
   export let form;
+
+  let loading = false;
 
   $: {
     if (form?.error) {
@@ -33,7 +35,22 @@
 </script>
 
 <section>
-  <form method="POST" class="flex flex-col gap-4" use:enhance>
+  <form
+    method="POST"
+    class="flex flex-col gap-4"
+    use:enhance={() => {
+      loading = true;
+      return async ({ result, update }) => {
+        if (result.type === "redirect") {
+          AlertsStore.addAlert("User created please login", "success");
+        }
+        await applyAction(result);
+        loading = false;
+        // `result` is an `ActionResult` object
+        // `update` is a function which triggers the default logic that would be triggered if this callback wasn't set
+      };
+    }}
+  >
     <h1 class="text-3xl text-center">Register</h1>
     {#if project}
       <h1 class="text-xl text-center">Project: {project.name}</h1>
@@ -137,8 +154,13 @@
           !atleastEightChars ||
           !upperCase ||
           !lowerCase ||
-          !number}>Register</button
+          !number}
       >
+        {#if loading}<span class="loading loading-spinner loading-md"
+          ></span>{:else}
+          Register
+        {/if}
+      </button>
     </div>
   </form>
 </section>
