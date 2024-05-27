@@ -1,7 +1,10 @@
 import { json, error } from "@sveltejs/kit";
+import dayjs from "dayjs";
+
 import { db } from "$lib/db.js";
 import { checkIfAdmin, checkIfOwner } from "$lib/server/auth.js";
 import { editColors } from "$lib/helpers/editColors.js";
+import { LogModel } from "$lib/Models/Log.js";
 
 export const GET = async ({ url, locals }) => {
   const projectId = locals.user.selectedProjectId;
@@ -127,20 +130,38 @@ export const POST = async ({ request, locals }) => {
     });
   }
 
+  const timecodeDateObj = dayjs(localDateString)
+    .add(timecode.hours, "h")
+    .add(timecode.minutes, "m")
+    .add(timecode.seconds, "s")
+    .add(timecode.frames * 40, "ms");
+
+  const logObj = {
+    body,
+    tags: uniqueTags ? uniqueTags : [],
+    marker,
+    timecode,
+    timecodeString,
+    timecodeDateObj: timecodeDateObj.format("YYYY-MM-DD[T]HH:mm:ss.SSSZ"),
+    timezone: timecodeDateObj.format("Z"),
+    localDate,
+    localDateString,
+    createdById: user.id,
+    createdByFullName: user.fullName,
+    project: { connect: { id: projectId } },
+  };
+
+  const result = LogModel.safeParse(logObj);
+
+  if (!result.success) {
+    console.log(result.error.format());
+
+    return error(400, "Input error");
+  }
+
   // Write to db
   const log = await db.log.create({
-    data: {
-      body,
-      tags: uniqueTags ? uniqueTags : [],
-      marker,
-      timecode,
-      timecodeString,
-      localDate,
-      localDateString,
-      createdById: user.id,
-      createdByFullName: user.fullName,
-      project: { connect: { id: projectId } },
-    },
+    data: logObj,
   });
 
   return json(log);
@@ -187,15 +208,34 @@ export const PATCH = async ({ request, locals }) => {
     .toString()
     .padStart(2, "0")}`;
 
+  // Update TimecodeDateObj
+  const timecodeDateObj = dayjs(localDateString)
+    .add(updatedLog.timecode.hours, "h")
+    .add(updatedLog.timecode.minutes, "m")
+    .add(updatedLog.timecode.seconds, "s")
+    .add(updatedLog.timecode.frames * 40, "ms");
+
+  const logObj = {
+    ...updatedLog,
+    marker,
+    tags: uniqueTags,
+    localDateString,
+    timecodeString,
+    timecodeDateObj: timecodeDateObj.format("YYYY-MM-DD[T]HH:mm:ss.SSSZ"),
+    timezone: timecodeDateObj.format("Z"),
+  };
+
+  const result = LogModel.safeParse(logObj);
+
+  if (!result.success) {
+    console.log(result.error.format());
+
+    return error(400, "Input error");
+  }
+
   const log = await db.log.update({
     where: { id: id },
-    data: {
-      ...updatedLog,
-      marker,
-      tags: uniqueTags,
-      localDateString,
-      timecodeString,
-    },
+    data: logObj,
   });
 
   const find = locals.user.assignedProjects.findIndex(
