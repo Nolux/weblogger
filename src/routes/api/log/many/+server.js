@@ -1,6 +1,7 @@
 import { json, error } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
 import dayjs from "dayjs";
+import { LogModel } from "$lib/Models/Log.js";
 
 export const POST = async ({ request, locals }) => {
   let { logs, localDateString } = await request.json();
@@ -17,10 +18,14 @@ export const POST = async ({ request, locals }) => {
   logs = logs.map((log) => {
     // Look for capital words and marker words ending with:
     const tags = log.body.match(/\b[A-Z0-9]{2,}\b/g) || [];
-    let marker = log.body.match(/\b[A-Z0-9]{2,}\b:/);
+    let marker = log.body.match(/\b[A-Z0-9]{1,}\b:/);
+    let shortMarkers = log.body.match(/\b[A-Z0-9]{1,}\b:/g);
     if (marker) {
       marker = marker[0];
       tags[tags.indexOf(marker.split(":")[0])] = marker;
+    }
+    if (marker && !tags.includes(marker)) {
+      tags.unshift(...shortMarkers);
     }
 
     // Check for duplicate tags
@@ -51,7 +56,7 @@ export const POST = async ({ request, locals }) => {
       .add(log.timecode.seconds, "s")
       .add(log.timecode.frames * 40, "ms");
 
-    return {
+    const logObj = {
       body: log.body,
       tags: uniqueTags ? uniqueTags : [],
       marker: log.marker,
@@ -65,6 +70,18 @@ export const POST = async ({ request, locals }) => {
       createdByFullName: user.fullName,
       projectId: projectId,
     };
+
+    console.log(logObj);
+
+    const result = LogModel.safeParse(logObj);
+
+    if (!result.success) {
+      console.log(result.error.format());
+
+      return;
+    }
+
+    return logObj;
   });
 
   // Check if project has this day?

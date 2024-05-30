@@ -5,10 +5,10 @@ export const LogModel = z.object({
   marker: z.string().optional().nullable(),
   tags: z.array(z.string()).optional(),
   timecode: z.object({
-    hours: z.number().positive().max(23),
-    minutes: z.number().positive().max(59),
-    seconds: z.number().positive().max(59),
-    frames: z.number().positive().max(24), // TODO: change when updating to other framerates
+    hours: z.number().max(23).min(0),
+    minutes: z.number().max(59).min(0),
+    seconds: z.number().max(59).min(0),
+    frames: z.number().max(24).min(0), // TODO: change when updating to other framerates
   }),
   timecodeString: z.string(),
   timecodeDateObj: z.string(),

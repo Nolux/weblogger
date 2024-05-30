@@ -90,10 +90,14 @@ export const POST = async ({ request, locals }) => {
 
   // Look for capital words and marker words ending with:
   const tags = body.match(/\b[A-Z0-9]{2,}\b/g) || [];
-  let marker = body.match(/\b[A-Z0-9]{2,}\b:/);
+  let marker = body.match(/\b[A-Z0-9]{1,}\b:/);
+  let shortMarkers = body.match(/\b[A-Z0-9]{1,}\b:/g);
   if (marker) {
     marker = marker[0];
     tags[tags.indexOf(marker.split(":")[0])] = marker;
+  }
+  if (marker && !tags.includes(marker)) {
+    tags.unshift(...shortMarkers);
   }
 
   // Check for duplicate tags
@@ -178,7 +182,7 @@ export const PATCH = async ({ request, locals }) => {
 
   // Look for capital words and marker words ending with:
   const tags = updatedLog.body.match(/\b[A-Z0-9]{2,}\b/g) || [];
-  let marker = updatedLog.body.match(/\b[A-Z0-9]{2,}\b:/);
+  let marker = updatedLog.body.match(/\b[A-Z0-9]{1,}\b:/);
   if (marker) {
     marker = marker[0];
     tags[tags.indexOf(marker.split(":")[0])] = marker;
