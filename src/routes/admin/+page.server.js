@@ -1,7 +1,7 @@
 import { fail } from "@sveltejs/kit";
 
 import { db } from "$lib/db.js";
-import { PRIVATE_JWT_USER_SECRET } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import jwt from "jsonwebtoken";
 import { checkIfAdmin } from "$lib/server/auth.js";
 
@@ -105,7 +105,7 @@ export const actions = {
       projectId: projectId,
     };
 
-    const token = jwt.sign(jwtUser, PRIVATE_JWT_USER_SECRET, {
+    const token = jwt.sign(jwtUser, env.PRIVATE_JWT_USER_SECRET, {
       expiresIn: "1d",
     });
 

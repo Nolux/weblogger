@@ -3,21 +3,17 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 
 import { db } from "$lib/db.js";
-import {
-  PRIVATE_JWT_RESET_SECRET,
-  PRIVATE_MAILUSER,
-  PRIVATE_MAILPASSWORD,
-} from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
   secure: true, // true for 465, false for other ports
   auth: {
-    user: PRIVATE_MAILUSER,
-    pass: PRIVATE_MAILPASSWORD,
+    user: env.PRIVATE_MAILUSER,
+    pass: env.PRIVATE_MAILPASSWORD,
   },
-  from: PRIVATE_MAILUSER,
+  from: env.PRIVATE_MAILUSER,
 });
 
 export const actions = {
@@ -45,7 +41,7 @@ export const actions = {
       email: user.email,
     };
 
-    const token = jwt.sign(jwtUser, PRIVATE_JWT_RESET_SECRET, {
+    const token = jwt.sign(jwtUser, env.PRIVATE_JWT_RESET_SECRET, {
       expiresIn: "1h",
     });
 

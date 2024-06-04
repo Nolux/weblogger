@@ -2,7 +2,7 @@ import { fail, redirect, error } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
 import { createUser } from "$lib/server/user.js";
-import { PRIVATE_JWT_USER_SECRET } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { db } from "$lib/db.js";
 import { UserModel } from "$lib/Models/User.js";
 
@@ -12,7 +12,7 @@ export async function load({ fetch, locals, url }) {
   let projectId;
 
   try {
-    const decodedToken = jwt.verify(token, PRIVATE_JWT_USER_SECRET);
+    const decodedToken = jwt.verify(token, env.PRIVATE_JWT_USER_SECRET);
     projectId = decodedToken.projectId;
     const project = await db.project.findUnique({
       where: { id: projectId },
@@ -40,7 +40,7 @@ export const actions = {
     let projectId;
 
     try {
-      const decodedToken = jwt.verify(token, PRIVATE_JWT_USER_SECRET);
+      const decodedToken = jwt.verify(token, env.PRIVATE_JWT_USER_SECRET);
       projectId = decodedToken.projectId;
     } catch {
       return fail(400, {

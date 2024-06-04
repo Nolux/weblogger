@@ -1,7 +1,7 @@
 import { redirect } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
-import { PRIVATE_JWT_ACCESS_SECRET } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 import { db } from "$lib/db.js";
 
 export async function handle({ event, resolve }) {
@@ -16,7 +16,7 @@ export async function handle({ event, resolve }) {
     const token = authCookie.split(" ")[1];
 
     try {
-      const jwtUser = jwt.verify(token, PRIVATE_JWT_ACCESS_SECRET);
+      const jwtUser = jwt.verify(token, env.PRIVATE_JWT_ACCESS_SECRET);
 
       if (typeof jwtUser === "string") {
         throw new Error("Something went wrong");

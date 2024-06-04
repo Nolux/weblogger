@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import { db } from "$lib/db.js";
-import { PRIVATE_JWT_RESET_SECRET } from "$env/static/private";
+import { env } from "$env/dynamic/private";
 
 export const actions = {
   default: async ({ request, url, params }) => {
@@ -19,7 +19,7 @@ export const actions = {
     const { password } = formData;
 
     try {
-      const jwtUser = jwt.verify(resetToken, PRIVATE_JWT_RESET_SECRET);
+      const jwtUser = jwt.verify(resetToken, env.PRIVATE_JWT_RESET_SECRET);
       console.log(jwtUser);
 
       const user = await db.user.update({
