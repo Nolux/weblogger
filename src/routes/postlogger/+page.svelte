@@ -248,7 +248,7 @@
   </div>
   <Hotkeys
     replaceBody={(hotkey) => {
-      input.body = input.body + hotkey;
+      postLoggerInput.set($postLoggerInput + hotkey);
     }}
     markerColors={currentProject.markerColors}
     {submitLog}
