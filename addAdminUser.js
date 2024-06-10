@@ -3,67 +3,41 @@ import { db } from "./src/lib/db.js";
 
 import bcrypt from "bcryptjs";
 
-export const createUser = async (
-  email,
-  password,
-  firstName,
-  lastName,
-  projectId
-) => {
-  email = email.toLowerCase();
-  // Check if user exists
-  const user = await db.user.findUnique({
-    where: {
-      email,
+dotenv.config();
+
+// check if procjet has any
+
+const foundProjects = await db.project.findMany();
+
+console.log(foundProjects);
+
+if (foundProjects.length < 1) {
+  const project = await db.project.create({
+    data: {
+      name: "testproject",
+      contact: {
+        name: "test",
+        email: "test@email.com",
+        telephone: "00000000",
+      },
     },
   });
 
-  if (user) {
-    return {
-      error: "User already exists",
-    };
-  }
-
-  firstName = firstName.toLowerCase();
-  firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-
-  lastName = lastName.toLowerCase();
-  lastName = lastName.charAt(0).toUpperCase() + lastName.slice(1);
-
   let userData = {
-    email,
-    password: await bcrypt.hash(password, 10),
-    firstName,
-    lastName,
-    fullName: firstName + " " + lastName,
+    email: process.env.PRIVATE_ADMIN_USER,
+    password: await bcrypt.hash(process.env.PRIVATE_ADMIN_PASSWORD, 10),
+    firstName: "Admin",
+    lastName: "Admin",
+    fullName: "Admin",
+    isAdmin: true,
   };
 
-  if (projectId) {
-    userData.assignedProjects = { connect: { id: projectId } };
-    userData.selectedProjectId = projectId;
+  if (project) {
+    userData.assignedProjects = { connect: { id: project.id } };
+    userData.selectedProjectId = project.id;
   }
 
-  try {
-    const user = await db.user.create({
-      data: userData,
-    });
-
-    return { user };
-  } catch (error) {
-    console.log(error);
-    return {
-      errors: "Something went wrong",
-    };
-  }
-};
-
-dotenv.config();
-
-createUser(
-  process.env.PRIVATE_ADMIN_USER,
-  process.env.PRIVATE_ADMIN_PASSWORD,
-  "Admin",
-  "admin"
-);
-
-console.log(process.env.PRIVATE_ADMIN_USER);
+  const user = await db.user.create({
+    data: userData,
+  });
+}
