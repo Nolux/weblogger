@@ -36,22 +36,24 @@
       </a>
     </div>
   {:else}
-    <div class="flex flex-col lg:flex-row justify-around items-stretch gap-4">
-      <a
-        href="/login"
-        class="text-center flex-1 bg-base-300 p-4 w-full rounded hover:bg-base-200"
-      >
-        <div class="text-xl font-bold">LOGIN</div>
-        <div>Sign in to get access to your project</div>
+    <div class="relative">
+      <a href="/login" class="">
+        <video autoplay muted id="bgVideo">
+          <source src="video/bgvideo.webm" type="video/webm" />
+        </video>
       </a>
-      <div class="divider divider-horizontal"></div>
-      <a
-        href="/about"
-        class="text-center flex-1 bg-base-300 p-4 w-full rounded hover:bg-base-200"
-      >
-        <div class="text-xl font-bold">ABOUT</div>
-        <div>Who made this?!</div>
-      </a>
+      <div
+        class="absolute top-1/2 opacity-50 hover:opacity-100 w-full flex flex-col lg:flex-row justify-around items-stretch gap-4"
+      ></div>
     </div>
   {/if}
 </div>
+
+<style>
+  #bgVideo {
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+  }
+</style>
