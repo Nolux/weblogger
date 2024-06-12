@@ -1,7 +1,10 @@
-export async function load(event) {
-  const user = event.locals.user;
+export async function load({ locals, request }) {
+  const headers = request.headers;
+  const userAgent = headers.get("user-agent");
+  const user = locals.user;
+
   if (!user) {
-    return;
+    return { userAgent: userAgent };
   }
 
   return { user };

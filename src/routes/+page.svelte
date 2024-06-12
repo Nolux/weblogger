@@ -2,6 +2,13 @@
   export let data;
 
   $: user = data.user;
+  $: userAgent = data.userAgent.toLowerCase();
+
+  $: isSafari = userAgent.indexOf("safari/") > -1;
+
+  $: console.log(isSafari);
+
+  console.log(isSafari);
 </script>
 
 <div class="flex flex-col gap-8">
@@ -38,8 +45,8 @@
   {:else}
     <div class="relative">
       <a href="/login" class="">
-        <video autoplay muted id="bgVideo">
-          <source src="video/bgvideo.webm" type="video/webm" />
+        <video autoplay muted playsinline id="bgVideo">
+          <source src={`video/bgvideo.${isSafari ? "mov" : "webm"}`} />
         </video>
       </a>
       <div
