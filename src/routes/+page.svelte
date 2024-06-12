@@ -4,7 +4,7 @@
   $: user = data.user;
   $: userAgent = data.userAgent?.toLowerCase();
 
-  $: isSafari = userAgent.indexOf("safari/") > -1;
+  $: isSafari = userAgent?.indexOf("safari/") > -1;
 
   $: console.log(isSafari);
 
