@@ -2,7 +2,7 @@
   export let data;
 
   $: user = data.user;
-  $: userAgent = data.userAgent.toLowerCase();
+  $: userAgent = data.userAgent?.toLowerCase();
 
   $: isSafari = userAgent.indexOf("safari/") > -1;
 
