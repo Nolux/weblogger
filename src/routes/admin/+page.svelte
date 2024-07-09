@@ -9,11 +9,12 @@
   $: users = data.users;
 
   $: console.log(projects);
+  $: console.log(users);
   export let form;
 
   $: {
     if (form?.error) {
-      AlertsStore.addAlert(form?.error, "error");
+      AlertsStore.addAlert(form?.errorMsg, "error");
     }
     if (form?.success) {
       AlertsStore.addAlert(form?.success, "success");
@@ -144,6 +145,100 @@
           return async ({ result, update }) => {
             if (result.type === "redirect") {
               AlertsStore.addAlert("User created please login", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
+      >
+        <label class="flex items-center justify-between">
+          User Email:
+          <select class="select select-bordered" name="email" value="">
+            {#each users as user}
+              <option value={user.email}>{user.email}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="flex items-center justify-between">
+          Project Name:
+          <select class="select select-bordered" name="projectId">
+            {#each projects as project}
+              <option value={project.id}>{project.name}</option>
+            {/each}
+          </select>
+        </label>
+        <button
+          type="submit"
+          class="btn w-1/2 btn-info max-w-xs m-auto"
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Add
+          {/if}</button
+        >
+      </form>
+    </div>
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
+      <h1 class="collapse-title text-xl font-medium">Add User to Controller</h1>
+      <form
+        method="POST"
+        action="?/assignUserToController"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User assigned to controller", "success");
+            }
+            await applyAction(result);
+
+            loading = false;
+          };
+        }}
+      >
+        <label class="flex items-center justify-between">
+          User Email:
+          <select class="select select-bordered" name="email" value="">
+            {#each users as user}
+              <option value={user.email}>{user.email}</option>
+            {/each}
+          </select>
+        </label>
+        <label class="flex items-center justify-between">
+          Project Name:
+          <select class="select select-bordered" name="projectId">
+            {#each projects as project}
+              <option value={project.id}>{project.name}</option>
+            {/each}
+          </select>
+        </label>
+        <button
+          type="submit"
+          class="btn w-1/2 btn-info max-w-xs m-auto"
+          disabled={loading}
+          >{#if loading}<span class="loading loading-spinner loading-md"
+            ></span>{:else}
+            Add
+          {/if}</button
+        >
+      </form>
+    </div>
+    <div class="collapse collapse-arrow border border-info rounded-none">
+      <input type="radio" name="controller-accordion" />
+      <h1 class="collapse-title text-xl font-medium">
+        Unassign User as Controller
+      </h1>
+      <form
+        method="POST"
+        action="?/unassignUserToController"
+        class="flex flex-col gap-4 collapse-content md:w-1/2 xl:w-1/4 lg:m-auto"
+        use:enhance={() => {
+          loading = true;
+          return async ({ result, update }) => {
+            if (result.type === "redirect") {
+              AlertsStore.addAlert("User assigned to controller", "success");
             }
             await applyAction(result);
 

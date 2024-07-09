@@ -94,6 +94,94 @@ export const actions = {
     });
     return { success: `${user.email} assigned to ${project.name}` };
   },
+  assignUserToController: async ({ request, locals, url }) => {
+    const formData = Object.fromEntries(await request.formData());
+
+    const { email, projectId } = formData;
+
+    console.log(email, projectId);
+
+    const lowercaseEmail = email.toLowerCase();
+
+    const user = await db.user.findUnique({
+      where: { email: lowercaseEmail },
+    });
+
+    const project = await db.project.findUnique({ where: { id: projectId } });
+
+    if (!user || !project) {
+      return fail(400, {
+        error: true,
+        errorMsg: "User or project does not exist",
+      });
+    }
+
+    if (user.projectController.includes(project.id)) {
+      return fail(400, {
+        error: true,
+        errorMsg: "User assigned to project already",
+      });
+    }
+
+    console.log(user);
+
+    const updatedUser = await db.user.update({
+      where: { email: lowercaseEmail },
+      data: { projectController: { push: projectId } },
+    });
+
+    console.log(updatedUser);
+
+    return {
+      success: `${user.email} assigned as controller to ${project.name}`,
+    };
+  },
+  unassignUserToController: async ({ request, locals, url }) => {
+    const formData = Object.fromEntries(await request.formData());
+
+    const { email, projectId } = formData;
+
+    console.log(email, projectId);
+
+    const lowercaseEmail = email.toLowerCase();
+
+    const user = await db.user.findUnique({
+      where: { email: lowercaseEmail },
+    });
+
+    const project = await db.project.findUnique({ where: { id: projectId } });
+
+    if (!user || !project) {
+      return fail(400, {
+        error: true,
+        errorMsg: "User or project does not exist",
+      });
+    }
+
+    if (!user.projectController.includes(project.id)) {
+      return fail(400, {
+        error: true,
+        errorMsg: "User not assigned to project",
+      });
+    }
+
+    const newControllerArray = user.projectController.filter(
+      (id) => id !== projectId
+    );
+
+    console.log(newControllerArray);
+
+    const updatedUser = await db.user.update({
+      where: { email: lowercaseEmail },
+      data: { projectController: newControllerArray },
+    });
+
+    console.log(updatedUser);
+
+    return {
+      success: `${user.email} unassigned as controller to ${project.name}`,
+    };
+  },
   makeRegisterLink: async ({ request, locals, url }) => {
     const formData = Object.fromEntries(await request.formData());
 
