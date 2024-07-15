@@ -52,7 +52,7 @@ export const createUser = async (
     return { user };
   } catch (error) {
     return {
-      errors: "Something went wrong",
+      error: "Something went wrong",
     };
   }
 };
@@ -68,7 +68,7 @@ export const loginUser = async (email, password) => {
 
   if (!user) {
     return {
-      errors: "Invalid credentials",
+      error: "Invalid credentials",
     };
   }
 
@@ -77,7 +77,7 @@ export const loginUser = async (email, password) => {
 
   if (!passwordIsValid) {
     return {
-      errors: "Invalid credentials",
+      error: "Invalid credentials",
     };
   }
 
