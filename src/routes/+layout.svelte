@@ -74,6 +74,7 @@
             <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
             <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
             <li><a on:click={gotoLink} href="/search/">Search</a></li>
+            <li><a on:click={gotoLink} href="/live/">Live</a></li>
           </div>
           <div>
             {#if user.isAdmin}
