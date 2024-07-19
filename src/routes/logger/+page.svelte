@@ -276,7 +276,7 @@
   <table class="table">
     <thead>
       <tr class="flex">
-        <td class="grow">Logg</td>
+        <td class="w-full">Logg</td>
         <td class="w-40">TC</td>
         <td class="w-40">time</td>
         <td class="w-40">written by</td>
@@ -286,7 +286,7 @@
     <tbody>
       {#each logs as log (log.id)}
         <tr class="flex">
-          <td class="grow">{log.body}</td>
+          <td class="w-full">{log.body}</td>
           <td class="w-40"
             >{log.timecode.hours
               .toString()
