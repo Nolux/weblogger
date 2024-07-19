@@ -100,6 +100,7 @@
   <div class="grid lg:grid-cols-4 w-full gap-4">
     <textarea
       bind:value={$postLoggerInput}
+      disabled={submittingLog}
       class="lg:col-span-2 grow text-xl textarea textarea-lg textarea-secondary p-2"
       placeholder="Logger"
       rows={8}
