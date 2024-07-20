@@ -11,12 +11,12 @@ const webSocketServer = {
     const io = new Server(server.httpServer);
 
     io.on("connection", (socket) => {
-      socket.on("newData", (projectId) => {
-        io.emit("fetchNewData", projectId);
+      socket.on("joinProject", (projectId) => {
+        socket.join(projectId);
       });
-
-      console.log("connected: ", socket.id);
-      socket.emit("eventFromServer", "✅ Connected");
+      socket.on("newData", (projectId) => {
+        io.to(projectId).emit("fetchNewData", projectId);
+      });
     });
   },
 };

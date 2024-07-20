@@ -43,12 +43,14 @@
 
   let loggerInput = persisted("loggerInput", "");
 
+  socket.emit("joinProject", data.currentProject.id);
+
   socket.on("fetchNewData", async (projectId) => {
-    let now = dayjs()
-      .add($tcOffsets.hours, "hour")
-      .add($tcOffsets.minutes, "minute")
-      .add($tcOffsets.seconds, "second");
     if (projectId == user.selectedProjectId) {
+      let now = dayjs()
+        .add($tcOffsets.hours, "hour")
+        .add($tcOffsets.minutes, "minute")
+        .add($tcOffsets.seconds, "second");
       const res = await fetch(
         "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD")
       );
