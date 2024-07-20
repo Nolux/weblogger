@@ -16,6 +16,8 @@
   $: user = data.user;
   $: currentProject = data.currentProject;
 
+  socket.emit("joinProject", data.currentProject.id);
+
   socket.on("fetchNewData", async (projectId) => {
     let now = dayjs();
     if (projectId == user.selectedProjectId) {
