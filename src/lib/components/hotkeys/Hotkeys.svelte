@@ -3,6 +3,8 @@
   import { hotkeys } from "$lib/stores/hotkeysStore.js";
   export let replaceBody;
   export let markerColors = [];
+  export let inTimecode;
+  export let setTimecodeToNow;
 </script>
 
 <div class={`w-full grid gap-2 grid-cols-4 lg:grid-cols-8 justify-around`}>
@@ -19,6 +21,9 @@
           }}
           on:click={() => {
             console.log("CLICK", hotkey);
+            if (inTimecode == "XX:XX:XX:XX") {
+              setTimecodeToNow();
+            }
             replaceBody(markerColors[i].text + " ");
           }}
         >

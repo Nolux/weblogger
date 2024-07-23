@@ -94,11 +94,7 @@
       .add($tcOffsets.minutes, "minute")
       .add($tcOffsets.seconds, "second");
     if (inTimecode == "XX:XX:XX:XX") {
-      inTimecode =
-        now.format("HH:mm:ss:") +
-        Math.floor(now.millisecond() / 40) // TODO: check frame rate?
-          .toString()
-          .padStart(2, "0");
+      setTimecodeToNow();
     }
 
     input.localDate = {
@@ -141,6 +137,20 @@
     };
     loggerInput.set("");
     submittingLog = false;
+  };
+
+  const setTimecodeToNow = () => {
+    let now = dayjs()
+      .add($tcOffsets.hours, "hour")
+      .add($tcOffsets.minutes, "minute")
+      .add($tcOffsets.seconds, "second");
+    if (inTimecode == "XX:XX:XX:XX") {
+      inTimecode =
+        now.format("HH:mm:ss:") +
+        Math.floor(now.millisecond() / 40) // TODO: check frame rate?
+          .toString()
+          .padStart(2, "0");
+    }
   };
 </script>
 
@@ -196,15 +206,7 @@
             code: $timecodeHotkey.key,
           }}
           on:click={() => {
-            let now = dayjs()
-              .add($tcOffsets.hours, "hour")
-              .add($tcOffsets.minutes, "minute")
-              .add($tcOffsets.seconds, "second");
-            inTimecode =
-              now.format("HH:mm:ss:") +
-              Math.floor(dayjs().millisecond() / 40)
-                .toString()
-                .padStart(2, "0");
+            setTimecodeToNow();
           }}
         >
           IN: <span class="font-mono">{inTimecode}</span>
@@ -274,6 +276,8 @@
       loggerInput.set($loggerInput + hotkey);
     }}
     markerColors={currentProject.markerColors}
+    {setTimecodeToNow}
+    {inTimecode}
   />
 
   <table class="table">
