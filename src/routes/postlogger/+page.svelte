@@ -31,6 +31,7 @@
   let recentLogs = writable([]);
 
   let submittingLog = false;
+  let textarea;
 
   const submitLog = async () => {
     submittingLog = true;
@@ -99,6 +100,7 @@
 
   <div class="grid lg:grid-cols-4 w-full gap-4">
     <textarea
+      bind:this={textarea}
       bind:value={$postLoggerInput}
       disabled={submittingLog}
       class="lg:col-span-2 grow text-xl textarea textarea-lg textarea-secondary p-2"
@@ -250,6 +252,7 @@
   <Hotkeys
     replaceBody={(hotkey) => {
       postLoggerInput.set($postLoggerInput + hotkey);
+      textarea.select();
     }}
     markerColors={currentProject.markerColors}
     {submitLog}

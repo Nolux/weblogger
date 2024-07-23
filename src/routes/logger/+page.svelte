@@ -30,6 +30,7 @@
   let timecode = "00:00:00:00";
   let inTimecode = "XX:XX:XX:XX";
   let submittingLog = false;
+  let textarea;
 
   let now = dayjs()
     .add($tcOffsets.hours, "hour")
@@ -139,12 +140,13 @@
     submittingLog = false;
   };
 
-  const setTimecodeToNow = () => {
+  const setTimecodeToNow = (forced = false) => {
+    textarea.select();
     let now = dayjs()
       .add($tcOffsets.hours, "hour")
       .add($tcOffsets.minutes, "minute")
       .add($tcOffsets.seconds, "second");
-    if (inTimecode == "XX:XX:XX:XX") {
+    if (inTimecode == "XX:XX:XX:XX" || forced) {
       inTimecode =
         now.format("HH:mm:ss:") +
         Math.floor(now.millisecond() / 40) // TODO: check frame rate?
@@ -160,6 +162,7 @@
   </h1>
   <div class="grid grid-cols-4 w-full gap-4">
     <textarea
+      bind:this={textarea}
       bind:value={$loggerInput}
       disabled={submittingLog}
       class="col-span-4 lg:col-span-2 grow text-xl textarea textarea-lg textarea-primary p-2"
@@ -206,7 +209,7 @@
             code: $timecodeHotkey.key,
           }}
           on:click={() => {
-            setTimecodeToNow();
+            setTimecodeToNow(true);
           }}
         >
           IN: <span class="font-mono">{inTimecode}</span>
@@ -250,10 +253,17 @@
             code: $resetHotkey.key,
           }}
           on:click={() => {
-            input = {
-              timecode: {},
-              localDate: { year: 2024, month: 1, day: 1 },
+            let now = dayjs()
+              .add($tcOffsets.hours, "hour")
+              .add($tcOffsets.minutes, "minute")
+              .add($tcOffsets.seconds, "second");
+
+            input.localDate = {
+              year: now.year(),
+              month: now.month() + 1,
+              day: now.date(),
             };
+
             loggerInput.set("");
             inTimecode = "XX:XX:XX:XX";
           }}
