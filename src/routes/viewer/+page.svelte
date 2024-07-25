@@ -6,6 +6,8 @@
   import { DatePicker } from "@svelte-plugins/datepicker";
   import dayjs from "dayjs";
 
+  import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
+
   export let data;
 
   $: logs = data.logs;
@@ -155,9 +157,19 @@
             getNewData();
           }}
         >
-          X
+          <Icon icon="mdi:close"></Icon>
         </div>
       {/if}
+      <SearchBadge
+        callback={(filter) => {
+          let newFilters = filters;
+          if (!filters.includes(filter)) {
+            newFilters.push(filter);
+            filters = newFilters;
+          }
+          getNewData();
+        }}
+      />
     </div>
     <div class="grow p-2 flex flex-col gap-4">
       {#if logs.length < 1}
