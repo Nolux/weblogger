@@ -31,7 +31,6 @@ export const GET = async ({ request, locals, url }) => {
         $match: {
           body: { $regex: regex, $options: "i" },
           projectId: { $eq: { $oid: projectId } },
-          deleted: false,
         },
       },
       {
@@ -42,6 +41,14 @@ export const GET = async ({ request, locals, url }) => {
       },
     ],
   };
+
+  // Show deleted post if admin or projectController
+  if (
+    !locals.user.isAdmin &&
+    !locals.user.projectController.includes(projectId)
+  ) {
+    searchObj.pipeline[0].$match.deleted = false;
+  }
 
   if (filters.length > 0) {
     searchObj.pipeline[0].$match.tags = { $all: filters };

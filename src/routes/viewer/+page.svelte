@@ -177,9 +177,11 @@
           <div class="w-full text-xl text-center">No logs for date</div>
         </div>
       {:else}
-        {#each logs as log}
+        {#each logs as log (log.id)}
           <div
-            class="grid grid-cols-12 lg:flex-row gap-2 border border-accent p-2"
+            class="grid grid-cols-12 lg:flex-row gap-2 border {!log.deleted
+              ? 'border-accent'
+              : 'border-error'} p-2"
           >
             <div class="w-full text-xl col-span-12 lg:col-span-8">
               {log.body}
@@ -260,23 +262,42 @@
                 <a class="btn" href={`/viewer/${log.id}?editmode=true/`}>
                   <Icon icon="mdi:pencil"></Icon></a
                 >
-                <button
-                  class="btn {log.confirmDelete ? 'btn-error' : ''}"
-                  on:click={async () => {
-                    if (!log.confirmDelete) {
-                      log.confirmDelete = true;
-                      setTimeout(() => {
-                        log.confirmDelete = false;
-                      }, 4000);
-                    } else {
-                      await fetch("/api/log/delete", {
-                        method: "DELETE",
-                        body: JSON.stringify({ logId: log.id }),
-                      });
-                      getNewData();
-                    }
-                  }}><Icon icon="mdi:trash"></Icon></button
-                >
+                {#if !log.deleted}
+                  <button
+                    class="btn {log.confirmDelete ? 'btn-error' : ''}"
+                    on:click={async () => {
+                      if (!log.confirmDelete) {
+                        log.confirmDelete = true;
+                        setTimeout(() => {
+                          log.confirmDelete = false;
+                        }, 4000);
+                      } else {
+                        await fetch("/api/log/delete", {
+                          method: "DELETE",
+                          body: JSON.stringify({ logId: log.id }),
+                        });
+                        getNewData();
+                      }
+                    }}><Icon icon="mdi:trash"></Icon></button
+                  >{:else}
+                  <button
+                    class="btn {log.confirmRestore ? 'btn-success' : ''}"
+                    on:click={async () => {
+                      if (!log.confirmRestore) {
+                        log.confirmRestore = true;
+                        setTimeout(() => {
+                          log.confirmRestore = false;
+                        }, 4000);
+                      } else {
+                        await fetch("/api/log/restore", {
+                          method: "POST",
+                          body: JSON.stringify({ logId: log.id }),
+                        });
+                        getNewData();
+                      }
+                    }}><Icon icon="mdi:arrow-u-left-top"></Icon></button
+                  >
+                {/if}
               </div>
             </div>
           </div>

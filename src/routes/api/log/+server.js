@@ -30,7 +30,16 @@ export const GET = async ({ url, locals }) => {
   let count = 0;
   let logs = [];
 
-  let searchObj = { projectId: projectId, deleted: false };
+  let searchObj = { projectId: projectId };
+
+  // Show deleted post if admin or projectController
+  if (
+    !locals.user.isAdmin &&
+    !locals.user.projectController.includes(projectId)
+  ) {
+    searchObj.deleted = false;
+  }
+
   if (filters) {
     searchObj.tags = { hasEvery: filters };
   }
