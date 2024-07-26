@@ -18,8 +18,6 @@
   $: perPage = data.perPage;
   let asc = true;
 
-  $: console.log(data);
-
   let currentPage = 0;
   let filters = $page.url.searchParams.get("filters") || [];
   if (filters != "") {
@@ -70,9 +68,6 @@
               type="text"
               placeholder="Select date"
               on:click={toggleDatePicker}
-              on:change={() => {
-                console.log("object");
-              }}
               bind:value={selectedDate}
             />
           </div>
@@ -203,7 +198,6 @@
                         on:click={() => {
                           let newFilters = filters;
                           if (!filters.includes(tag)) {
-                            console.log(tag);
                             newFilters.push(tag);
                             filterColors[tag] = {
                               markerColor: log.markerColor,

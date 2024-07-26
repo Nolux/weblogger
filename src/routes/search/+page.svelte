@@ -17,14 +17,11 @@
   $: perPage = data.perPage;
   let asc = true;
 
-  $: console.log(data);
-
   let currentPage = 0;
   let filters = $page.url.searchParams.get("filters") || [];
   if (filters != "") {
     filters = filters.split(" ");
   }
-  $: console.log(filters);
   let filterColors = [];
 
   let loading = false;
@@ -37,16 +34,13 @@
 
     goto(`?${$page.url.searchParams.toString()}`);
 
-    console.log("object");
-
     const res = await fetch(
       `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
     );
     const data = await res.json();
 
     logs = data.logs;
-    console.log(logs);
-    //age = data.page;
+
     loading = false;
     firstSearchDone = true;
   };
@@ -144,7 +138,6 @@
                         on:click={() => {
                           let newFilters = filters;
                           if (!filters.includes(tag)) {
-                            console.log(tag);
                             newFilters.push(tag);
                             filterColors[tag] = {
                               markerColor: log.markerColor,

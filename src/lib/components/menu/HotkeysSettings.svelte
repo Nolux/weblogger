@@ -5,8 +5,6 @@
     resetHotkey,
     timecodeHotkey,
   } from "$lib/stores/hotkeysStore.js";
-
-  $: console.log($hotkeys, $timecodeHotkey);
 </script>
 
 <div class="flex flex-col gap-1">

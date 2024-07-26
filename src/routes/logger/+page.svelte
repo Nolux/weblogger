@@ -18,8 +18,6 @@
   $: user = data.user;
   $: currentProject = data.currentProject;
 
-  $: console.log(user, currentProject);
-
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
@@ -56,7 +54,6 @@
         "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD")
       );
       const data = await res.json();
-      console.log(data);
       logs = data.logs;
     }
   });
@@ -111,15 +108,12 @@
       frames: parseInt(inTimecode.split(":")[3]),
     };
 
-    console.log(input);
-
     const res = await fetch("/api/log", {
       method: "POST",
       body: JSON.stringify({ ...input, body: $loggerInput }),
     });
     if (!res.ok) {
       const json = await res.json();
-      console.log(json);
       AlertsStore.addAlert(json.message, "warning");
       submittingLog = false;
 
