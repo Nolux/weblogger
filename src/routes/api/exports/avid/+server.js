@@ -22,6 +22,10 @@ export const GET = async ({ locals, url }) => {
     orderBy: { timecodeString: "asc" },
   });
 
+  const count = await db.log.count({
+    where: { projectId, localDateString: localDate, deleted: false },
+  });
+
   let returnString = "";
 
   logs.map((log) => {
@@ -54,7 +58,7 @@ export const GET = async ({ locals, url }) => {
       "Content-Type": "text/plain",
       "Content-Disposition":
         'attachment; name="fieldName"; filename="' +
-        `${localDate} - ${currentProject.name}` +
+        `${localDate} - ${currentProject.name} - ${count}` +
         '.txt"',
     },
   });

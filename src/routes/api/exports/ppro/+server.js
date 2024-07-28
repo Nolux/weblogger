@@ -23,6 +23,10 @@ export const GET = async ({ locals, url }) => {
     orderBy: { timecodeString: "asc" },
   });
 
+  const count = await db.log.count({
+    where: { projectId, localDateString: localDate, deleted: false },
+  });
+
   let xmlObj = {
     xmeml: {
       "@version": "4",
@@ -136,7 +140,7 @@ export const GET = async ({ locals, url }) => {
       "Content-Type": "text/xml",
       "Content-Disposition":
         'attachment; name="fieldName"; filename="' +
-        `${localDate} - ${currentProject.name}` +
+        `${localDate} - ${currentProject.name} - ${count}` +
         '.xml"',
     },
   });
