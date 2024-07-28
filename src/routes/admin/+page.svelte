@@ -8,8 +8,6 @@
   $: projects = data.projects;
   $: users = data.users;
 
-  $: console.log(projects);
-  $: console.log(users);
   export let form;
 
   $: {

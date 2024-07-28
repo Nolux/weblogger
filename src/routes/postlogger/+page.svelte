@@ -58,13 +58,10 @@
     let newLogs = $recentLogs;
     newLogs.push(await res.json());
     recentLogs.set(newLogs);
-    console.log($recentLogs);
     submittingLog = false;
   };
 
   let isOpen = false;
-
-  $: console.log(input.timecode);
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
@@ -89,7 +86,6 @@
     }
     input.timecode[type] = value;
     el.target.value = value;
-    console.log(value);
   }
 </script>
 
@@ -116,7 +112,6 @@
           showYearControls={true}
           align="right"
           onDayClick={(e) => {
-            console.log(e);
             dateInput = dayjs(e.startDate).format("YYYY-MM-DD");
           }}
           theme="postlogger-datepicker"
@@ -127,9 +122,6 @@
               type="text"
               placeholder="Select date"
               on:click={toggleDatePicker}
-              on:change={() => {
-                console.log("object");
-              }}
               bind:value={dateInput}
             />
           </div>

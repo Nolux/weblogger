@@ -20,7 +20,6 @@
             code: hotkey.key,
           }}
           on:click={() => {
-            console.log("CLICK", hotkey);
             if (inTimecode == "XX:XX:XX:XX") {
               setTimecodeToNow();
             }

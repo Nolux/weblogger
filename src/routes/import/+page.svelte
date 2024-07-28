@@ -12,10 +12,8 @@
 
   $: {
     if (form?.error) {
-      console.log(form);
     }
     if (form?.logs) {
-      console.log(form);
     }
   }
   let loading = false;
@@ -33,13 +31,11 @@
       })
       .filter(Boolean);
 
-    console.log(logs);
     const res = await fetch("/api/log/many", {
       method: "POST",
       body: JSON.stringify({ logs, localDateString: form.localDateString }),
     });
     const data = await res.json();
-    console.log(data);
     if (data.count) {
       AlertsStore.addAlert(
         `Uploaded to server, ${data.count} logs added at ${form.localDateString}`,
@@ -83,7 +79,6 @@
           align="center"
           onDayClick={(e) => {
             selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
-            console.log(selectedDate);
           }}
           theme="custom-datepicker"
           bind:isOpen

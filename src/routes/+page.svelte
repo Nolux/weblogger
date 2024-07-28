@@ -5,10 +5,6 @@
   $: userAgent = data.userAgent?.toLowerCase();
 
   $: isSafari = userAgent?.indexOf("safari/") > -1;
-
-  $: console.log(isSafari);
-
-  console.log(isSafari);
 </script>
 
 <div class="flex flex-col gap-8">

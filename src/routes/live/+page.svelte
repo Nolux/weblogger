@@ -25,7 +25,6 @@
         "/api/log?page=0&perPage=50&localDate=" + now.format("YYYY.MM.DD")
       );
       const data = await res.json();
-      console.log(data);
       logs = data.logs;
     }
   });

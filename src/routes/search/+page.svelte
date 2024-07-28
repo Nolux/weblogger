@@ -17,14 +17,11 @@
   $: perPage = data.perPage;
   let asc = true;
 
-  $: console.log(data);
-
   let currentPage = 0;
   let filters = $page.url.searchParams.get("filters") || [];
   if (filters != "") {
     filters = filters.split(" ");
   }
-  $: console.log(filters);
   let filterColors = [];
 
   let loading = false;
@@ -37,16 +34,13 @@
 
     goto(`?${$page.url.searchParams.toString()}`);
 
-    console.log("object");
-
     const res = await fetch(
       `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
     );
     const data = await res.json();
 
     logs = data.logs;
-    console.log(logs);
-    //age = data.page;
+
     loading = false;
     firstSearchDone = true;
   };
@@ -120,7 +114,9 @@
         {/if}
         {#each logs as log}
           <div
-            class="grid grid-cols-12 lg:flex-row gap-2 border border-accent p-2"
+            class="grid grid-cols-12 lg:flex-row gap-2 border {!log.deleted
+              ? 'border-accent'
+              : 'border-error'} p-2"
           >
             <div class="w-full text-xl col-span-12 lg:col-span-8">
               {log.body}
@@ -142,7 +138,6 @@
                         on:click={() => {
                           let newFilters = filters;
                           if (!filters.includes(tag)) {
-                            console.log(tag);
                             newFilters.push(tag);
                             filterColors[tag] = {
                               markerColor: log.markerColor,
@@ -207,23 +202,42 @@
                 <a class="btn" href={`/viewer/${log.id}/`}>
                   <Icon icon="mdi:pencil"></Icon></a
                 >
-                <button
-                  class="btn {log.confirmDelete ? 'btn-error' : ''}"
-                  on:click={async () => {
-                    if (!log.confirmDelete) {
-                      log.confirmDelete = true;
-                      setTimeout(() => {
-                        log.confirmDelete = false;
-                      }, 4000);
-                    } else {
-                      await fetch("/api/log/delete", {
-                        method: "DELETE",
-                        body: JSON.stringify({ logId: log.id }),
-                      });
-                      getNewData();
-                    }
-                  }}><Icon icon="mdi:trash"></Icon></button
-                >
+                {#if !log.deleted}
+                  <button
+                    class="btn {log.confirmDelete ? 'btn-error' : ''}"
+                    on:click={async () => {
+                      if (!log.confirmDelete) {
+                        log.confirmDelete = true;
+                        setTimeout(() => {
+                          log.confirmDelete = false;
+                        }, 4000);
+                      } else {
+                        await fetch("/api/log/delete", {
+                          method: "DELETE",
+                          body: JSON.stringify({ logId: log.id }),
+                        });
+                        getNewData();
+                      }
+                    }}><Icon icon="mdi:trash"></Icon></button
+                  >{:else}
+                  <button
+                    class="btn {log.confirmRestore ? 'btn-success' : ''}"
+                    on:click={async () => {
+                      if (!log.confirmRestore) {
+                        log.confirmRestore = true;
+                        setTimeout(() => {
+                          log.confirmRestore = false;
+                        }, 4000);
+                      } else {
+                        await fetch("/api/log/restore", {
+                          method: "POST",
+                          body: JSON.stringify({ logId: log.id }),
+                        });
+                        getNewData();
+                      }
+                    }}><Icon icon="mdi:arrow-u-left-top"></Icon></button
+                  >
+                {/if}
               </div>
             </div>
           </div>

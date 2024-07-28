@@ -212,9 +212,6 @@
               on:click={() => {
                 isOpen = !isOpen;
               }}
-              on:change={() => {
-                console.log("object");
-              }}
               bind:value={log.localDateString}
             />
           </div>
