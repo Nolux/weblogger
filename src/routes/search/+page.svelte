@@ -60,7 +60,12 @@
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
     <div class="flex gap-4 items-stretch">
-      <div class="grow grid gap-4">
+      <form
+        class="grow grid gap-4"
+        on:submit|preventDefault={() => {
+          getNewData();
+        }}
+      >
         <label class="input input-bordered flex items-center gap-2">
           <Icon icon="mdi-search"></Icon>
           <input
@@ -71,10 +76,8 @@
           />
         </label>
 
-        <button class="btn btn-primary w-full" on:click={getNewData}
-          >Search</button
-        >
-      </div>
+        <button class="btn btn-primary w-full" type="submit">Search</button>
+      </form>
       <div class=" {dateSelectorOpen ? 'w-1/3' : ''}">
         {#if dateSelectorOpen}
           <div class="flex gap-2 justify-center h-full">
