@@ -6,6 +6,7 @@ export const GET = async ({ request, locals, url }) => {
   const projectId = locals.user.selectedProjectId;
   const query = url.searchParams.get("query");
   let filters = url.searchParams.get("filters");
+  const localDate = url.searchParams.get("localDate");
 
   const find = locals.user.assignedProjects.findIndex(
     (x) => x.id == locals.user.selectedProjectId
@@ -41,6 +42,10 @@ export const GET = async ({ request, locals, url }) => {
       },
     ],
   };
+
+  if (localDate != null || localDate != undefined) {
+    searchObj.pipeline[0].$match.localDateString = localDate;
+  }
 
   // Show deleted post if admin or projectController
   if (

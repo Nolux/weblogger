@@ -13,9 +13,16 @@ export async function load({ params, fetch, locals, url }) {
   );
 
   const currentProject = locals.user.assignedProjects[find];
+  const perPage = 30;
 
-  const res = await fetch(`/api/log/search?query=${search}&filters=${filters}`);
-  const data = await res.json();
+  const selectedDate =
+    url.searchParams.get("selectedDate") ||
+    currentProject.projectDays.sort()[currentProject.projectDays.length - 1];
 
-  return { ...data };
+  return {
+    user: locals.user,
+    projectDays: currentProject.projectDays.sort(),
+    selectedDate,
+    perPage: perPage,
+  };
 }
