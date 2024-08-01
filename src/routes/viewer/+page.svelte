@@ -27,7 +27,7 @@
 
   let loading = false;
 
-  let showTimecodePicker = true;
+  let showTimecodePicker = false;
   let inputTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
 
   const getNewData = async () => {
