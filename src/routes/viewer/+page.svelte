@@ -53,6 +53,12 @@
     const data = await res.json();
     logs = data.logs;
     pages = data.page;
+
+    if (currentPage > pages.totalPages) {
+      currentPage = 0;
+      getNewData();
+    }
+
     loading = false;
   };
 
