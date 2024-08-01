@@ -13,6 +13,7 @@ export const GET = async ({ url, locals }) => {
   const localDate = url.searchParams.get("localDate");
   const asc = url.searchParams.get("asc") || "desc";
   let filters = url.searchParams.get("filters");
+  const afterTc = url.searchParams.get("afterTc");
 
   if (filters) {
     filters = filters.split(",");
@@ -47,6 +48,19 @@ export const GET = async ({ url, locals }) => {
     searchObj.localDateString = localDate;
   }
 
+  if (afterTc) {
+    let timecode = afterTc.split(":");
+
+    const timecodeDateObj = dayjs(localDate)
+      .add(timecode[0], "h")
+      .add(timecode[1], "m")
+      .add(timecode[2], "s")
+      .add(timecode[3] * 40, "ms");
+
+    searchObj.timecodeDateObj = {
+      gte: timecodeDateObj.format("YYYY-MM-DD[T]HH:mm:ss.SSSZ"),
+    };
+  }
   count = await db.log.count({
     where: searchObj,
   });

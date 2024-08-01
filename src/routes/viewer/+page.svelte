@@ -25,20 +25,76 @@
   }
   let filterColors = [];
 
+  let loading = false;
+
+  let showTimecodePicker = true;
+  let inputTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
+
   const getNewData = async () => {
+    loading = true;
     $page.url.searchParams.set("selectedDate", selectedDate);
     $page.url.searchParams.set("filters", filters);
     goto(`?${$page.url.searchParams.toString()}`);
     const res = await fetch(
-      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}`
+      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${
+        showTimecodePicker
+          ? `&afterTc=${inputTimecode.hours
+              .toString()
+              .padStart(2, "0")}:${inputTimecode.minutes
+              .toString()
+              .padStart(2, "0")}:${inputTimecode.seconds
+              .toString()
+              .padStart(2, "0")}:${inputTimecode.frames
+              .toString()
+              .padStart(2, "0")}`
+          : ""
+      }`
     );
     const data = await res.json();
     logs = data.logs;
     pages = data.page;
+    loading = false;
   };
+
   let isOpen = false;
 
   const toggleDatePicker = () => (isOpen = !isOpen);
+
+  function enforceMinMax(el, type) {
+    const value = parseInt(el.target.value);
+
+    if (value === null || isNaN(value)) {
+      inputTimecode[type] = 0;
+      el.target.value = parseInt(0);
+      return;
+    }
+
+    if (value < parseInt(el.target.min)) {
+      inputTimecode[type] = parseInt(el.target.min);
+      el.target.value = parseInt(el.target.min);
+      return;
+    }
+    if (value > parseInt(el.target.max)) {
+      inputTimecode[type] = parseInt(el.target.max);
+      el.target.value = parseInt(el.target.max);
+      return;
+    }
+    inputTimecode[type] = value;
+    el.target.value = value;
+  }
+
+  /*
+        <div class="tooltip btn flex items-center" data-tip="Oldest first">
+          <input
+            type="checkbox"
+            class="toggle"
+            bind:checked={asc}
+            on:change={() => {
+              getNewData();
+            }}
+          />
+        </div>
+*/
 </script>
 
 <div class="flex flex-col gap-8">
@@ -47,13 +103,14 @@
   </h1>
   <div class="flex flex-col gap-4 w-full justify-between">
     <div class="grid grid-cols-4 gap-4 items-stretch">
-      <div class="col-span-4 lg:col-span-2 self-stretch">
+      <div class="col-span-4 lg:col-span-3 self-stretch">
         <DatePicker
           enableFutureDates={false}
           showYearControls={true}
           align="right"
           onDayClick={(e) => {
             selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
+            console.log(e);
             getNewData();
           }}
           theme="custom-datepicker"
@@ -74,57 +131,124 @@
         </DatePicker>
       </div>
       <div
-        class="flex justify-between items-center col-span-4 lg:col-span-2 border border-accent p-4 gap-4 text-center"
+        class="flex justify-center col-span-4 lg:col-span-1 border border-accent p-4 gap-4 text-center"
       >
-        <div class="tooltip btn flex items-center" data-tip="Oldest first">
-          <input
-            type="checkbox"
-            class="toggle"
-            bind:checked={asc}
-            on:change={() => {
+        <button
+          class="btn tooltip {showTimecodePicker ? 'btn-warning' : ''}"
+          data-tip="Filter by start time"
+          on:click={() => {
+            showTimecodePicker = !showTimecodePicker;
+            if (!showTimecodePicker) {
               getNewData();
-            }}
-          />
-        </div>
-        <a
-          class="btn aspect-square"
-          target="_blank"
-          href="/api/exports/pdf?localDate={selectedDate}"
-          ><Icon icon="mdi:printer"></Icon></a
+            }
+          }}><Icon icon="mdi:clock-edit-outline"></Icon></button
         >
-        <a class="btn" href="/import?date={selectedDate}">Import</a>
-        <details class="dropdown dropdown-left">
-          <summary class="btn">Exports</summary>
+
+        <details class="dropdown tooltip dropdown-left" data-tip="Menu">
+          <summary class="btn"><Icon icon="mdi:hamburger-menu"></Icon></summary>
           <ul
-            class="p-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
+            class="p-2 gap-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
           >
+            <div class="divider">Print</div>
+
             <a
-              class="btn join-item"
+              class="btn"
+              target="_blank"
+              href="/api/exports/pdf?localDate={selectedDate}"
+              ><Icon icon="mdi:printer"></Icon>PDF</a
+            >
+            <a
+              class="btn"
+              target="_blank"
+              href="/api/exports/text?localDate={selectedDate}"
+              ><Icon icon="mdi:file-text"></Icon>Text file</a
+            >
+            <div class="divider py-4 pt-8">Exports</div>
+            <a
+              class="btn"
               target="_blank"
               href="/api/exports/avid?localDate={selectedDate}"
               >AVID Markers TXT</a
             >
             <a
-              class="btn join-item"
+              class="btn"
               target="_blank"
               href="/api/exports/ppro?localDate={selectedDate}"
               >Premiere Pro XML</a
             >
-            <a class="btn join-item" disabled>Final Cut X XML</a>
+            <a class="btn" disabled>Final Cut X XML</a>
             <a
-              class="btn join-item"
+              class="btn"
               target="_blank"
               href="/api/exports/fcp?localDate={selectedDate}">CSV</a
             >
-            <a
-              class="btn join-item"
-              target="_blank"
-              href="/api/exports/text?localDate={selectedDate}">Text file</a
-            >
+
+            <div class="divider py-4 pt-8">Import</div>
+
+            <a class="btn" href="/import?date={selectedDate}">Import</a>
           </ul>
         </details>
       </div>
     </div>
+    {#if showTimecodePicker}
+      <div
+        class="w-full grid grid-cols-5 gap-4 text-center border border-accent p-4 gap-4"
+      >
+        <div class="font-bold text-xl">Hours</div>
+        <div class="font-bold text-xl">Minutes</div>
+        <div class="font-bold text-xl">Seconds</div>
+        <div class="font-bold text-xl">Frames</div>
+        <div class="font-bold text-xl"></div>
+        <input
+          type="number"
+          min="0"
+          max="23"
+          id="hours"
+          class="input input-bordered"
+          placeholder="Hours"
+          on:keyup={(e) => enforceMinMax(e, "hours")}
+          on:change={(e) => enforceMinMax(e, "hours")}
+          value="0"
+        />
+        <input
+          type="number"
+          max="59"
+          min="0"
+          id="minutes"
+          class="input input-bordered"
+          placeholder="minutes"
+          on:keyup={(e) => enforceMinMax(e, "minutes")}
+          on:change={(e) => enforceMinMax(e, "minutes")}
+          value="0"
+        />
+        <input
+          type="number"
+          max="59"
+          min="0"
+          id="seconds"
+          class="input input-bordered"
+          placeholder="seconds"
+          on:keyup={(e) => enforceMinMax(e, "seconds")}
+          on:change={(e) => enforceMinMax(e, "seconds")}
+          value="0"
+        />
+        <input
+          type="number"
+          max="24"
+          min="0"
+          id="frames"
+          class="input input-bordered"
+          placeholder="frames"
+          on:keyup={(e) => enforceMinMax(e, "frames")}
+          on:change={(e) => enforceMinMax(e, "frames")}
+          value="0"
+        />
+        <button class="btn btn-success" on:click={getNewData}>
+          {#if loading}<span class="loading loading-spinner loading-lg"
+            ></span>{:else}GO{/if}
+        </button>
+      </div>
+    {/if}
     <div class="flex justify-end h-4 gap-2">
       {#each filters as filter}
         <div
