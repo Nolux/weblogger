@@ -185,7 +185,9 @@
 
             <div class="divider py-4 pt-8">Import</div>
 
-            <a class="btn" href="/import?date={selectedDate}">Import</a>
+            <a class="btn" target="_blank" href="/import?date={selectedDate}"
+              >Import</a
+            >
           </ul>
         </details>
       </div>
