@@ -21,6 +21,8 @@
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
+  import { slide } from "svelte/transition";
+
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   dayjs.extend(relativeTime);
@@ -296,7 +298,7 @@
     </thead>
     <tbody>
       {#each logs as log (log.id)}
-        <tr class="flex">
+        <tr class="flex" transition:slide>
           <td class="w-full">{log.body}</td>
           <td class="w-40"
             >{log.timecode.hours

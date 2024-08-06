@@ -11,6 +11,8 @@
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
   import Icon from "@iconify/svelte";
+  import { slide } from "svelte/transition";
+
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
@@ -260,7 +262,7 @@
     </thead>
     <tbody>
       {#each $recentLogs as log (log.id)}
-        <tr class="flex">
+        <tr class="flex" transition:slide>
           <td class="grow">{log.body}</td>
           <td class="w-40"
             >{log.timecode.hours
