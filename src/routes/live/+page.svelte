@@ -3,10 +3,10 @@
   import relativeTime from "dayjs/plugin/relativeTime";
   dayjs.extend(relativeTime);
 
-  import { fade } from "svelte/transition";
+  import { slide } from "svelte/transition";
   import Icon from "@iconify/svelte";
 
-  import { socket } from "$lib/socket.js";
+  import { socket, socketStatus } from "$lib/socket.js";
 
   export let data;
 
@@ -29,12 +29,11 @@
     }
   });
 
-  let clock = "";
+  let clock = dayjs().format("HH:mm:ss");
 
   setInterval(() => {
-    let time = dayjs();
-    clock = time.format("HH:mm:ss");
-  }, 50);
+    clock = dayjs().format("HH:mm:ss");
+  }, 800);
 </script>
 
 <div
@@ -44,13 +43,24 @@
   bind:this={holder}
 >
   <div class="flex justify-between">
-    <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
-      Live {fullscreen ? currentProject.name : ""}
+    <h1
+      class="w-full text-3xl font-bold text-center hidden lg:block lg:text-left"
+    >
+      Live
+      {fullscreen ? `Project ${currentProject.name}` : ""}
     </h1>
-    <div class="flex flex-row gap-4 align-middle">
+    <div
+      class="flex flex-row gap-4 w-full justify-center lg:justify-end align-middle place-items-center"
+    >
       <div class="text-3xl font-bold">
         {clock}
       </div>
+      <div
+        class="w-2 h-2 tooltip tooltip-bottom rounded {$socketStatus
+          ? 'bg-green-500'
+          : 'bg-red-500'}"
+        data-tip="Server status"
+      ></div>
       <button
         on:click={() => {
           if (fullscreen) {
@@ -66,32 +76,33 @@
       >
     </div>
   </div>
-  <table class="table text-xl">
-    <thead>
-      <tr class="flex">
-        <td class="w-full">Logg</td>
-        <td class="w-40 text-center">TC</td>
-        <td class="w-40 text-center">written by</td>
-      </tr>
-    </thead>
-    <tbody>
-      {#each logs as log (log.id)}
-        <tr class="flex" transition:fade>
-          <td class="w-full">{log.body}</td>
-          <td class="w-40 text-center"
-            >{log.timecode.hours
-              .toString()
-              .padStart(2, "0")}:{log.timecode.minutes
-              .toString()
-              .padStart(2, "0")}:{log.timecode.seconds
-              .toString()
-              .padStart(2, "0")}:{log.timecode.frames
-              .toString()
-              .padStart(2, "0")}</td
-          >
-          <td class="w-40 text-center">{log.createdByFullName}</td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+  <div class="grid grid-cols-6 p-4">
+    <div class="col-span-6 text-md hidden lg:block text-xs">Body</div>
+    <div class="divider divider-neutral col-span-6"></div>
+
+    {#each logs as log (log.id)}
+      <div
+        class="col-span-6 w-full lg:col-span-5 text-xl lg:text-2xl"
+        transition:slide
+      >
+        {log.body}
+      </div>
+      <div
+        class="flex flex-col w-full col-span-6 lg:col-span-1 justify-center text-center pt-4 lg:pt-0 lg:justify-start align-middle"
+        transition:slide
+      >
+        <div class="lg:text-right font-bold lg:text-2xl">
+          {log.timecode.hours.toString().padStart(2, "0")}:{log.timecode.minutes
+            .toString()
+            .padStart(2, "0")}:{log.timecode.seconds
+            .toString()
+            .padStart(2, "0")}:{log.timecode.frames.toString().padStart(2, "0")}
+        </div>
+        <div class="lg:text-right text-xs lg:text-xl">
+          {log.createdByFullName}
+        </div>
+      </div>
+      <div class="divider divider-neutral col-span-6" transition:slide></div>
+    {/each}
+  </div>
 </div>
