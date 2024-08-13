@@ -54,9 +54,7 @@
   }
 </script>
 
-<h1
-  class="text-3xl font-bold font-bold text-center hidden lg:block lg:text-left mb-4"
->
+<h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left mb-4">
   Viewer
 </h1>
 <div class="flex justify-between">
