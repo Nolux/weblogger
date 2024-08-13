@@ -164,7 +164,7 @@ export const POST = async ({ request, locals }) => {
     .add(timecode.frames * 40, "ms");
 
   const logObj = {
-    body,
+    body: body.trim(),
     tags: uniqueTags ? uniqueTags : [],
     marker,
     timecode,
