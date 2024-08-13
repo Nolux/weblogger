@@ -1,11 +1,13 @@
 import { error } from "@sveltejs/kit";
 
 import { editColors } from "$lib/helpers/editColors.js";
-import { db } from "$lib/db.js";
+import { getLogsWithFilters } from "$lib/helpers/getLogsWithFilters.js";
 
 export const GET = async ({ locals, url }) => {
   const projectId = locals.user.selectedProjectId;
   const localDate = url.searchParams.get("localDate");
+  let filters = url.searchParams.get("filters");
+  const afterTc = url.searchParams.get("afterTc");
 
   if (!projectId || !localDate) {
     return error(400, "Missing input");
@@ -17,13 +19,11 @@ export const GET = async ({ locals, url }) => {
 
   const currentProject = locals.user.assignedProjects[find];
 
-  const logs = await db.log.findMany({
-    where: { projectId, localDateString: localDate, deleted: false },
-    orderBy: { timecodeString: "asc" },
-  });
-
-  const count = await db.log.count({
-    where: { projectId, localDateString: localDate, deleted: false },
+  const { logs, count } = await getLogsWithFilters({
+    projectId,
+    localDate,
+    filters,
+    afterTc,
   });
 
   let returnString = "";

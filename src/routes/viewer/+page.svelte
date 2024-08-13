@@ -155,44 +155,120 @@
           <ul
             class="p-2 gap-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
           >
-            <div class="divider">Print</div>
+            <div class="divider">
+              <span
+                class={showTimecodePicker || filters.length > 0
+                  ? "text-warning"
+                  : ""}
+                >{showTimecodePicker || filters.length > 0
+                  ? "Print with filters"
+                  : "Print"}</span
+              >
+            </div>
 
             <a
-              class="btn"
+              class="btn btn-xs"
               target="_blank"
-              href="/api/exports/pdf?localDate={selectedDate}"
-              ><Icon icon="mdi:printer"></Icon>PDF</a
+              href={`/api/exports/pdf?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inputTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }`}><Icon icon="mdi:printer"></Icon>PDF</a
             >
             <a
-              class="btn"
+              class="btn btn-xs"
               target="_blank"
-              href="/api/exports/text?localDate={selectedDate}"
-              ><Icon icon="mdi:file-text"></Icon>Text file</a
+              href={`/api/exports/text?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inputTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }`}><Icon icon="mdi:file-text"></Icon>Text file</a
             >
-            <div class="divider py-4 pt-8">Exports</div>
+            <div class="divider py-4 pt-8">
+              <span
+                class={showTimecodePicker || filters.length > 0
+                  ? "text-warning"
+                  : ""}
+                >{showTimecodePicker || filters.length > 0
+                  ? "Exports with filters"
+                  : "Exports"}</span
+              >
+            </div>
             <a
-              class="btn"
+              class="btn btn-xs"
               target="_blank"
-              href="/api/exports/avid?localDate={selectedDate}"
-              >AVID Markers TXT</a
+              href={`/api/exports/avid?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inputTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }`}>AVID Markers TXT</a
             >
             <a
-              class="btn"
+              class="btn btn-xs"
               target="_blank"
-              href="/api/exports/ppro?localDate={selectedDate}"
-              >Premiere Pro XML</a
+              href={`/api/exports/ppro?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inputTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }`}>Premiere Pro XML</a
             >
-            <a class="btn" disabled>Final Cut X XML</a>
+            <a class="btn btn-xs" disabled>Final Cut X XML</a>
             <a
-              class="btn"
+              class="btn btn-xs"
               target="_blank"
-              href="/api/exports/fcp?localDate={selectedDate}">CSV</a
+              href={`/api/exports/csv?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inputTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inputTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }`}>CSV</a
             >
 
             <div class="divider py-4 pt-8">Import</div>
 
-            <a class="btn" target="_blank" href="/import?date={selectedDate}"
-              >Import</a
+            <a
+              class="btn btn-xs"
+              target="_blank"
+              href="/import?date={selectedDate}">Import</a
             >
           </ul>
         </details>
