@@ -23,9 +23,9 @@ export const GET = async ({ locals, url }) => {
   let textFile = `${currentProject.name}, ${localDate} \r`;
 
   logs.map((log) => {
-    let body = log.body.replace(/[^a-zA-Z0-9!@#$%^&*: ]/g, "");
+    let body = log.body.replace(/\n/g, " ");
 
-    textFile = textFile + `${log.timecodeString}\t${body}\t\r`;
+    textFile = textFile + `${log.timecodeString}\t${body}\r`;
   });
 
   return new Response(textFile, {
