@@ -58,7 +58,9 @@ export const GET = async ({ locals, url }) => {
       "Content-Type": "text/plain",
       "Content-Disposition":
         'attachment; name="fieldName"; filename="' +
-        `${localDate} - ${currentProject.name} - ${count}` +
+        `${localDate} - ${currentProject.name} - ${count}${
+          filters.length > 0 ? " - " + filters.split(",").join(",") : ""
+        }${afterTc ? " - " + afterTc.replaceAll(":", "") : ""}` +
         '.txt"',
     },
   });

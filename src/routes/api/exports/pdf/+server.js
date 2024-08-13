@@ -168,7 +168,9 @@ export const GET = async ({ locals, url }) => {
       "Content-Type": "application/pdf",
       "Content-Disposition":
         'attachment; name="fieldName"; filename="' +
-        `${localDate} - ${currentProject.name}` +
+        `${localDate} - ${currentProject.name}${
+          filters.length > 0 ? " - " + filters.split(",").join(",") : ""
+        }${afterTc ? " - " + afterTc.replaceAll(":", "") : ""}` +
         '.pdf"',
     },
   });
