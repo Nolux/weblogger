@@ -13,7 +13,7 @@ export async function load({ params, fetch, locals, url }) {
   );
 
   const currentProject = locals.user.assignedProjects[find];
-  const perPage = 30;
+  const perPage = 50;
 
   const selectedDate =
     url.searchParams.get("selectedDate") ||

@@ -43,11 +43,12 @@
     goto(`?${$page.url.searchParams.toString()}`);
 
     const res = await fetch(
-      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${selectedDate ? "&localDate=" + selectedDate : ""}`
+      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`
     );
     const data = await res.json();
 
     logs = data.logs;
+    pages = data.page;
 
     loading = false;
     firstSearchDone = true;
@@ -63,6 +64,8 @@
       <form
         class="grow grid gap-4"
         on:submit|preventDefault={() => {
+          currentPage = 0;
+          pages = { page: 0, totalPages: 0, totalCount: 0 };
           getNewData();
         }}
       >
@@ -87,6 +90,7 @@
               align="right"
               onDayClick={(e) => {
                 selectedDate = dayjs(e.startDate).format("YYYY.MM.DD");
+                currentPage = 0;
                 getNewData();
               }}
               theme="custom-datepicker"
@@ -110,6 +114,7 @@
               on:click={() => {
                 dateSelectorOpen = false;
                 selectedDate = null;
+                currentPage = 0;
                 getNewData();
               }}>close</button
             >
@@ -149,6 +154,7 @@
           class="badge badge-warning hover:brightness-50 cursor-pointer"
           on:click={() => {
             filters = [];
+            currentPage = 0;
             getNewData();
           }}
         >
@@ -162,6 +168,7 @@
             newFilters.push(filter);
             filters = newFilters;
           }
+          currentPage = 0;
           getNewData();
         }}
       />
@@ -216,6 +223,7 @@
                           } else {
                             filters = newFilters.filter((x) => x != tag);
                           }
+                          currentPage = 0;
                           getNewData();
                         }}
                         class="badge {filters.includes(tag)
@@ -285,6 +293,7 @@
                           method: "DELETE",
                           body: JSON.stringify({ logId: log.id }),
                         });
+
                         getNewData();
                       }
                     }}><Icon icon="mdi:trash"></Icon></button

@@ -5,6 +5,8 @@ import { editColors } from "$lib/helpers/editColors.js";
 export const GET = async ({ request, locals, url }) => {
   const projectId = locals.user.selectedProjectId;
   const query = url.searchParams.get("query");
+  const perPage = url.searchParams.get("perPage");
+  const page = url.searchParams.get("page");
   let filters = url.searchParams.get("filters");
   const localDate = url.searchParams.get("localDate");
 
@@ -19,12 +21,9 @@ export const GET = async ({ request, locals, url }) => {
   }
 
   const splitSearch = query.split(" ");
-  console.log(splitSearch);
   let regex = "";
 
   splitSearch.map((str) => (regex = regex + `(?=.*\\b${str}\\b.*)`));
-
-  console.log(filters);
 
   let searchObj = {
     pipeline: [
@@ -40,11 +39,33 @@ export const GET = async ({ request, locals, url }) => {
           timecodeString: -1,
         },
       },
+      { $skip: perPage * page },
+      { $limit: parseInt(perPage) },
+    ],
+  };
+
+  let countSearchObj = {
+    pipeline: [
+      {
+        $match: {
+          body: { $regex: regex, $options: "i" },
+          projectId: { $eq: { $oid: projectId } },
+          deleted: true,
+        },
+      },
+      {
+        $sort: {
+          localDateString: -1,
+          timecodeString: -1,
+        },
+      },
+      { $count: "document_count" },
     ],
   };
 
   if (localDate != null || localDate != undefined) {
     searchObj.pipeline[0].$match.localDateString = localDate;
+    countSearchObj.pipeline[0].$match.localDateString = localDate;
   }
 
   // Show deleted post if admin or projectController
@@ -53,16 +74,20 @@ export const GET = async ({ request, locals, url }) => {
     !locals.user.projectController.includes(projectId)
   ) {
     searchObj.pipeline[0].$match.deleted = false;
+    countSearchObj.pipeline[0].$match.deleted = false;
   }
 
   if (filters.length > 0) {
     searchObj.pipeline[0].$match.tags = { $all: filters };
+    countSearchObj.pipeline[0].$match.tags = { $all: filters };
   }
-
-  console.log(searchObj.pipeline[0].$match);
 
   let logs = await db.log.aggregateRaw(searchObj);
 
+  let count = await db.log.aggregateRaw(countSearchObj);
+  if (count.length > 0) {
+    count = count[0]["document_count"];
+  }
   logs.map((log) => {
     if (log.marker) {
       log.markerColor = "";
@@ -81,5 +106,8 @@ export const GET = async ({ request, locals, url }) => {
     log.createdById = log.createdById["$oid"];
   });
 
-  return json({ logs });
+  return json({
+    logs,
+    page: { page, totalCount: count, totalPages: Math.ceil(count / perPage) },
+  });
 };
