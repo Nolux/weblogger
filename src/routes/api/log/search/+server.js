@@ -50,7 +50,6 @@ export const GET = async ({ request, locals, url }) => {
         $match: {
           body: { $regex: regex, $options: "i" },
           projectId: { $eq: { $oid: projectId } },
-          deleted: true,
         },
       },
       {
