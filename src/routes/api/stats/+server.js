@@ -5,9 +5,7 @@ import _ from "lodash";
 export const GET = async ({ request, locals }) => {
   const startTime = Date.now();
   if (locals.user.projectController.includes(locals.user.selectedProjectId)) {
-    console.log("CONTROLLER");
   } else if (locals.user.isAdmin) {
-    console.log("ADMIN");
   } else {
     return error(401, "Missing auth");
   }
