@@ -85,6 +85,12 @@ export const GET = async ({ request, locals }) => {
   });
   const sortedBusiestDays = _.orderBy(busiestDays, ["logs"], ["desc"]);
 
+  // Total chars
+  let totalChars = 0;
+  logs.map(({ body }) => {
+    totalChars = totalChars + body.length;
+  });
+
   const endTime = Date.now();
   return json({
     sortedBusiestDays,
@@ -92,6 +98,11 @@ export const GET = async ({ request, locals }) => {
     sortedMostUsedTags,
     sortedMostUsedTagsWithoutMarkers,
     longestLog,
-    info: { totalLogs: count, executionTime: endTime - startTime },
+    info: {
+      totalLogs: count,
+      executionTime: endTime - startTime,
+      daysLogged: sortedBusiestDays.length,
+      totalChars: totalChars,
+    },
   });
 };
