@@ -84,6 +84,10 @@
               <li>
                 <a on:click={gotoLink} href="/controller">Project Controller</a>
               </li>
+              <li>
+                <a on:click={gotoLink} href="/controller/stats">Project Stats</a
+                >
+              </li>
             {/if}
           </div>
         {:else}

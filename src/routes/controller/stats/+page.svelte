@@ -1,6 +1,6 @@
 <script>
   export let data;
-  console.log(data);
+
   $: stats = data.stats;
 
   let showMoreMostUsedTags = false;
