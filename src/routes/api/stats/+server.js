@@ -30,13 +30,13 @@ export const GET = async ({ request, locals }) => {
   logs.map((log) => {
     log.tags.map((tag) => {
       if (mostUsedTags[tag]) {
-        mostUsedTags[tag].score = mostUsedTags[tag].score + 1;
+        mostUsedTags[tag].timesUsed = mostUsedTags[tag].timesUsed + 1;
       } else {
-        mostUsedTags[tag] = { score: 1, name: tag };
+        mostUsedTags[tag] = { timesUsed: 1, name: tag };
       }
     });
   });
-  const sortedMostUsedTags = _.orderBy(mostUsedTags, ["score"], ["desc"]);
+  const sortedMostUsedTags = _.orderBy(mostUsedTags, ["timesUsed"], ["desc"]);
 
   const sortedMostUsedTagsWithoutMarkers = _.filter(sortedMostUsedTags, (e) => {
     return !e.name.includes(":");
@@ -54,31 +54,38 @@ export const GET = async ({ request, locals }) => {
   let mostLogs = {};
   logs.map((log) => {
     if (mostLogs[log.createdById]) {
-      mostLogs[log.createdById].score = mostLogs[log.createdById].score + 1;
+      mostLogs[log.createdById].logs = mostLogs[log.createdById].logs + 1;
+      mostLogs[log.createdById].totalChars =
+        mostLogs[log.createdById].totalChars + log.body.length;
     } else {
       mostLogs[log.createdById] = {
         id: log.createdById,
         name: log.createdByFullName,
-        score: 1,
+        logs: 1,
+        totalChars: log.body.length,
       };
     }
   });
-  const sortedMostLogs = _.orderBy(mostLogs, ["score"], ["desc"]);
+
+  const sortedMostLogs = _.orderBy(mostLogs, ["logs"], ["desc"]);
+  sortedMostLogs.map((user) => {
+    user.avgChars = Math.floor(user.totalChars / user.logs);
+  });
 
   // Busiest day
   let busiestDays = {};
   logs.map((log) => {
     if (busiestDays[log.localDateString]) {
-      busiestDays[log.localDateString].score =
-        busiestDays[log.localDateString].score + 1;
+      busiestDays[log.localDateString].logs =
+        busiestDays[log.localDateString].logs + 1;
     } else {
       busiestDays[log.localDateString] = {
-        score: 1,
+        logs: 1,
         name: log.localDateString,
       };
     }
   });
-  const sortedBusiestDays = _.orderBy(busiestDays, ["score"], ["desc"]);
+  const sortedBusiestDays = _.orderBy(busiestDays, ["logs"], ["desc"]);
 
   const endTime = Date.now();
   return json({
