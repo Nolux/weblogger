@@ -93,7 +93,7 @@
           <div class="stat-value text-info">{stats.allTotalCharacters}</div>
         </div>
         <div class="stat place-items-center">
-          <div class="stat-title">Today days</div>
+          <div class="stat-title">Total days</div>
           <div class="stat-value text-info">{stats.allDaysLogged}</div>
         </div>
       </div>
