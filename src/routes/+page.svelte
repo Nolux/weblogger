@@ -48,7 +48,7 @@
     </div>
     <div class="w-full border border-info stats">
       <div class="stat place-items-center">
-        <div class="stat-title text-2xl">Total logs</div>
+        <div class="stat-title text-2xl">Total today logs</div>
         <div class="stat-value text-info text-6xl">{stats.todayLogs}</div>
         <div class="stat-desc">
           {stats.todayLogs >
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div class="stat place-items-center">
-        <div class="stat-title text-2xl">Total characters</div>
+        <div class="stat-title text-2xl">Total today characters</div>
         <div class="stat-value text-info text-6xl">{stats.todayCharacters}</div>
         <div class="stat-desc">
           {stats.todayCharacters >
