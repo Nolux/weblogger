@@ -59,6 +59,18 @@ model Project {
   markerColors  MarkerColors[]
 }
 
+model Stats {
+  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+  projectId              String   @db.ObjectId @unique
+  projectTotalLogs       Int
+  projectTotalDays       Int
+  projectTotalCharacters Int
+  todayLogs              Int
+  todayCharacters        Int
+}
+
 type Timecode {
   hours   Int
   minutes Int
