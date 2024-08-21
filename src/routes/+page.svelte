@@ -68,17 +68,17 @@
         </div>
       </div>
     </div>
-    <div class="divider divider-info"></div>
+    <div class="divider divider-info mx-10"></div>
     <h2 class="text-xl text-center">Select module</h2>
     <div class="flex flex-col lg:flex-row justify-around items-stretch gap-4">
-      <a href="/logger" class="btn btn-outline btn-info btn-lg grow">
-        <div class="text-xl font-bold">LOGGER</div>
+      <a href="/logger" class="btn btn-outline btn-primary btn-lg grow">
+        <div class="text-xl lg:text-2xl font-bold">LOGGER</div>
       </a>
-      <a href="/postlogger" class="btn btn-outline btn-info btn-lg grow">
-        <div class="text-xl font-bold">POST LOGGER</div>
+      <a href="/postlogger" class="btn btn-outline btn-secondary btn-lg grow">
+        <div class="text-xl lg:text-2xl font-bold">POST LOGGER</div>
       </a>
-      <a href="/viewer" class="btn btn-outline btn-info btn-lg grow">
-        <div class="text-xl font-bold">VIEWER</div>
+      <a href="/viewer" class="btn btn-outline btn-accent btn-lg grow">
+        <div class="text-xl lg:text-2xl font-bold">VIEWER</div>
       </a>
     </div>
   {:else}

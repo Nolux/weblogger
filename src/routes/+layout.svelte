@@ -42,7 +42,7 @@
         >
         {#if user}
           <div class="avatar placeholder aspect-square">
-            <div class="bg-primary text-primary-content rounded-full w-12">
+            <div class="bg-info text-info-content rounded-full w-12">
               <span class="text-xl"
                 >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
               >
@@ -103,7 +103,7 @@
         <div>
           <div class="flex items-center justify-between w-full pb-4">
             <div class="avatar placeholder">
-              <div class="bg-primary text-primary-content rounded-full w-14">
+              <div class="bg-info text-info-content rounded-full w-14">
                 <span class="text-3xl"
                   >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
                 >
