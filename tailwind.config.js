@@ -31,5 +31,6 @@ export default {
     },
     { pattern: /text-.+/ },
     { pattern: /alert-.+/ },
+    { pattern: /border-.+/ },
   ],
 };
