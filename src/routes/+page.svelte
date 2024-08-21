@@ -70,7 +70,9 @@
     </div>
     <div class="divider divider-info mx-10"></div>
     <h2 class="text-xl text-center">Select module</h2>
-    <div class="flex flex-col lg:flex-row justify-around items-stretch gap-4">
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 justify-around items-stretch gap-4"
+    >
       <a href="/logger" class="btn btn-outline btn-primary btn-lg grow">
         <div class="text-xl lg:text-2xl font-bold">LOGGER</div>
       </a>
@@ -79,6 +81,9 @@
       </a>
       <a href="/viewer" class="btn btn-outline btn-accent btn-lg grow">
         <div class="text-xl lg:text-2xl font-bold">VIEWER</div>
+      </a>
+      <a href="/live" class="btn btn-outline btn-error btn-lg grow">
+        <div class="text-xl lg:text-2xl font-bold">LIVE</div>
       </a>
     </div>
   {:else}
