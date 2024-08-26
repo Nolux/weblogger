@@ -39,7 +39,7 @@
 
     <div class="border border-info rounded-xl p-4">
       <h1 class="w-full text-3xl">Top Loggers</h1>
-      <table class="table my-4 p-4 text-center">
+      <table class="table lg:table-xs my-4 p-4 text-center">
         <thead class="">
           <tr>
             <th>Name</th>
@@ -62,7 +62,7 @@
     </div>
     <div class="border border-info rounded-xl p-4">
       <h1 class="w-full text-3xl">Top Tags</h1>
-      <table class="table my-4 p-4 text-center">
+      <table class="table lg:table-xs my-4 p-4 text-center">
         <thead class="">
           <tr>
             <th>Name</th>
@@ -100,7 +100,7 @@
     </div>
     <div class="border border-info rounded-xl p-4">
       <h1 class="w-full text-3xl">Top Tags Without Markers</h1>
-      <table class="table my-4 p-4 text-center">
+      <table class="table lg:table-xs my-4 p-4 text-center">
         <thead class="">
           <tr>
             <th>Name</th>
@@ -140,7 +140,7 @@
 
     <div class="border border-info rounded-xl p-4">
       <h1 class="w-full text-3xl">Top Days</h1>
-      <table class="table my-4 p-4 text-center">
+      <table class="table lg:table-xs my-4 p-4 text-center">
         <thead class="">
           <tr>
             <th>Day</th>
