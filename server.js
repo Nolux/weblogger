@@ -7,8 +7,6 @@ import cron from "node-cron";
 import { handler } from "./build/handler.js";
 import { generateStats } from "./src/lib/server/generateStats.js";
 
-generateStats();
-
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -25,6 +23,9 @@ io.on("connection", (socket) => {
     io.to(projectId).emit("fetchNewData", projectId);
   });
 });
+
+// Stats
+generateStats();
 
 cron.schedule("*/10 * * * *", () => {
   generateStats();
