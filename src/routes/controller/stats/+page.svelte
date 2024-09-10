@@ -1,4 +1,8 @@
 <script>
+  import dayjs from "dayjs";
+  import relativeTime from "dayjs/plugin/relativeTime";
+  dayjs.extend(relativeTime);
+
   export let data;
 
   $: stats = data.stats;
@@ -17,22 +21,26 @@
     <div class="w-full border border-info stats">
       <div class="stat place-items-center">
         <div class="stat-title">Total Logs:</div>
-        <div class="stat-value text-info">{stats.info.totalLogs}</div>
+        <div class="stat-value text-info">{stats.projectTotalLogs}</div>
         <div class="stat-desc">
-          Average {Math.floor(stats.info.totalLogs / stats.info.daysLogged)} per
+          Average {Math.floor(stats.projectTotalLogs / stats.projectTotalDays)} per
           day
         </div>
       </div>
       <div class="stat place-items-center">
         <div class="stat-title">Total Days logged:</div>
-        <div class="stat-value text-info">{stats.info.daysLogged}</div>
+        <div class="stat-value text-info">{stats.projectTotalDays}</div>
+        <div class="stat-desc">
+          Stats updated {dayjs(stats.updatedAt).fromNow()}
+        </div>
       </div>
       <div class="stat place-items-center">
         <div class="stat-title">Total Characters Written:</div>
-        <div class="stat-value text-info">{stats.info.totalChars}</div>
+        <div class="stat-value text-info">{stats.projectTotalCharacters}</div>
         <div class="stat-desc">
-          Average {Math.floor(stats.info.totalChars / stats.info.totalLogs)} per
-          log
+          Average {Math.floor(
+            stats.projectTotalCharacters / stats.projectTotalLogs
+          )} per log
         </div>
       </div>
     </div>

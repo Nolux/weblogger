@@ -32,7 +32,7 @@
         <div class="stat-title">Total Days logged</div>
         <div class="stat-value text-info">{stats.projectTotalDays}</div>
         <div class="stat-desc">
-          stats updated {dayjs(stats.updatedAt).fromNow()}
+          Stats updated {dayjs(stats.updatedAt).fromNow()}
         </div>
       </div>
       <div class="stat place-items-center">
