@@ -60,15 +60,37 @@ model Project {
 }
 
 model Stats {
-  id                     String   @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt              DateTime @default(now())
-  updatedAt              DateTime @updatedAt
-  projectId              String   @db.ObjectId @unique
-  projectTotalLogs       Int
-  projectTotalDays       Int
-  projectTotalCharacters Int
-  todayLogs              Int
-  todayCharacters        Int
+  id                               String             @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt                        DateTime           @default(now())
+  updatedAt                        DateTime           @updatedAt
+  projectId                        String             @unique @db.ObjectId
+  projectTotalLogs                 Int
+  projectTotalDays                 Int
+  projectTotalCharacters           Int
+  todayLogs                        Int
+  todayCharacters                  Int
+  sortedBusiestDays                sortedBusiestDay[]
+  sortedMostLogs                   sortedMostLog[]
+  sortedMostUsedTags               Tag[]
+  sortedMostUsedTagsWithoutMarkers Tag[]
+}
+
+type sortedBusiestDay {
+  logs Int
+  name String
+}
+
+type sortedMostLog {
+  id         String
+  name       String
+  logs       Int
+  totalChars Int
+  avgChars   Int
+}
+
+type Tag {
+  timesUsed Int
+  name      String
 }
 
 type Timecode {
