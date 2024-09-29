@@ -28,6 +28,6 @@ jobs:
             cd ~/weblogger
             git pull
             git status
-            npm install --only=prod
+            npm install
             npm run build
             pm2 restart weblogger
