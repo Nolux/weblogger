@@ -30,4 +30,5 @@ jobs:
             git status
             npm install
             npm run build
+            npx prisma db push
             pm2 restart weblogger
