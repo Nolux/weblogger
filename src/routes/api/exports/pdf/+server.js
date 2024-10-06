@@ -10,6 +10,7 @@ export const GET = async ({ locals, url }) => {
   const localDate = url.searchParams.get("localDate");
   let filters = url.searchParams.get("filters");
   const afterTc = url.searchParams.get("afterTc");
+  const excludeFilter = url.searchParams.get("excludeFilter");
 
   if (!projectId || !localDate) {
     return error(400, "Missing input");
@@ -26,6 +27,7 @@ export const GET = async ({ locals, url }) => {
     localDate,
     filters,
     afterTc,
+    excludeFilter,
   });
 
   logs.map((log) => {
