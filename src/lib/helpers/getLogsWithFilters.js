@@ -6,13 +6,20 @@ export const getLogsWithFilters = async ({
   localDate,
   filters,
   afterTc,
+  excludeFilter,
 }) => {
   let searchObj = { projectId: projectId, deleted: false };
 
   if (filters) {
     filters = filters.split(",");
-    searchObj.tags = { hasEvery: filters };
+    if (excludeFilter) {
+      searchObj.NOT = { tags: { hasSome: filters } };
+    } else {
+      searchObj.tags = { hasEvery: filters };
+    }
   }
+
+  console.log(searchObj);
 
   if (localDate) {
     searchObj.localDateString = localDate;
@@ -31,6 +38,7 @@ export const getLogsWithFilters = async ({
       gte: timecodeDateObj.format("YYYY-MM-DD[T]HH:mm:ss.SSSZ"),
     };
   }
+
   const count = await db.log.count({
     where: searchObj,
   });
