@@ -30,6 +30,8 @@
   let showTimecodePicker = false;
   let inputTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
 
+  let excludeMode = $page.url.searchParams.get("excludeMode") || false
+
   const getNewData = async () => {
     loading = true;
     $page.url.searchParams.set("selectedDate", selectedDate);
@@ -88,19 +90,6 @@
     inputTimecode[type] = value;
     el.target.value = value;
   }
-
-  /*
-        <div class="tooltip btn flex items-center" data-tip="Oldest first">
-          <input
-            type="checkbox"
-            class="toggle"
-            bind:checked={asc}
-            on:change={() => {
-              getNewData();
-            }}
-          />
-        </div>
-*/
 </script>
 
 <div class="flex flex-col gap-8">
@@ -153,8 +142,19 @@
         <details class="dropdown tooltip dropdown-left" data-tip="Menu">
           <summary class="btn"><Icon icon="mdi:hamburger-menu"></Icon></summary>
           <ul
-            class="p-2 gap-2 shadow menu bg-base-300 dropdown-content w-44 z-[1] rounded-box join join-vertical"
+            class="p-2 gap-2 shadow menu bg-base-300 dropdown-content w-60 z-[1] rounded-box join join-vertical"
           >
+            <div class="divider">
+              <span>Exclude Search Tags</span>
+            </div>
+            <div class="w-full flex justify-center items-center mb-4">
+            <input type="checkbox" class="toggle {excludeMode ? "toggle-warning": ""}" bind:checked={excludeMode} on:click={() => {
+               console.log("object");
+               excludeMode =!excludeMode;
+               $page.url.searchParams.set("excludeMode", excludeMode);
+               goto(`?${$page.url.searchParams.toString()}`);
+            }} />
+            </div>
             <div class="divider">
               <span
                 class={showTimecodePicker || filters.length > 0
@@ -181,7 +181,7 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }`}><Icon icon="mdi:printer"></Icon>PDF</a
+              }&excludeFilter=${excludeMode}`}><Icon icon="mdi:printer"></Icon>PDF</a
             >
             <a
               class="btn btn-xs"
@@ -198,7 +198,7 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }`}><Icon icon="mdi:file-text"></Icon>Text file</a
+              }&excludeFilter=${excludeMode}`}><Icon icon="mdi:file-text"></Icon>Text file</a
             >
             <div class="divider py-4 pt-8">
               <span
@@ -225,7 +225,7 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }`}>AVID Markers TXT</a
+              }&excludeFilter=${excludeMode}`}>AVID Markers TXT</a
             >
             <a
               class="btn btn-xs"
@@ -242,7 +242,7 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }`}>Premiere Pro XML</a
+              }&excludeFilter=${excludeMode}`}>Premiere Pro XML</a
             >
             <a class="btn btn-xs" disabled>Final Cut X XML</a>
             <a
@@ -260,7 +260,7 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }`}>CSV</a
+              }&excludeFilter=${excludeMode}`}>CSV</a
             >
 
             <div class="divider py-4 pt-8">Import</div>
@@ -276,7 +276,7 @@
     </div>
     {#if showTimecodePicker}
       <div
-        class="w-full grid grid-cols-5 gap-4 text-center border border-accent p-4 gap-4"
+        class="w-full grid grid-cols-5 gap-4 text-center border border-accent p-4"
       >
         <div class="font-bold text-xl">Hours</div>
         <div class="font-bold text-xl">Minutes</div>
