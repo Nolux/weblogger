@@ -23,4 +23,8 @@ const webSocketServer = {
 
 export default defineConfig({
   plugins: [sveltekit(), webSocketServer],
+  test: {
+    globals: true,
+    environment: "happy-dom",
+  },
 });
