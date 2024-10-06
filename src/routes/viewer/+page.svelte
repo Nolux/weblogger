@@ -30,7 +30,7 @@
   let showTimecodePicker = false;
   let inputTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
 
-  let excludeMode = $page.url.searchParams.get("excludeMode") || false
+  let excludeMode = $page.url.searchParams.get("excludeMode") || false;
 
   const getNewData = async () => {
     loading = true;
@@ -148,12 +148,17 @@
               <span>Exclude Search Tags</span>
             </div>
             <div class="w-full flex justify-center items-center mb-4">
-            <input type="checkbox" class="toggle {excludeMode ? "toggle-warning": ""}" bind:checked={excludeMode} on:click={() => {
-               console.log("object");
-               excludeMode =!excludeMode;
-               $page.url.searchParams.set("excludeMode", excludeMode);
-               goto(`?${$page.url.searchParams.toString()}`);
-            }} />
+              <input
+                type="checkbox"
+                class="toggle {excludeMode ? 'toggle-warning' : ''}"
+                bind:checked={excludeMode}
+                on:click={() => {
+                  console.log("object");
+                  excludeMode = !excludeMode;
+                  $page.url.searchParams.set("excludeMode", excludeMode);
+                  goto(`?${$page.url.searchParams.toString()}`);
+                }}
+              />
             </div>
             <div class="divider">
               <span
@@ -181,7 +186,8 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }&excludeFilter=${excludeMode}`}><Icon icon="mdi:printer"></Icon>PDF</a
+              }&excludeFilter=${excludeMode}`}
+              ><Icon icon="mdi:printer"></Icon>PDF</a
             >
             <a
               class="btn btn-xs"
@@ -198,7 +204,8 @@
                       .toString()
                       .padStart(2, "0")}`
                   : ""
-              }&excludeFilter=${excludeMode}`}><Icon icon="mdi:file-text"></Icon>Text file</a
+              }&excludeFilter=${excludeMode}`}
+              ><Icon icon="mdi:file-text"></Icon>Text file</a
             >
             <div class="divider py-4 pt-8">
               <span
