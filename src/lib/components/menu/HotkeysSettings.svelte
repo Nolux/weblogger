@@ -4,6 +4,7 @@
     submitHotkey,
     resetHotkey,
     timecodeHotkey,
+    personalHotkeys,
   } from "$lib/stores/hotkeysStore.js";
 </script>
 
@@ -13,7 +14,8 @@
       <tr>
         <th>type</th>
         <th>Button</th>
-        <th>Controll</th>
+        <th>opt</th>
+        <th>Control</th>
         <th>Shift</th>
         <th>Alt</th>
       </tr>
@@ -28,6 +30,7 @@
             bind:value={$submitHotkey.key}
           />
         </td>
+        <td></td>
         <td
           ><input
             class="toggle toggle-xs"
@@ -59,6 +62,7 @@
             bind:value={$resetHotkey.key}
           />
         </td>
+        <td></td>
         <td
           ><input
             class="toggle toggle-xs"
@@ -66,6 +70,7 @@
             bind:checked={$resetHotkey.modifiers.control}
           /></td
         >
+
         <td
           ><input
             class="toggle toggle-xs"
@@ -90,6 +95,7 @@
             bind:value={$timecodeHotkey.key}
           />
         </td>
+        <td></td>
         <td
           ><input
             class="toggle toggle-xs"
@@ -120,6 +126,47 @@
               class="input input-xs w-16 input-bordered"
               type="text"
               bind:value={hotkey.key}
+            />
+          </td>
+          <td></td>
+          <td
+            ><input
+              class="toggle toggle-xs"
+              type="checkbox"
+              bind:checked={hotkey.modifiers.control}
+            /></td
+          >
+          <td
+            ><input
+              class="toggle toggle-xs"
+              type="checkbox"
+              bind:checked={hotkey.modifiers.shift}
+            /></td
+          >
+          <td
+            ><input
+              class="toggle toggle-xs"
+              type="checkbox"
+              bind:checked={hotkey.modifiers.alt}
+            /></td
+          >
+        </tr>
+      {/each}
+      {#each $personalHotkeys as hotkey, i}
+        <tr>
+          <td>Personal Hotkey {i + 1}</td>
+          <td>
+            <input
+              class="input input-xs w-16 input-bordered"
+              type="text"
+              bind:value={hotkey.key}
+            />
+          </td>
+          <td>
+            <input
+              class="input input-xs w-16 input-bordered"
+              type="text"
+              bind:value={hotkey.text}
             />
           </td>
           <td

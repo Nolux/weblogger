@@ -3,13 +3,14 @@
   import ThemeSelector from "../theme/themeSelector.svelte";
   import HotkeysSettings from "./HotkeysSettings.svelte";
   import ProjectSelector from "./ProjectSelector.svelte";
+  let dialog;
 </script>
 
 <li>
-  <a class="" onclick="settingsModal.showModal()">Settings</a>
+  <a class="" on:click={() => dialog.showModal()}>Settings</a>
 </li>
-<dialog id="settingsModal" class="modal">
-  <div class="modal-box relative">
+<dialog bind:this={dialog} id="settingsModal" class="modal">
+  <div class="modal-box max-w-[80vw] xl:max-w-[60vw] relative">
     <div class="modal-action absolute top-0 right-6">
       <form method="dialog">
         <button class="btn btn-ghost btn-xs">x</button>
