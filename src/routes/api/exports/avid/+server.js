@@ -8,6 +8,7 @@ export const GET = async ({ locals, url }) => {
   const localDate = url.searchParams.get("localDate");
   let filters = url.searchParams.get("filters");
   const afterTc = url.searchParams.get("afterTc");
+  const beforeTc = url.searchParams.get("beforeTc");
   const excludeFilter = url.searchParams.get("excludeFilter");
 
   if (!projectId || !localDate) {
@@ -25,6 +26,7 @@ export const GET = async ({ locals, url }) => {
     localDate,
     filters,
     afterTc,
+    beforeTc,
     excludeFilter,
   });
 

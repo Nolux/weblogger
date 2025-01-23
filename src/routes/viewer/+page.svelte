@@ -28,7 +28,8 @@
   let loading = false;
 
   let showTimecodePicker = false;
-  let inputTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
+  let inTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
+  let outTimecode = { hours: 23, minutes: 59, seconds: 59, frames: 24 };
 
   let excludeMode = $page.url.searchParams.get("excludeMode") || false;
 
@@ -40,13 +41,21 @@
     const res = await fetch(
       `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${
         showTimecodePicker
-          ? `&afterTc=${inputTimecode.hours
+          ? `&afterTc=${inTimecode.hours
               .toString()
-              .padStart(2, "0")}:${inputTimecode.minutes
+              .padStart(2, "0")}:${inTimecode.minutes
               .toString()
-              .padStart(2, "0")}:${inputTimecode.seconds
+              .padStart(2, "0")}:${inTimecode.seconds
               .toString()
-              .padStart(2, "0")}:${inputTimecode.frames
+              .padStart(2, "0")}:${inTimecode.frames
+              .toString()
+              .padStart(2, "0")}&beforeTc=${outTimecode.hours
+              .toString()
+              .padStart(2, "0")}:${outTimecode.minutes
+              .toString()
+              .padStart(2, "0")}:${outTimecode.seconds
+              .toString()
+              .padStart(2, "0")}:${outTimecode.frames
               .toString()
               .padStart(2, "0")}`
           : ""
@@ -68,27 +77,30 @@
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
-  function enforceMinMax(el, type) {
+  function enforceMinMax(el, obj, type) {
     const value = parseInt(el.target.value);
+    let returnValue = value;
 
     if (value === null || isNaN(value)) {
-      inputTimecode[type] = 0;
+      returnValue = 0;
       el.target.value = parseInt(0);
       return;
     }
 
     if (value < parseInt(el.target.min)) {
-      inputTimecode[type] = parseInt(el.target.min);
+      returnValue = parseInt(el.target.min);
       el.target.value = parseInt(el.target.min);
       return;
     }
     if (value > parseInt(el.target.max)) {
-      inputTimecode[type] = parseInt(el.target.max);
+      returnValue = parseInt(el.target.max);
       el.target.value = parseInt(el.target.max);
       return;
     }
-    inputTimecode[type] = value;
+    returnValue = value;
     el.target.value = value;
+
+    return returnValue;
   }
 </script>
 
@@ -176,13 +188,21 @@
               target="_blank"
               href={`/api/exports/pdf?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
-                  ? `&afterTc=${inputTimecode.hours
+                  ? `&afterTc=${inTimecode.hours
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .padStart(2, "0")}:${inTimecode.minutes
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .padStart(2, "0")}:${inTimecode.seconds
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.frames
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
                       .toString()
                       .padStart(2, "0")}`
                   : ""
@@ -194,13 +214,21 @@
               target="_blank"
               href={`/api/exports/text?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
-                  ? `&afterTc=${inputTimecode.hours
+                  ? `&afterTc=${inTimecode.hours
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .padStart(2, "0")}:${inTimecode.minutes
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .padStart(2, "0")}:${inTimecode.seconds
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.frames
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
                       .toString()
                       .padStart(2, "0")}`
                   : ""
@@ -222,13 +250,21 @@
               target="_blank"
               href={`/api/exports/avid?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
-                  ? `&afterTc=${inputTimecode.hours
+                  ? `&afterTc=${inTimecode.hours
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .padStart(2, "0")}:${inTimecode.minutes
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .padStart(2, "0")}:${inTimecode.seconds
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.frames
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
                       .toString()
                       .padStart(2, "0")}`
                   : ""
@@ -239,13 +275,21 @@
               target="_blank"
               href={`/api/exports/ppro?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
-                  ? `&afterTc=${inputTimecode.hours
+                  ? `&afterTc=${inTimecode.hours
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .padStart(2, "0")}:${inTimecode.minutes
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .padStart(2, "0")}:${inTimecode.seconds
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.frames
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
                       .toString()
                       .padStart(2, "0")}`
                   : ""
@@ -257,13 +301,21 @@
               target="_blank"
               href={`/api/exports/csv?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
-                  ? `&afterTc=${inputTimecode.hours
+                  ? `&afterTc=${inTimecode.hours
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.minutes
+                      .padStart(2, "0")}:${inTimecode.minutes
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.seconds
+                      .padStart(2, "0")}:${inTimecode.seconds
                       .toString()
-                      .padStart(2, "0")}:${inputTimecode.frames
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
                       .toString()
                       .padStart(2, "0")}`
                   : ""
@@ -283,13 +335,15 @@
     </div>
     {#if showTimecodePicker}
       <div
-        class="w-full grid grid-cols-5 gap-4 text-center border border-accent p-4"
+        class="w-full grid grid-cols-6 gap-4 text-center border border-accent p-4"
       >
+        <div></div>
         <div class="font-bold text-xl">Hours</div>
         <div class="font-bold text-xl">Minutes</div>
         <div class="font-bold text-xl">Seconds</div>
         <div class="font-bold text-xl">Frames</div>
         <div class="font-bold text-xl"></div>
+        <div>IN</div>
         <input
           type="number"
           min="0"
@@ -297,8 +351,12 @@
           id="hours"
           class="input input-bordered"
           placeholder="Hours"
-          on:keyup={(e) => enforceMinMax(e, "hours")}
-          on:change={(e) => enforceMinMax(e, "hours")}
+          on:keyup={(e) => {
+            inTimecode.hours = enforceMinMax(e, inTimecode, "hours");
+          }}
+          on:change={(e) => {
+            inTimecode.hours = enforceMinMax(e, inTimecode, "hours");
+          }}
           value="0"
         />
         <input
@@ -308,8 +366,12 @@
           id="minutes"
           class="input input-bordered"
           placeholder="minutes"
-          on:keyup={(e) => enforceMinMax(e, "minutes")}
-          on:change={(e) => enforceMinMax(e, "minutes")}
+          on:keyup={(e) => {
+            inTimecode.minutes = enforceMinMax(e, inTimecode, "minutes");
+          }}
+          on:change={(e) => {
+            inTimecode.minutes = enforceMinMax(e, inTimecode, "minutes");
+          }}
           value="0"
         />
         <input
@@ -319,8 +381,12 @@
           id="seconds"
           class="input input-bordered"
           placeholder="seconds"
-          on:keyup={(e) => enforceMinMax(e, "seconds")}
-          on:change={(e) => enforceMinMax(e, "seconds")}
+          on:keyup={(e) => {
+            inTimecode.seconds = enforceMinMax(e, inTimecode, "seconds");
+          }}
+          on:change={(e) => {
+            inTimecode.seconds = enforceMinMax(e, inTimecode, "seconds");
+          }}
           value="0"
         />
         <input
@@ -330,9 +396,75 @@
           id="frames"
           class="input input-bordered"
           placeholder="frames"
-          on:keyup={(e) => enforceMinMax(e, "frames")}
-          on:change={(e) => enforceMinMax(e, "frames")}
+          on:keyup={(e) => {
+            inTimecode.frames = enforceMinMax(e, inTimecode, "frames");
+          }}
+          on:change={(e) => {
+            inTimecode.frames = enforceMinMax(e, inTimecode, "frames");
+          }}
           value="0"
+        />
+        <div></div>
+        <div>OUT</div>
+        <input
+          type="number"
+          min="0"
+          max="23"
+          id="hours"
+          class="input input-bordered"
+          placeholder="Hours"
+          on:keyup={(e) => {
+            outTimecode.hours = enforceMinMax(e, outTimecode, "hours");
+          }}
+          on:change={(e) => {
+            outTimecode.hours = enforceMinMax(e, outTimecode, "hours");
+          }}
+          value="23"
+        />
+        <input
+          type="number"
+          max="59"
+          min="0"
+          id="minutes"
+          class="input input-bordered"
+          placeholder="minutes"
+          on:keyup={(e) => {
+            outTimecode.minutes = enforceMinMax(e, outTimecode, "minutes");
+          }}
+          on:change={(e) => {
+            outTimecode.minutes = enforceMinMax(e, outTimecode, "minutes");
+          }}
+          value="59"
+        />
+        <input
+          type="number"
+          max="59"
+          min="0"
+          id="seconds"
+          class="input input-bordered"
+          placeholder="seconds"
+          on:keyup={(e) => {
+            outTimecode.seconds = enforceMinMax(e, outTimecode, "seconds");
+          }}
+          on:change={(e) => {
+            outTimecode.seconds = enforceMinMax(e, outTimecode, "seconds");
+          }}
+          value="59"
+        />
+        <input
+          type="number"
+          max="24"
+          min="0"
+          id="frames"
+          class="input input-bordered"
+          placeholder="frames"
+          on:keyup={(e) => {
+            outTimecode.frames = enforceMinMax(e, outTimecode, "frames");
+          }}
+          on:change={(e) => {
+            outTimecode.frames = enforceMinMax(e, outTimecode, "frames");
+          }}
+          value="24"
         />
         <button class="btn btn-success" on:click={getNewData}>
           {#if loading}<span class="loading loading-spinner loading-lg"
