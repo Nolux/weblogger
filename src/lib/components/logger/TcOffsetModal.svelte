@@ -2,15 +2,20 @@
   import Icon from "@iconify/svelte";
 
   import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
+
+  let dialog;
 </script>
 
 <div class="tooltip tooltip-left" data-tip="Timecode Offset Settings">
-  <button class="btn btn-ghost z-10" onclick="tcOffsetModal.showModal()"
-    ><Icon icon="mdi:cog" /></button
+  <button
+    class="btn btn-ghost z-10"
+    on:click={() => {
+      dialog.showModal();
+    }}><Icon icon="mdi:cog" /></button
   >
 </div>
 
-<dialog id="tcOffsetModal" class="modal">
+<dialog id="tcOffsetModal" bind:this={dialog} class="modal">
   <div class="modal-box flex flex-col gap-4 relative">
     <div class="modal-action absolute top-0 right-6">
       <form method="dialog">
