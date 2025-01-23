@@ -77,30 +77,29 @@
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
-  function enforceMinMax(el, obj, type) {
+  function enforceMinMax(el) {
     const value = parseInt(el.target.value);
+    console.log(value);
     let returnValue = value;
 
     if (value === null || isNaN(value)) {
       returnValue = 0;
-      el.target.value = parseInt(0);
-      return;
-    }
-
-    if (value < parseInt(el.target.min)) {
+      el.target.value = 0;
+      return returnValue;
+    } else if (value < parseInt(el.target.min)) {
       returnValue = parseInt(el.target.min);
       el.target.value = parseInt(el.target.min);
-      return;
-    }
-    if (value > parseInt(el.target.max)) {
+      return returnValue;
+    } else if (value > parseInt(el.target.max)) {
       returnValue = parseInt(el.target.max);
       el.target.value = parseInt(el.target.max);
-      return;
+      return returnValue;
+    } else {
+      el.target.value = value;
     }
-    returnValue = value;
-    el.target.value = value;
 
-    return returnValue;
+    console.log(returnValue);
+    return returnValue || 0;
   }
 </script>
 
@@ -352,10 +351,7 @@
           class="input input-bordered"
           placeholder="Hours"
           on:keyup={(e) => {
-            inTimecode.hours = enforceMinMax(e, inTimecode, "hours");
-          }}
-          on:change={(e) => {
-            inTimecode.hours = enforceMinMax(e, inTimecode, "hours");
+            inTimecode.hours = enforceMinMax(e);
           }}
           value="0"
         />
