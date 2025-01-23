@@ -25,6 +25,7 @@
 
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
+  import PersonalHotkeys from "$lib/components/hotkeys/PersonalHotkeys.svelte";
   dayjs.extend(relativeTime);
 
   let timecode = "00:00:00:00";
@@ -282,6 +283,13 @@
       loggerInput.set($loggerInput + hotkey);
     }}
     markerColors={currentProject.markerColors}
+    {setTimecodeToNow}
+    {inTimecode}
+  />
+  <PersonalHotkeys
+    replaceBody={(hotkey) => {
+      loggerInput.set($loggerInput + hotkey);
+    }}
     {setTimecodeToNow}
     {inTimecode}
   />

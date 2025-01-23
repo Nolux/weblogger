@@ -15,6 +15,7 @@
 
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
+  import PersonalHotkeys from "$lib/components/hotkeys/PersonalHotkeys.svelte";
 
   $: logs = data.logs;
   $: user = data.user;
@@ -250,6 +251,12 @@
     }}
     markerColors={currentProject.markerColors}
     {submitLog}
+  />
+  <PersonalHotkeys
+    replaceBody={(hotkey) => {
+      postLoggerInput.set($postLoggerInput + hotkey);
+      textarea.select();
+    }}
   />
   <table class="table">
     <thead>
