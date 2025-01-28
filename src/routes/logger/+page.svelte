@@ -135,7 +135,9 @@
     };
     loggerInput.set("");
     submittingLog = false;
-    textarea.select();
+    setTimeout(() => {
+      textarea.select();
+    }, 50);
   };
 
   const setTimecodeToNow = (forced = false) => {
