@@ -135,6 +135,7 @@
     };
     loggerInput.set("");
     submittingLog = false;
+    textarea.select();
   };
 
   const setTimecodeToNow = (forced = false) => {
