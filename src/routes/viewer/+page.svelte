@@ -211,6 +211,32 @@
             <a
               class="btn btn-xs"
               target="_blank"
+              href={`/api/exports/docx?localDate=${selectedDate}&filters=${filters.join(",")}${
+                showTimecodePicker
+                  ? `&afterTc=${inTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${inTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${inTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${inTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}&beforeTc=${outTimecode.hours
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.minutes
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.seconds
+                      .toString()
+                      .padStart(2, "0")}:${outTimecode.frames
+                      .toString()
+                      .padStart(2, "0")}`
+                  : ""
+              }&excludeFilter=${excludeMode}`}
+              ><Icon icon="mdi:file-text"></Icon>Word Doc</a
+            >
+            <a
+              class="btn btn-xs"
+              target="_blank"
               href={`/api/exports/text?localDate=${selectedDate}&filters=${filters.join(",")}${
                 showTimecodePicker
                   ? `&afterTc=${inTimecode.hours

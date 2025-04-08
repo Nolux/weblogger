@@ -1,6 +1,6 @@
 {
   "name": "weblogger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",
@@ -48,6 +48,7 @@
     "@tailwindcss/typography": "^0.5.12",
     "bcryptjs": "^2.4.3",
     "dayjs": "^1.11.10",
+    "docx": "^9.3.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
