@@ -111,8 +111,14 @@
       </label>
       <label class="w-full flex justify-between items-center gap-4">
         <div class="w-1/2">File type:</div>
-        <select class="select grow select-accent file-input-accent">
-          <option value="avid">Avid Marker file</option>
+        <select
+          id="fileType"
+          name="fileType"
+          class="select grow select-accent file-input-accent"
+        >
+          <option value="avid-marker">Avid Marker file</option>
+          <option value="avid-script">Avid Script file</option>
+          <option value="avid-subcap" disabled>Avid Subcap file</option>
         </select>
       </label>
       <button class="btn" type="submit"
