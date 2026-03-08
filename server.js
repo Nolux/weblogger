@@ -25,11 +25,12 @@ io.on("connection", (socket) => {
 });
 
 // Stats
-generateStats();
+// TODO: fix removed stats
+// generateStats();
 
-cron.schedule("*/10 * * * *", () => {
-  generateStats();
-});
+//cron.schedule("*/10 * * * *", () => {
+//  generateStats();
+//});
 
 // SvelteKit should handle everything else using Express middleware
 // https://github.com/sveltejs/kit/tree/master/packages/adapter-node#custom-server

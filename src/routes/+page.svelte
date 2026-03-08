@@ -6,10 +6,8 @@
   dayjs.extend(relativeTime);
 
   $: user = data.user;
-  $: stats = data.stats;
-  $: userAgent = data.userAgent?.toLowerCase();
 
-  $: console.log(stats);
+  $: userAgent = data.userAgent?.toLowerCase();
 
   $: isSafari = userAgent?.indexOf("safari/") > -1;
 </script>
@@ -19,96 +17,32 @@
     {user ? `Welcome back ${user.firstName}!` : "Welcome to Weblogger"}
   </h1>
   {#if user}
-    <div class="w-full border border-info stats">
-      <div class="stat place-items-center">
-        <div class="stat-title">Total Logs</div>
-        <div class="stat-value text-info">{stats.projectTotalLogs}</div>
-        <div class="stat-desc">
-          Average {Math.floor(stats.projectTotalLogs / stats.projectTotalDays)}
-          per day
-        </div>
-      </div>
-      <div class="stat place-items-center">
-        <div class="stat-title">Total Days logged</div>
-        <div class="stat-value text-info">{stats.projectTotalDays}</div>
-        <div class="stat-desc">
-          Stats updated {dayjs(stats.updatedAt).fromNow()}
-        </div>
-      </div>
-      <div class="stat place-items-center">
-        <div class="stat-title">Total Characters Written</div>
-        <div class="stat-value text-info">{stats.projectTotalCharacters}</div>
-        <div class="stat-desc">
-          Average {Math.floor(
-            stats.projectTotalCharacters / stats.projectTotalLogs
-          )}
-          per log
-        </div>
-      </div>
-    </div>
-    <div class="w-full border border-info stats">
-      <div class="stat place-items-center">
-        <div class="stat-title text-xl">Total logs written today</div>
-        <div class="stat-value text-info text-6xl">{stats.todayLogs}</div>
-        <div class="stat-desc">
-          {stats.todayLogs >
-          Math.floor(stats.projectTotalLogs / stats.projectTotalDays)
-            ? "More then average"
-            : "Less then average, keep logging!"}
-        </div>
-      </div>
-      <div class="stat place-items-center">
-        <div class="stat-title text-xl">Total characters written today</div>
-        <div class="stat-value text-info text-6xl">{stats.todayCharacters}</div>
-        <div class="stat-desc">
-          {stats.todayCharacters >
-          Math.floor(stats.projectTodayCharacters / stats.projectTotalDays)
-            ? "More then average"
-            : "Less then average, keep logging!"}
-        </div>
-      </div>
-    </div>
-    <div class="divider divider-info mx-10"></div>
     <h2 class="text-xl text-center">Select module</h2>
     <div
-      class="grid grid-cols-1 lg:grid-cols-2 justify-around items-stretch gap-4"
+      class="grid grid-cols-1 gap-4 justify-around items-stretch lg:grid-cols-2"
     >
       <a href="/logger" class="btn btn-outline btn-primary btn-lg grow">
-        <div class="text-xl lg:text-2xl font-bold">LOGGER</div>
+        <div class="text-xl font-bold lg:text-2xl">LOGGER</div>
       </a>
       <a href="/postlogger" class="btn btn-outline btn-secondary btn-lg grow">
-        <div class="text-xl lg:text-2xl font-bold">POST LOGGER</div>
+        <div class="text-xl font-bold lg:text-2xl">POST LOGGER</div>
       </a>
       <a href="/viewer" class="btn btn-outline btn-accent btn-lg grow">
-        <div class="text-xl lg:text-2xl font-bold">VIEWER</div>
+        <div class="text-xl font-bold lg:text-2xl">VIEWER</div>
       </a>
       <a href="/live" class="btn btn-outline btn-error btn-lg grow">
-        <div class="text-xl lg:text-2xl font-bold">LIVE</div>
+        <div class="text-xl font-bold lg:text-2xl">LIVE</div>
       </a>
     </div>
   {:else}
     <div class="relative">
-      <div class="w-full border border-info stats">
-        <div class="stat place-items-center">
-          <div class="stat-title">Total logs</div>
-          <div class="stat-value text-info">{stats.allTotalLogs}</div>
-        </div>
-        <div class="stat place-items-center">
-          <div class="stat-title">Total characters written</div>
-          <div class="stat-value text-info">{stats.allTotalCharacters}</div>
-        </div>
-        <div class="stat place-items-center">
-          <div class="stat-title">Total days</div>
-          <div class="stat-value text-info">{stats.allDaysLogged}</div>
-        </div>
-      </div>
       <a href="/login" class="">
         <video autoplay muted playsinline id="bgVideo">
           <source src={`video/bgvideo.${isSafari ? "mov" : "webm"}`} />
         </video>
       </a>
       <div
-        class="absolute top-1/2 opacity-50 hover:opacity-100 w-full flex flex-col lg:flex-row justify-around items-stretch gap-4"
+        class="flex absolute top-1/2 flex-col gap-4 justify-around items-stretch w-full opacity-50 hover:opacity-100 lg:flex-row"
       ></div>
     </div>
   {/if}
