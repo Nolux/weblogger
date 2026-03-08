@@ -25,24 +25,24 @@
     type="checkbox"
     class="drawer-toggle"
   />
-  <div class="drawer-content flex flex-col relative">
+  <div class="flex relative flex-col drawer-content">
     <label
       for="sidebar"
       aria-label="close sidebar"
       class="drawer-overlay lg:hidden"
     ></label>
 
-    <div class="grow overflow-scroll no-scrollbar p-4">
-      <div class="lg:hidden flex items-center justify-between pb-4 select-none">
-        <label for="sidebar" class="btn btn-ghost drawer-button lg:hidden z-40">
+    <div class="overflow-scroll p-4 grow no-scrollbar">
+      <div class="flex justify-between items-center pb-4 select-none lg:hidden">
+        <label for="sidebar" class="z-40 btn btn-ghost drawer-button lg:hidden">
           <Icon icon="mdi-light:menu" width="34"></Icon></label
         >
-        <a href="/" class="font-bold text-3xl"
+        <a href="/" class="text-3xl font-bold"
           >Weblogger <span class="text-xs">2.0</span></a
         >
         {#if user}
           <div class="avatar placeholder aspect-square">
-            <div class="bg-info text-info-content rounded-full w-12">
+            <div class="w-12 rounded-full bg-info text-info-content">
               <span class="text-xl"
                 >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
               >
@@ -53,21 +53,21 @@
       <slot />
     </div>
   </div>
-  <div class="drawer-side z-40 border-r border-base-300">
+  <div class="z-40 border-r drawer-side border-base-300">
     <label for="sidebar" aria-label="close sidebar" class="drawer-overlay"
     ></label>
     <ul
-      class="menu p-4 w-80 h-full bg-base-200 text-base-content flex flex-col gap-4 lg:justify-between lg:text-xl"
+      class="flex flex-col gap-4 p-4 w-80 h-full menu bg-base-200 text-base-content lg:justify-between lg:text-xl"
     >
       <li class="text-3xl">
         <a class="font-bold" on:click={gotoLink} href="/"
           >Weblogger <span class="text-xs">2.0</span></a
         >
       </li>
-      <div class="grow flex flex-col gap-8 lg:gap-10">
+      <div class="flex flex-col gap-8 grow lg:gap-10">
         {#if user}
           <div class="justify-self-start">
-            <li class="text-md p-4 select-none">
+            <li class="p-4 select-none text-md">
               Project: {currentProject.name}
             </li>
             <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
@@ -84,10 +84,6 @@
               <li>
                 <a on:click={gotoLink} href="/controller">Project Controller</a>
               </li>
-              <li>
-                <a on:click={gotoLink} href="/controller/stats">Project Stats</a
-                >
-              </li>
             {/if}
           </div>
         {:else}
@@ -101,9 +97,9 @@
       </div>
       {#if user}
         <div>
-          <div class="flex items-center justify-between w-full pb-4">
+          <div class="flex justify-between items-center pb-4 w-full">
             <div class="avatar placeholder">
-              <div class="bg-info text-info-content rounded-full w-14">
+              <div class="w-14 rounded-full bg-info text-info-content">
                 <span class="text-3xl"
                   >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
                 >
@@ -115,7 +111,7 @@
               </a>
             </div>
             <div>
-              <a class="btn btn-ghost rounded-full" href="/login/signout">
+              <a class="rounded-full btn btn-ghost" href="/login/signout">
                 <Icon
                   icon="mdi:exit-to-app"
                   width="24"
