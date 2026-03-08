@@ -1,3 +1,4 @@
+import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
 
@@ -22,7 +23,10 @@ const webSocketServer = {
 };
 
 export default defineConfig({
-  plugins: [sveltekit(), webSocketServer],
+  plugins: [sentrySvelteKit({
+    org: "selbek-produksjoner-as",
+    project: "weblogger"
+  }), sveltekit(), webSocketServer],
   test: {
     globals: true,
     environment: "happy-dom",

@@ -1,10 +1,21 @@
+import {sequence} from "@sveltejs/kit/hooks";
+import * as Sentry from "@sentry/sveltekit";
 import { redirect } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
 import { env } from "$env/dynamic/private";
 import { db } from "$lib/db.js";
 
-export async function handle({ event, resolve }) {
+Sentry.init({
+    dsn: "https://6ff730d0e1c9e8e48ee1103159eb5434@o4509541128601600.ingest.de.sentry.io/4511008257278032",
+    tracesSampleRate: 1,
+    enableLogs: true,
+    sendDefaultPii: true
+})
+
+export const handleError = Sentry.handleErrorWithSentry();
+
+export const handle = sequence(Sentry.sentryHandle(), async function _handle({ event, resolve }) {
   const requestedPath = event.url.pathname;
   const { headers } = event.request;
 
@@ -137,4 +148,4 @@ export async function handle({ event, resolve }) {
       return html.replace('data-theme=""', `data-theme="${theme}"`);
     },
   });
-}
+});
