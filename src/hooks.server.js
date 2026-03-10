@@ -10,7 +10,8 @@ Sentry.init({
     dsn: "https://6ff730d0e1c9e8e48ee1103159eb5434@o4509541128601600.ingest.de.sentry.io/4511008257278032",
     tracesSampleRate: 1,
     enableLogs: true,
-    sendDefaultPii: true
+    sendDefaultPii: true,
+    environment: env.NODE_ENV || "production",
 })
 
 export const handleError = Sentry.handleErrorWithSentry();
