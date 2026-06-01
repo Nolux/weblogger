@@ -1,30 +1,31 @@
 <script>
+  import { run, preventDefault } from 'svelte/legacy';
+
   import { enhance, applyAction } from "$app/forms";
 
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
-  export let data;
 
-  $: projects = data.projects;
-  $: users = data.users;
 
-  export let form;
+  let { data, form = $bindable() } = $props();
 
-  $: {
+
+  let loading = $state();
+
+  let copied = $state(false);
+  let confirm = $state(false);
+
+  let selectedTab = $state(0);
+  let projects = $derived(data.projects);
+  let users = $derived(data.users);
+  run(() => {
     if (form?.error) {
       AlertsStore.addAlert(form?.errorMsg, "error");
     }
     if (form?.success) {
       AlertsStore.addAlert(form?.success, "success");
     }
-  }
-
-  let loading;
-
-  let copied = false;
-  let confirm = false;
-
-  let selectedTab = 0;
+  });
 </script>
 
 <div class="relative flex flex-col gap-8">
@@ -33,7 +34,7 @@
   </h1>
   <div role="tablist" class="tabs tabs-bordered w-full flex p-8">
     <input
-      on:click={() => {
+      onclick={() => {
         selectedTab = 0;
       }}
       checked={selectedTab == 0}
@@ -43,7 +44,7 @@
     />
     <input
       checked={selectedTab == 1}
-      on:click={() => {
+      onclick={() => {
         selectedTab = 1;
       }}
       type="radio"
@@ -139,14 +140,14 @@
           </label>
           <button
             type={"submit"}
-            on:click|preventDefault={(e) => {
+            onclick={preventDefault((e) => {
               if (confirm) {
                 confirm = false;
                 e.currentTarget.form.submit();
               } else {
                 confirm = !confirm;
               }
-            }}
+            })}
             class={`btn w-1/2 ${confirm ? "btn-error" : "btn-info"} max-w-xs m-auto`}
             disabled={loading}
             >{#if loading}<span class="loading loading-spinner loading-md"
@@ -324,7 +325,7 @@
             <div
               class="tooltip"
               data-tip={copied ? "Copied" : "Click to copy"}
-              on:click={() => {
+              onclick={() => {
                 copied = true;
                 navigator.clipboard.writeText(form.registerLink);
                 setTimeout(() => {

@@ -1,37 +1,38 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import Icon from "@iconify/svelte";
   import { enhance, applyAction } from "$app/forms";
 
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   import { fade } from "svelte/transition";
 
-  export let data;
 
-  $: project = data.project;
 
-  export let form;
+  let { data, form } = $props();
 
-  let loading = false;
+  let loading = $state(false);
 
-  $: {
-    if (form?.error) {
-      AlertsStore.addAlert(form?.error, "error");
-    }
-  }
 
-  let input = {
+  let input = $state({
     email: "",
     password: "",
     firstName: "",
     lastName: "",
-  };
+  });
 
-  let passwordFocus = false;
+  let passwordFocus = $state(false);
 
-  $: atleastEightChars = input.password.length > 7;
-  $: upperCase = input.password.match(/(?=(.*[A-Z]){1,})/);
-  $: lowerCase = input.password.match(/(?=(.*[a-z]){1,})/);
-  $: number = input.password.match(/(?=(.*[\d]){1,})/);
+  let project = $derived(data.project);
+  run(() => {
+    if (form?.error) {
+      AlertsStore.addAlert(form?.error, "error");
+    }
+  });
+  let atleastEightChars = $derived(input.password.length > 7);
+  let upperCase = $derived(input.password.match(/(?=(.*[A-Z]){1,})/));
+  let lowerCase = $derived(input.password.match(/(?=(.*[a-z]){1,})/));
+  let number = $derived(input.password.match(/(?=(.*[\d]){1,})/));
 </script>
 
 <section>
@@ -72,10 +73,10 @@
       <Icon icon="mdi-light:lock" width="24" height="24" style="fill-current"
       ></Icon>
       <input
-        on:focus={() => {
+        onfocus={() => {
           passwordFocus = true;
         }}
-        on:blur={() => {
+        onblur={() => {
           passwordFocus = false;
         }}
         bind:value={input.password}
@@ -92,28 +93,28 @@
         ><input
           type="checkbox"
           class="checkbox checkbox-xs"
-          bind:checked={atleastEightChars}
+          checked={atleastEightChars}
         />At least 8 characters</span
       >
       <span class="flex justify-between items-center" transition:fade
         ><input
           type="checkbox"
           class="checkbox checkbox-xs"
-          bind:checked={upperCase}
+          checked={!!upperCase}
         />One uppercase letter</span
       >
       <span class="flex justify-between items-center" transition:fade
         ><input
           type="checkbox"
           class="checkbox checkbox-xs"
-          bind:checked={lowerCase}
+          checked={!!lowerCase}
         />One lowercase letter</span
       >
       <span class="flex justify-between items-center" transition:fade
         ><input
           type="checkbox"
           class="checkbox checkbox-xs"
-          bind:checked={number}
+          checked={!!number}
         />One Number</span
       >
     {/if}

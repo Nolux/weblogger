@@ -1,18 +1,20 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import Icon from "@iconify/svelte";
 
   import { enhance } from "$app/forms";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
-  export let form;
+  let { form } = $props();
 
-  let loading = false;
+  let loading = $state(false);
 
-  $: {
+  run(() => {
     if (form?.error) {
       AlertsStore.addAlert(form?.error, "error");
     }
-  }
+  });
 </script>
 
 <section>

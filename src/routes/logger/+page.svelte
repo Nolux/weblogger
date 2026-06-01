@@ -1,5 +1,4 @@
 <script>
-  export let data;
   import { socket } from "$lib/socket.js";
 
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
@@ -14,9 +13,6 @@
     timecodeHotkey,
   } from "$lib/stores/hotkeysStore.js";
 
-  $: logs = data.logs;
-  $: user = data.user;
-  $: currentProject = data.currentProject;
 
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
@@ -26,22 +22,23 @@
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   import PersonalHotkeys from "$lib/components/hotkeys/PersonalHotkeys.svelte";
+  let { data } = $props();
   dayjs.extend(relativeTime);
 
-  let timecode = "00:00:00:00";
-  let inTimecode = "XX:XX:XX:XX";
-  let submittingLog = false;
-  let textarea;
+  let timecode = $state("00:00:00:00");
+  let inTimecode = $state("XX:XX:XX:XX");
+  let submittingLog = $state(false);
+  let textarea = $state();
 
   let now = dayjs()
     .add($tcOffsets.hours, "hour")
     .add($tcOffsets.minutes, "minute")
     .add($tcOffsets.seconds, "second");
 
-  let input = {
+  let input = $state({
     timecode: {},
     localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
-  };
+  });
 
   let loggerInput = persisted("loggerInput", "");
 
@@ -154,6 +151,9 @@
           .padStart(2, "0");
     }
   };
+  let logs = $derived(data.logs);
+  let user = $derived(data.user);
+  let currentProject = $derived(data.currentProject);
 </script>
 
 <div class="flex flex-col gap-8">
@@ -208,7 +208,7 @@
             alt: $timecodeHotkey.modifiers.alt,
             code: $timecodeHotkey.key,
           }}
-          on:click={() => {
+          onclick={() => {
             setTimecodeToNow(true);
           }}
         >
@@ -225,7 +225,7 @@
             alt: $submitHotkey.modifiers.alt,
             code: $submitHotkey.key,
           }}
-          on:click={() => {
+          onclick={() => {
             submitLog();
           }}
         >
@@ -252,7 +252,7 @@
             alt: $resetHotkey.modifiers.alt,
             code: $resetHotkey.key,
           }}
-          on:click={() => {
+          onclick={() => {
             let now = dayjs()
               .add($tcOffsets.hours, "hour")
               .add($tcOffsets.minutes, "minute")

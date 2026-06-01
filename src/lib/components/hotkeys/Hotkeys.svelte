@@ -1,10 +1,12 @@
 <script>
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
   import { hotkeys } from "$lib/stores/hotkeysStore.js";
-  export let replaceBody;
-  export let markerColors = [];
-  export let inTimecode;
-  export let setTimecodeToNow;
+  let {
+    replaceBody,
+    markerColors = [],
+    inTimecode,
+    setTimecodeToNow
+  } = $props();
 </script>
 
 <div class={`w-full grid gap-2 grid-cols-4 lg:grid-cols-8 justify-around`}>
@@ -19,7 +21,7 @@
             alt: hotkey.modifiers.alt,
             code: hotkey.key,
           }}
-          on:click={() => {
+          onclick={() => {
             if (inTimecode == "XX:XX:XX:XX") {
               setTimecodeToNow();
             }

@@ -2,7 +2,7 @@
   import { goto, invalidateAll } from "$app/navigation";
   import { page } from "$app/stores";
 
-  export let user;
+  let { user = $bindable() } = $props();
 
   const submitChangeProject = async (projectId) => {
     const response = await fetch("/api/user/selectProject", {
@@ -19,7 +19,7 @@
   <select
     class="select select-bordered w-full max-w-xs"
     bind:value={user.selectedProjectId}
-    on:change={(e) => {
+    onchange={(e) => {
       submitChangeProject(e.target.value);
     }}
   >

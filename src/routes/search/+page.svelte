@@ -1,4 +1,6 @@
 <script>
+  import { preventDefault } from 'svelte/legacy';
+
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
 
@@ -8,30 +10,30 @@
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  let searchInput = $page.url.searchParams.get("query") || "";
+  let searchInput = $state($page.url.searchParams.get("query") || "");
 
-  $: logs = data.logs || [];
-  $: pages = data.page;
-  $: user = data.user;
-  $: projectDays = data.projectDays;
-  $: selectedDate = data.selectedDate;
-  $: perPage = data.perPage;
+  let logs = $derived(data.logs || []);
+  let pages = $derived(data.page);
+  let user = $derived(data.user);
+  let projectDays = $derived(data.projectDays);
+  let selectedDate = $derived(data.selectedDate);
+  let perPage = $derived(data.perPage);
   let asc = true;
 
-  let currentPage = 0;
-  let filters = $page.url.searchParams.get("filters") || [];
+  let currentPage = $state(0);
+  let filters = $state($page.url.searchParams.get("filters") || []);
   if (filters != "") {
     filters = filters.split(" ");
   }
-  let filterColors = [];
+  let filterColors = $state([]);
 
-  let loading = false;
-  let firstSearchDone = false;
+  let loading = $state(false);
+  let firstSearchDone = $state(false);
 
-  let dateSelectorOpen = false;
-  let isOpen = false;
+  let dateSelectorOpen = $state(false);
+  let isOpen = $state(false);
   const toggleDatePicker = () => (isOpen = !isOpen);
 
   const getNewData = async () => {
@@ -63,11 +65,11 @@
     <div class="flex gap-4 items-stretch">
       <form
         class="grow grid gap-4"
-        on:submit|preventDefault={() => {
+        onsubmit={preventDefault(() => {
           currentPage = 0;
           pages = { page: 0, totalPages: 0, totalCount: 0 };
           getNewData();
-        }}
+        })}
       >
         <label class="input input-bordered flex items-center gap-2">
           <Icon icon="mdi-search"></Icon>
@@ -104,14 +106,14 @@
                   class="h-full input input-accent w-full text-4xl input-lg text-center"
                   type="text"
                   placeholder="Select date"
-                  on:click={toggleDatePicker}
+                  onclick={toggleDatePicker}
                   bind:value={selectedDate}
                 />
               </div>
             </DatePicker>
             <button
               class="btn btn-error h-full"
-              on:click={() => {
+              onclick={() => {
                 dateSelectorOpen = false;
                 selectedDate = null;
                 currentPage = 0;
@@ -122,7 +124,7 @@
         {:else}
           <button
             class="btn btn-warning h-full"
-            on:click={() => {
+            onclick={() => {
               dateSelectorOpen = true;
               console.log(selectedDate);
             }}><Icon icon="mdi-date-range"></Icon></button
@@ -152,7 +154,7 @@
       {#if filters.length > 0}
         <div
           class="badge badge-warning hover:brightness-50 cursor-pointer"
-          on:click={() => {
+          onclick={() => {
             filters = [];
             currentPage = 0;
             getNewData();
@@ -211,7 +213,7 @@
                       data-tip="Click to apply filter"
                     >
                       <div
-                        on:click={() => {
+                        onclick={() => {
                           let newFilters = filters;
                           if (!filters.includes(tag)) {
                             newFilters.push(tag);
@@ -282,7 +284,7 @@
                 {#if !log.deleted}
                   <button
                     class="btn {log.confirmDelete ? 'btn-error' : ''}"
-                    on:click={async () => {
+                    onclick={async () => {
                       if (!log.confirmDelete) {
                         log.confirmDelete = true;
                         setTimeout(() => {
@@ -300,7 +302,7 @@
                   >{:else}
                   <button
                     class="btn {log.confirmRestore ? 'btn-success' : ''}"
-                    on:click={async () => {
+                    onclick={async () => {
                       if (!log.confirmRestore) {
                         log.confirmRestore = true;
                         setTimeout(() => {
@@ -330,7 +332,7 @@
               class="{pages.totalPages > 1
                 ? 'join-item'
                 : ''} btn {currentPage == i ? 'btn-active' : ''}"
-              on:click={() => {
+              onclick={() => {
                 currentPage = i;
                 getNewData();
               }}>{i + 1}</button

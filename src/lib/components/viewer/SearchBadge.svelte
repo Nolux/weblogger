@@ -1,10 +1,10 @@
 <script>
   import { AlertsStore } from "$lib/stores/alertsStore";
   import Icon from "@iconify/svelte";
-  export let callback;
+  let { callback } = $props();
 
-  let searchInput = "";
-  let searchOpen = false;
+  let searchInput = $state("");
+  let searchOpen = $state(false);
 </script>
 
 {#if searchOpen}
@@ -18,7 +18,7 @@
     />
     <button
       class="btn btn-xs btn-warning"
-      on:click={() => {
+      onclick={() => {
         if (searchInput == "") {
           AlertsStore.addAlert("No search input", "warning");
         } else {
@@ -36,7 +36,7 @@
     <div
       class="tooltip tooltip-left flex items-center badge badge-warning hover:brightness-75 cursor-pointer"
       data-tip="Search for filter"
-      on:click={() => {
+      onclick={() => {
         searchOpen = true;
       }}
     >
