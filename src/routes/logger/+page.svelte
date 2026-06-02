@@ -151,9 +151,10 @@
           .padStart(2, "0");
     }
   };
-  let logs = $derived(data.logs);
+  let logs = $state(data.logs);
   let user = $derived(data.user);
   let currentProject = $derived(data.currentProject);
+  $effect(() => { logs = data.logs; });
 </script>
 
 <div class="flex flex-col gap-8">

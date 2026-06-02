@@ -12,9 +12,10 @@
 
   let holder = $state();
   let fullscreen = $state(false);
-  let logs = $derived(data.logs);
+  let logs = $state(data.logs);
   let user = $derived(data.user);
   let currentProject = $derived(data.currentProject);
+  $effect(() => { logs = data.logs; });
 
   socket.emit("joinProject", data.currentProject.id);
 
