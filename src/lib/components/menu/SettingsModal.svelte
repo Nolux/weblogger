@@ -1,13 +1,13 @@
 <script>
-  export let user;
   import ThemeSelector from "../theme/themeSelector.svelte";
   import HotkeysSettings from "./HotkeysSettings.svelte";
   import ProjectSelector from "./ProjectSelector.svelte";
-  let dialog;
+  let { user } = $props();
+  let dialog = $state();
 </script>
 
 <li>
-  <a class="" on:click={() => dialog.showModal()}>Settings</a>
+  <a class="" onclick={() => dialog.showModal()}>Settings</a>
 </li>
 <dialog bind:this={dialog} id="settingsModal" class="modal">
   <div class="modal-box max-w-[80vw] xl:max-w-[60vw] relative">

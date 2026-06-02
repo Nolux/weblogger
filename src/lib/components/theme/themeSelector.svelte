@@ -19,7 +19,7 @@
     "dim",
   ];
 
-  let current_theme = "";
+  let current_theme = $state("");
 
   onMount(() => {
     if (typeof window !== "undefined") {
@@ -53,7 +53,7 @@
   <select
     bind:value={current_theme}
     class="select select-bordered w-full max-w-xs"
-    on:change={(e) => set_theme(e)}
+    onchange={(e) => set_theme(e)}
   >
     {#each themes as theme}
       <option value={theme}>{theme}</option>

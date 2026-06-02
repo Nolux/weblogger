@@ -1,12 +1,14 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import Icon from "@iconify/svelte";
 
   import { enhance } from "$app/forms";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
-  export let form;
+  let { form } = $props();
 
-  $: {
+  run(() => {
     if (form?.error) {
       AlertsStore.addAlert(form?.error, "error");
     }
@@ -16,7 +18,7 @@
         "success"
       );
     }
-  }
+  });
 </script>
 
 <section>

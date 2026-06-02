@@ -1,4 +1,6 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import { DatePicker } from "@svelte-plugins/datepicker";
   import { enhance, applyAction } from "$app/forms";
   import dayjs from "dayjs";
@@ -8,18 +10,18 @@
 
   const authorizedExtensions = [".txt"];
 
-  export let form;
+  let { form = $bindable() } = $props();
 
-  $: {
+  run(() => {
     if (form?.error) {
     }
     if (form?.logs) {
     }
-  }
-  let loading = false;
+  });
+  let loading = $state(false);
 
-  let isOpen = false;
-  let selectedDate = $page.url.searchParams.get("date") || "";
+  let isOpen = $state(false);
+  let selectedDate = $state($page.url.searchParams.get("date") || "");
 
   const submitData = async () => {
     let logs = form.logs;
@@ -92,7 +94,7 @@
               placeholder="Select date"
               name="localDate"
               id="localDate"
-              on:click={() => {
+              onclick={() => {
                 isOpen = !isOpen;
               }}
               bind:value={selectedDate}
@@ -129,11 +131,11 @@
           imported wrong. So make sure you know what you are doing.
         </div>
         <div class="flex gap-4">
-          <button class="btn grow btn-primary" on:click={submitData}
+          <button class="btn grow btn-primary" onclick={submitData}
             >Submit</button
           ><button
             class="btn grow btn-warning"
-            on:click={() => {
+            onclick={() => {
               form.logs = null;
             }}>Reset</button
           >

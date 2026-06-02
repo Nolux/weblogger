@@ -4,13 +4,13 @@
   import { DatePicker } from "@svelte-plugins/datepicker";
   import { page } from "$app/stores";
 
-  export let data;
+  let { data } = $props();
 
-  $: log = data.log;
+  let log = $derived(data.log);
 
-  let editMode = $page.url.searchParams.get("editmode") || false;
+  let editMode = $state($page.url.searchParams.get("editmode") || false);
 
-  let isOpen = false;
+  let isOpen = $state(false);
   let dateInput = "";
 
   const updateLog = async () => {
@@ -60,13 +60,13 @@
 <div class="flex justify-between">
   <button
     class="btn btn-lg btn-ghost mb-4"
-    on:click={() => window.history.back()}
+    onclick={() => window.history.back()}
     ><Icon icon="mdi:arrow-back" /></button
   >
   <div>
     <button
       class="btn {editMode ? 'btn-warning' : ''}"
-      on:click={() => {
+      onclick={() => {
         if (editMode) {
           updateLog();
         } else {
@@ -76,7 +76,7 @@
     >
     <button
       class="btn transition-all {log.confirmDelete ? 'btn-error' : ''}"
-      on:click={async () => {
+      onclick={async () => {
         if (!log.confirmDelete) {
           log.confirmDelete = true;
           setTimeout(() => {
@@ -135,7 +135,7 @@
           type="textarea"
           rows="4"
           bind:value={log.body}
-        />
+></textarea>
       </div>
 
       <div class="col-span-2 flex flex-col gap-2">
@@ -148,7 +148,7 @@
             min="0"
             max="23"
             bind:value={log.timecode.hours}
-            on:keyup={(e) => enforceMinMax(e, "hours")}
+            onkeyup={(e) => enforceMinMax(e, "hours")}
           />
         </label>
         <label class="flex items-center gap-4 justify-between">
@@ -159,7 +159,7 @@
             min="0"
             max="59"
             bind:value={log.timecode.minutes}
-            on:keyup={(e) => enforceMinMax(e, "minutes")}
+            onkeyup={(e) => enforceMinMax(e, "minutes")}
           />
         </label>
         <label class="flex items-center gap-4 justify-between">
@@ -170,7 +170,7 @@
             min="0"
             max="59"
             bind:value={log.timecode.seconds}
-            on:keyup={(e) => enforceMinMax(e, "seconds")}
+            onkeyup={(e) => enforceMinMax(e, "seconds")}
           />
         </label>
         <label class="flex items-center gap-4 justify-between">
@@ -181,7 +181,7 @@
             min="0"
             max="24"
             bind:value={log.timecode.frames}
-            on:keyup={(e) => enforceMinMax(e, "frames")}
+            onkeyup={(e) => enforceMinMax(e, "frames")}
           />
         </label>
       </div>
@@ -207,7 +207,7 @@
               class="input input-bordered w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
-              on:click={() => {
+              onclick={() => {
                 isOpen = !isOpen;
               }}
               bind:value={log.localDateString}
@@ -218,7 +218,7 @@
       <div class="col-span-4 flex gap-2">
         <button
           class="btn btn-primary w-full"
-          on:click={() => {
+          onclick={() => {
             updateLog();
           }}>Save</button
         >
