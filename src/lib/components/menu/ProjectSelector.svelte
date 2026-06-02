@@ -18,7 +18,7 @@
   Select Project:
   <select
     class="select select-bordered w-full max-w-xs"
-    bind:value={user.selectedProjectId}
+    value={user.selectedProjectId}
     onchange={(e) => {
       submitChangeProject(e.target.value);
     }}
