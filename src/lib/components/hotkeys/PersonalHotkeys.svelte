@@ -9,7 +9,7 @@
     {#each $personalHotkeys as hotkey, i}
       {#if hotkey.text}
         <button
-          class="btn lg:btn-lg"
+          class="py-6 btn lg:btn-lg"
           use:shortcut={{
             shift: hotkey.modifiers.shift,
             control: hotkey.modifiers.control,
