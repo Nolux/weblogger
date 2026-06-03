@@ -1,6 +1,27 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark,
+    emerald,
+    corporate,
+    retro,
+    halloween,
+    garden,
+    aqua,
+    lofi,
+    fantasy,
+    dracula,
+    cmyk,
+    business,
+    coffee,
+    winter,
+    dim;
+}
+
+/* Safelist for dynamically constructed color classes (editColors.js) */
+@source inline("bg-{blue,cyan,green,yellow,red,pink}-500 bg-neutral-{100,800} border-{blue,cyan,green,yellow,red,pink}-500 border-neutral-{100,800} text-white text-black");
 
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -9,7 +30,7 @@
   }
   /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
