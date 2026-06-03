@@ -41,8 +41,8 @@
           >Weblogger <span class="text-xs">2.0</span></a
         >
         {#if user}
-          <div class="avatar placeholder aspect-square">
-            <div class="w-12 rounded-full bg-info text-info-content">
+        <div class="avatar avatar-placeholder">
+          <div class="w-12 rounded-full bg-info text-info-content">
               <span class="text-xl"
                 >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span
               >
@@ -98,7 +98,7 @@
       {#if user}
         <div>
           <div class="flex justify-between items-center pb-4 w-full">
-            <div class="avatar placeholder">
+            <div class="avatar avatar-placeholder">
               <div class="w-14 rounded-full bg-info text-info-content">
                 <span class="text-3xl"
                   >{user.firstName.charAt(0)}{user.lastName.charAt(0)}</span

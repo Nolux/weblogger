@@ -93,21 +93,22 @@
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
+  <h1 class="hidden text-3xl font-bold text-center lg:block lg:text-left">
     Post-Logger
   </h1>
 
-  <div class="grid lg:grid-cols-4 w-full gap-4">
+  <div class="grid gap-4 w-full lg:grid-cols-4">
     <textarea
       bind:this={textarea}
       bind:value={$postLoggerInput}
       disabled={submittingLog}
-      class="lg:col-span-2 grow text-xl textarea textarea-lg textarea-secondary p-2"
+      class="col-span-4 p-2 w-full h-full text-xl lg:col-span-2 grow textarea textarea-lg textarea-secondary"
       placeholder="Logger"
       rows={8}
     ></textarea>
+
     <div
-      class="border border-secondary p-4 lg:col-span-2 flex flex-col gap-4 text-center xl:text-3xl text-2xl font-bold select-none"
+      class="flex flex-col gap-4 p-4 text-2xl font-bold text-center border select-none border-secondary lg:col-span-2 xl:text-3xl"
     >
       <div class="flex flex-col gap-2">
         <DatePicker
@@ -119,9 +120,9 @@
           }}
           theme="postlogger-datepicker"
           bind:isOpen
-          ><div class="tooltip tooltip-secondary w-full" data-tip="Select Date">
+          ><div class="w-full tooltip tooltip-secondary" data-tip="Select Date">
             <input
-              class="input input-ghost w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+              class="w-full text-2xl font-bold text-center select-none input input-ghost input-lg xl:text-3xl tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
               onclick={toggleDatePicker}
@@ -143,13 +144,13 @@
               .padStart(2, "0")}
           </span>
         </div>
-        <div class="w-full grid grid-cols-4 gap-4">
+        <div class="grid grid-cols-4 gap-4 w-full">
           <input
             type="number"
             min="0"
             max="23"
             id="hours"
-            class="input"
+            class="w-full input"
             placeholder="Hours"
             onkeyup={(e) => enforceMinMax(e, "hours")}
             onchange={(e) => enforceMinMax(e, "hours")}
@@ -160,7 +161,7 @@
             max="59"
             min="0"
             id="minutes"
-            class="input"
+            class="w-full input"
             placeholder="minutes"
             onkeyup={(e) => enforceMinMax(e, "minutes")}
             onchange={(e) => enforceMinMax(e, "minutes")}
@@ -171,7 +172,7 @@
             max="59"
             min="0"
             id="seconds"
-            class="input"
+            class="w-full input"
             placeholder="seconds"
             onkeyup={(e) => enforceMinMax(e, "seconds")}
             onchange={(e) => enforceMinMax(e, "seconds")}
@@ -182,7 +183,7 @@
             max="24"
             min="0"
             id="frames"
-            class="input"
+            class="w-full input"
             placeholder="frames"
             onkeyup={(e) => enforceMinMax(e, "frames")}
             onchange={(e) => enforceMinMax(e, "frames")}
@@ -192,7 +193,7 @@
         <div class="divider"></div>
         <div class="flex gap-2">
           <button
-            class="btn w-1/2"
+            class="py-8 w-1/2 btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
             use:shortcut={{
               shift: $submitHotkey.modifiers.shift,
               control: $submitHotkey.modifiers.control,
@@ -219,7 +220,7 @@
             </div>
           </button>
           <button
-            class="btn w-1/2"
+            class="py-8 w-1/2 btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
             use:shortcut={{
               shift: $resetHotkey.modifiers.shift,
               control: $resetHotkey.modifiers.control,
@@ -300,27 +301,37 @@
     width: 100%;
   }
   :global(.datepicker[data-picker-theme="postlogger-datepicker"]) {
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--s));
+    --datepicker-container-background: var(--color-base-100);
+    --datepicker-container-border: 1px solid var(--color-secondary);
 
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--s));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--s));
+    --datepicker-calendar-header-text-color: var(--color-base-content);
+    --datepicker-calendar-dow-color: var(--color-base-content);
+    --datepicker-calendar-day-color: var(--color-secondary);
+    --datepicker-calendar-day-color-disabled: var(--color-neutral-content);
+    --datepicker-calendar-range-selected-background: var(--color-secondary);
 
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--s));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-background-hover: var(
+      --color-secondary
+    );
+    --datepicker-calendar-header-month-nav-icon-next-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-month-nav-icon-prev-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-year-nav-icon-next-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-year-nav-icon-prev-filter: var(
+      --color-neutral-content
+    );
 
     --datepicker-calendar-split-border: 1px solid pink;
 
     --datepicker-presets-border: 1px solid pink;
     --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--s));
-    --datepicker-presets-button-color-active: oklch(var(--s));
+    --datepicker-presets-button-color: var(--color-secondary);
+    --datepicker-presets-button-color-active: var(--color-secondary);
     --datepicker-presets-button-color-hover: #333;
     --datepicker-presets-button-color-focus: #333;
   }

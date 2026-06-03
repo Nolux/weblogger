@@ -52,7 +52,7 @@
   Select Theme:
   <select
     bind:value={current_theme}
-    class="select select-bordered w-full max-w-xs"
+    class="select w-full max-w-xs"
     onchange={(e) => set_theme(e)}
   >
     {#each themes as theme}

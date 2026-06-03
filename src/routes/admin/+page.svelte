@@ -32,7 +32,7 @@
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Admin
   </h1>
-  <div role="tablist" class="tabs tabs-bordered w-full flex p-8">
+  <div role="tablist" class="tabs tabs-border w-full flex p-8">
     <input
       onclick={() => {
         selectedTab = 0;
@@ -74,14 +74,14 @@
         >
           <label class="flex items-center justify-between">
             Project Name:
-            <input name="name" class="input input-bordered" type="text" />
+            <input name="name" class="input" type="text" />
           </label>
           <h1 class="text-xl">Contact</h1>
           <label class="flex items-center justify-between">
             Name:
             <input
               name="contactName"
-              class="input input-bordered"
+              class="input"
               type="text"
             />
           </label>
@@ -89,7 +89,7 @@
             email:
             <input
               name="contactEmail"
-              class="input input-bordered"
+              class="input"
               type="email"
             />
           </label>
@@ -97,7 +97,7 @@
             Telephone:
             <input
               name="contactTelephone"
-              class="input input-bordered"
+              class="input"
               type="text"
             />
           </label>
@@ -132,7 +132,7 @@
         >
           <label class="flex items-center justify-between">
             Project Name:
-            <select class="select select-bordered" name="projectId">
+            <select class="select" name="projectId">
               {#each projects as project}
                 <option value={project.id}>{project.name}</option>
               {/each}
@@ -181,7 +181,7 @@
         >
           <label class="flex items-center justify-between">
             User Email:
-            <select class="select select-bordered" name="email" value="">
+            <select class="select" name="email" value="">
               {#each users as user}
                 <option value={user.email}>{user.email}</option>
               {/each}
@@ -189,7 +189,7 @@
           </label>
           <label class="flex items-center justify-between">
             Project Name:
-            <select class="select select-bordered" name="projectId">
+            <select class="select" name="projectId">
               {#each projects as project}
                 <option value={project.id}>{project.name}</option>
               {/each}
@@ -228,7 +228,7 @@
         >
           <label class="flex items-center justify-between">
             User Email:
-            <select class="select select-bordered" name="email" value="">
+            <select class="select" name="email" value="">
               {#each users as user}
                 <option value={user.email}>{user.email}</option>
               {/each}
@@ -236,7 +236,7 @@
           </label>
           <label class="flex items-center justify-between">
             Project Name:
-            <select class="select select-bordered" name="projectId">
+            <select class="select" name="projectId">
               {#each projects as project}
                 <option value={project.id}>{project.name}</option>
               {/each}
@@ -275,7 +275,7 @@
         >
           <label class="flex items-center justify-between">
             User Email:
-            <select class="select select-bordered" name="email" value="">
+            <select class="select" name="email" value="">
               {#each users as user}
                 <option value={user.email}>{user.email}</option>
               {/each}
@@ -283,7 +283,7 @@
           </label>
           <label class="flex items-center justify-between">
             Project Name:
-            <select class="select select-bordered" name="projectId">
+            <select class="select" name="projectId">
               {#each projects as project}
                 <option value={project.id}>{project.name}</option>
               {/each}
@@ -334,7 +334,7 @@
               }}
             >
               <input
-                class="input input-bordered"
+                class="input"
                 type="text"
                 bind:value={form.registerLink}
               />
@@ -342,7 +342,7 @@
           {/if}
           <label class="flex items-center justify-between">
             Project Name:
-            <select class="select select-bordered" name="projectId">
+            <select class="select" name="projectId">
               {#each projects as project}
                 <option value={project.id}>{project.name}</option>
               {/each}
@@ -379,7 +379,7 @@
         >
           <label class="flex items-center justify-between">
             User:
-            <select class="select select-bordered" name="userId">
+            <select class="select" name="userId">
               {#each users as user}
                 <option value={user.id}>{user.fullName}, {user.email}</option>
               {/each}

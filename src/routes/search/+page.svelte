@@ -1,5 +1,5 @@
 <script>
-  import { preventDefault } from 'svelte/legacy';
+  import { preventDefault } from "svelte/legacy";
 
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
@@ -45,7 +45,7 @@
     goto(`?${$page.url.searchParams.toString()}`);
 
     const res = await fetch(
-      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`
+      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
     );
     const data = await res.json();
 
@@ -58,30 +58,30 @@
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
+  <h1 class="hidden text-3xl font-bold text-center lg:block lg:text-left">
     Search
   </h1>
-  <div class="flex flex-col gap-4 w-full justify-between">
-    <div class="flex gap-4 items-stretch">
+  <div class="flex flex-col gap-4 justify-between w-full">
+    <div class="flex gap-4 items-stretch w-full">
       <form
-        class="grow grid gap-4"
+        class="grid gap-4 w-full grow"
         onsubmit={preventDefault(() => {
           currentPage = 0;
           pages = { page: 0, totalPages: 0, totalCount: 0 };
           getNewData();
         })}
       >
-        <label class="input input-bordered flex items-center gap-2">
+        <label class="flex gap-2 items-center input w-full">
           <Icon icon="mdi-search"></Icon>
           <input
-            class="grow"
+            class="w-full grow"
             type="text"
             bind:value={searchInput}
             placeholder="Search"
           />
         </label>
 
-        <button class="btn btn-primary w-full" type="submit">Search</button>
+        <button class="w-full btn btn-primary" type="submit">Search</button>
       </form>
       <div class=" {dateSelectorOpen ? 'w-1/3' : ''}">
         {#if dateSelectorOpen}
@@ -99,11 +99,11 @@
               bind:isOpen
               enabledDates={projectDays}
               ><div
-                class="tooltip tooltip-accent w-full h-full"
+                class="w-full h-full tooltip tooltip-accent"
                 data-tip="Select Date"
               >
                 <input
-                  class="h-full input input-accent w-full text-4xl input-lg text-center"
+                  class="w-full h-full text-4xl text-center input input-accent input-lg"
                   type="text"
                   placeholder="Select date"
                   onclick={toggleDatePicker}
@@ -112,7 +112,7 @@
               </div>
             </DatePicker>
             <button
-              class="btn btn-error h-full"
+              class="h-full btn btn-error"
               onclick={() => {
                 dateSelectorOpen = false;
                 selectedDate = null;
@@ -123,7 +123,7 @@
           </div>
         {:else}
           <button
-            class="btn btn-warning h-full"
+            class="h-full btn btn-warning"
             onclick={() => {
               dateSelectorOpen = true;
               console.log(selectedDate);
@@ -133,7 +133,7 @@
       </div>
     </div>
 
-    <div class="flex justify-end h-4 gap-2">
+    <div class="flex gap-2 justify-end h-4">
       {#each filters as filter}
         <div
           class={`badge ${
@@ -153,7 +153,7 @@
       {/each}
       {#if filters.length > 0}
         <div
-          class="badge badge-warning hover:brightness-50 cursor-pointer"
+          class="cursor-pointer badge badge-warning hover:brightness-50"
           onclick={() => {
             filters = [];
             currentPage = 0;
@@ -175,9 +175,9 @@
         }}
       />
     </div>
-    <div class="grow p-2 flex flex-col gap-4">
+    <div class="flex flex-col gap-4 p-2 grow">
       {#if loading}
-        <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
+        <div class="flex flex-col gap-2 p-2 border lg:flex-row border-accent">
           <div class="w-full text-xl text-center">
             <span class="loading loading-spinner loading-md"></span>
           </div>
@@ -186,7 +186,7 @@
         <div class="flex flex-col"></div>
       {:else}
         {#if logs.length < 1 && searchInput && firstSearchDone}
-          <div class="flex flex-col lg:flex-row gap-2 border border-accent p-2">
+          <div class="flex flex-col gap-2 p-2 border lg:flex-row border-accent">
             <div class="w-full text-xl text-center">No logs found</div>
           </div>
         {/if}
@@ -196,20 +196,20 @@
               ? 'border-accent'
               : 'border-error'} p-2"
           >
-            <div class="w-full text-xl col-span-12 lg:col-span-8">
+            <div class="col-span-12 w-full text-xl lg:col-span-8">
               {log.body}
             </div>
             <div
-              class="flex col-span-12 lg:col-span-4 items-center justify-center lg:justify-end"
+              class="flex col-span-12 justify-center items-center lg:col-span-4 lg:justify-end"
             >
               <div
-                class="divider divider-horizontal w-2 visible lg:invisible"
+                class="visible w-2 divider divider-horizontal lg:invisible"
               ></div>
-              <div class="w-20 mt-1 text-center">
+              <div class="mt-1 w-20 text-center">
                 {#if log.tags.length > 0}
                   {#each log.tags as tag}
                     <div
-                      class="tooltip tooltip-left w-full"
+                      class="w-full tooltip tooltip-left"
                       data-tip="Click to apply filter"
                     >
                       <div
@@ -245,9 +245,9 @@
                 {:else}{/if}
               </div>
               <div
-                class="divider divider-horizontal w-2 visible lg:invisible"
+                class="visible w-2 divider divider-horizontal lg:invisible"
               ></div>
-              <div class="flex justify-between flex-col gap-2 lg:w-40">
+              <div class="flex flex-col gap-2 justify-between lg:w-40">
                 <div class="text-xl">
                   Date:
                   <span class="font-bold">
@@ -275,9 +275,9 @@
                 </div>
               </div>
               <div
-                class="divider divider-horizontal w-2 visible lg:invisible"
+                class="visible w-2 divider divider-horizontal lg:invisible"
               ></div>
-              <div class="flex gap-2 flex-col w-12">
+              <div class="flex flex-col gap-2 w-12">
                 <a class="btn" href={`/viewer/${log.id}/`}>
                   <Icon icon="mdi:pencil"></Icon></a
                 >
@@ -349,27 +349,37 @@
   }
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
     height: 100%;
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--a));
+    --datepicker-container-background: var(--color-base-100);
+    --datepicker-container-border: 1px solid var(--color-accent);
 
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--a));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--a));
+    --datepicker-calendar-header-text-color: var(--color-base-content);
+    --datepicker-calendar-dow-color: var(--color-base-content);
+    --datepicker-calendar-day-color: var(--color-accent);
+    --datepicker-calendar-day-color-disabled: var(--color-neutral-content);
+    --datepicker-calendar-range-selected-background: var(--color-accent);
 
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--a));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-background-hover: var(
+      --color-accent
+    );
+    --datepicker-calendar-header-month-nav-icon-next-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-month-nav-icon-prev-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-year-nav-icon-next-filter: var(
+      --color-neutral-content
+    );
+    --datepicker-calendar-header-year-nav-icon-prev-filter: var(
+      --color-neutral-content
+    );
 
     --datepicker-calendar-split-border: 1px solid pink;
 
     --datepicker-presets-border: 1px solid pink;
     --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--a));
-    --datepicker-presets-button-color-active: oklch(var(--a));
+    --datepicker-presets-button-color: var(--color-accent);
+    --datepicker-presets-button-color-active: var(--color-accent);
     --datepicker-presets-button-color-hover: #333;
     --datepicker-presets-button-color-focus: #333;
   }

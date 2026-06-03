@@ -9,7 +9,7 @@
 </script>
 
 <div class="flex flex-col gap-1">
-  <table class="table table-xs table-striped w-full">
+  <table class="table table-xs table-zebra w-full">
     <thead>
       <tr>
         <th>type</th>
@@ -25,7 +25,7 @@
         <td>Submit</td>
         <td>
           <input
-            class="input input-xs w-16 input-bordered"
+            class="input input-xs w-16"
             type="text"
             bind:value={$submitHotkey.key}
           />
@@ -57,7 +57,7 @@
         <td>Reset</td>
         <td>
           <input
-            class="input input-xs w-16 input-bordered"
+            class="input input-xs w-16"
             type="text"
             bind:value={$resetHotkey.key}
           />
@@ -90,7 +90,7 @@
         <td>Timecode</td>
         <td>
           <input
-            class="input input-xs w-16 input-bordered"
+            class="input input-xs w-16"
             type="text"
             bind:value={$timecodeHotkey.key}
           />
@@ -123,7 +123,7 @@
           <td>Hotkey {i + 1}</td>
           <td>
             <input
-              class="input input-xs w-16 input-bordered"
+              class="input input-xs w-16"
               type="text"
               bind:value={hotkey.key}
             />
@@ -157,14 +157,14 @@
           <td>Personal Hotkey {i + 1}</td>
           <td>
             <input
-              class="input input-xs w-16 input-bordered"
+              class="input input-xs w-16"
               type="text"
               bind:value={hotkey.key}
             />
           </td>
           <td>
             <input
-              class="input input-xs w-16 input-bordered"
+              class="input input-xs w-16"
               type="text"
               bind:value={hotkey.text}
             />

@@ -23,7 +23,7 @@
       </form>
     </div>
     <h1 class="font-bold text-xl mb-4">Timecode offset:</h1>
-    <label class="input input-bordered flex items-center gap-2">
+    <label class="input w-full flex items-center gap-2">
       Hours: <input
         max="23"
         min="-23"
@@ -33,7 +33,7 @@
         bind:value={$tcOffsets.hours}
       /></label
     >
-    <label class="input input-bordered flex items-center gap-2">
+    <label class="input w-full flex items-center gap-2">
       Minutes: <input
         max="59"
         min="-59"
@@ -43,7 +43,7 @@
         bind:value={$tcOffsets.minutes}
       /></label
     >
-    <label class="input input-bordered flex items-center gap-2">
+    <label class="input w-full flex items-center gap-2">
       Seconds: <input
         max="59"
         min="-59"
@@ -53,7 +53,7 @@
         bind:value={$tcOffsets.seconds}
       /></label
     >
-    <label class="input input-bordered flex items-center gap-2">
+    <label class="input w-full flex items-center gap-2">
       Frames: <input
         max="24"
         min="-24"
