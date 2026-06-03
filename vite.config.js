@@ -1,5 +1,6 @@
 import { sentrySvelteKit } from "@sentry/sveltekit";
 import { sveltekit } from "@sveltejs/kit/vite";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 
 import { Server } from "socket.io";
@@ -23,12 +24,16 @@ const webSocketServer = {
 };
 
 export default defineConfig({
-  plugins: [sentrySvelteKit({
-    org: "selbek-produksjoner-as",
-    project: "weblogger"
-  }), sveltekit(), webSocketServer],
+  plugins: [
+    tailwindcss(),
+    sentrySvelteKit({
+      org: "selbek-produksjoner-as",
+      project: "weblogger",
+    }),
+    sveltekit(),
+    webSocketServer,
+  ],
   test: {
     globals: true,
-    environment: "happy-dom",
   },
 });

@@ -24,7 +24,7 @@
 <section>
   <form method="post" class="flex flex-col gap-4" use:enhance>
     <h1 class="text-3xl">Forgot password</h1>
-    <label for="email" class="input input-bordered flex items-center gap-2">
+    <label for="email" class="input w-full flex items-center gap-2">
       <Icon icon="mdi-light:email" width="24" height="24" style="fill-current"
       ></Icon>
       <input

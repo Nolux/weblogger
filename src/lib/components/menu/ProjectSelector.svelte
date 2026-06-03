@@ -17,7 +17,7 @@
 <label class="flex justify-between items-center">
   Select Project:
   <select
-    class="select select-bordered w-full max-w-xs"
+    class="select w-full max-w-xs"
     value={user.selectedProjectId}
     onchange={(e) => {
       submitChangeProject(e.target.value);

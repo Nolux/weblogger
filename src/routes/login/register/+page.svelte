@@ -56,7 +56,7 @@
     {#if project}
       <h1 class="text-xl text-center">Project: {project.name}</h1>
     {/if}
-    <label for="email" class="input input-bordered flex items-center gap-2">
+    <label for="email" class="input w-full flex items-center gap-2">
       <Icon icon="mdi-light:email" width="24" height="24" style="fill-current"
       ></Icon>
       <input
@@ -69,7 +69,7 @@
         required
       />
     </label>
-    <label for="password" class="input input-bordered flex items-center gap-2">
+    <label for="password" class="input w-full flex items-center gap-2">
       <Icon icon="mdi-light:lock" width="24" height="24" style="fill-current"
       ></Icon>
       <input
@@ -118,7 +118,7 @@
         />One Number</span
       >
     {/if}
-    <label for="firstName" class="input input-bordered flex items-center gap-2">
+    <label for="firstName" class="input w-full flex items-center gap-2">
       <Icon icon="mdi-light:account" width="24" height="24" style="fill-current"
       ></Icon>
       <input
@@ -131,7 +131,7 @@
         required
       />
     </label>
-    <label for="lastName" class="input input-bordered flex items-center gap-2">
+    <label for="lastName" class="input w-full flex items-center gap-2">
       <Icon icon="mdi-light:account" width="24" height="24" style="fill-current"
       ></Icon>
       <input

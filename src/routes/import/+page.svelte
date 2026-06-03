@@ -106,7 +106,7 @@
         <div class="w-1/2">Uploaded file:</div>
         <input
           type="file"
-          class="file-input grow file-input-bordered file-input-accent"
+          class="file-input grow file-input-accent"
           name="file"
           id="file"
         />
@@ -141,7 +141,7 @@
           >
         </div>
       </div>
-      <table class="table table-striped">
+      <table class="table table-zebra">
         <thead>
           <tr class="text-center">
             <th>Timecode</th>
@@ -177,27 +177,27 @@
   }
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
     height: 100%;
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--a));
+    --datepicker-container-background: var(--color-base-100);
+    --datepicker-container-border: 1px solid var(--color-accent);
 
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--a));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--a));
+    --datepicker-calendar-header-text-color: var(--color-base-content);
+    --datepicker-calendar-dow-color: var(--color-base-content);
+    --datepicker-calendar-day-color: var(--color-accent);
+    --datepicker-calendar-day-color-disabled: var(--color-neutral-content);
+    --datepicker-calendar-range-selected-background: var(--color-accent);
 
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--a));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-background-hover: var(--color-accent);
+    --datepicker-calendar-header-month-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-month-nav-icon-prev-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-prev-filter: var(--color-neutral-content);
 
     --datepicker-calendar-split-border: 1px solid pink;
 
     --datepicker-presets-border: 1px solid pink;
     --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--a));
-    --datepicker-presets-button-color-active: oklch(var(--a));
+    --datepicker-presets-button-color: var(--color-accent);
+    --datepicker-presets-button-color-active: var(--color-accent);
     --datepicker-presets-button-color-hover: #333;
     --datepicker-presets-button-color-focus: #333;
   }

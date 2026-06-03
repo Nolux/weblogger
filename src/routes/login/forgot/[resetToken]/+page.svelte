@@ -18,7 +18,7 @@
 <section>
   <form method="post" class="flex flex-col gap-4" use:enhance>
     <h1 class="text-3xl">Forgot password</h1>
-    <label for="password1" class="input input-bordered flex items-center gap-2">
+    <label for="password1" class="input w-full flex items-center gap-2">
       <input
         type="password"
         name="password"
@@ -29,7 +29,7 @@
         required
       />
     </label>
-    <label for="password2" class="input input-bordered flex items-center gap-2">
+    <label for="password2" class="input w-full flex items-center gap-2">
       <input
         type="password"
         name="password"

@@ -9,7 +9,7 @@
 
 {#if searchOpen}
   <label
-    class="input input-bordered input-xs flex items-center gap-2 bg-warning"
+    class="input input-xs w-full flex items-center gap-2 bg-warning"
   >
     <input
       class="grow text-warning-content"
@@ -28,7 +28,7 @@
         }
       }}
     >
-      <Icon icon="mdi:search" style="color: oklch(var(--wac));"></Icon>
+      <Icon icon="mdi:search" style="color: var(--color-warning-content);"></Icon>
     </button>
   </label>
 {:else}
@@ -40,7 +40,7 @@
         searchOpen = true;
       }}
     >
-      <Icon icon="mdi:add" class="rounded-xl" style="color: oklch(var(--wac))"
+      <Icon icon="mdi:add" class="rounded-xl" style="color: var(--color-warning-content)"
       ></Icon>
     </div>
   </div>

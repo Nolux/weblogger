@@ -131,7 +131,7 @@
       <div class="col-span-4 flex flex-col gap-2">
         Body:
         <textarea
-          class="textarea textarea-bordered"
+          class="textarea w-full"
           type="textarea"
           rows="4"
           bind:value={log.body}
@@ -143,7 +143,7 @@
         <label class="flex items-center gap-4 justify-between">
           Hours:
           <input
-            class="input input-bordered"
+            class="input"
             type="number"
             min="0"
             max="23"
@@ -154,7 +154,7 @@
         <label class="flex items-center gap-4 justify-between">
           Minutes:
           <input
-            class="input input-bordered"
+            class="input"
             type="number"
             min="0"
             max="59"
@@ -165,7 +165,7 @@
         <label class="flex items-center gap-4 justify-between">
           Seconds:
           <input
-            class="input input-bordered"
+            class="input"
             type="number"
             min="0"
             max="59"
@@ -176,7 +176,7 @@
         <label class="flex items-center gap-4 justify-between">
           Frames:
           <input
-            class="input input-bordered"
+            class="input"
             type="number"
             min="0"
             max="24"
@@ -204,7 +204,7 @@
           bind:isOpen
           ><div class="tooltip tooltip-secondary w-full" data-tip="Select Date">
             <input
-              class="input input-bordered w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+              class="input w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
               onclick={() => {
@@ -231,27 +231,27 @@
     width: 100%;
   }
   :global(.datepicker[data-picker-theme="postlogger-datepicker"]) {
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--s));
+    --datepicker-container-background: var(--color-base-100);
+    --datepicker-container-border: 1px solid var(--color-secondary);
 
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--s));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--s));
+    --datepicker-calendar-header-text-color: var(--color-base-content);
+    --datepicker-calendar-dow-color: var(--color-base-content);
+    --datepicker-calendar-day-color: var(--color-secondary);
+    --datepicker-calendar-day-color-disabled: var(--color-neutral-content);
+    --datepicker-calendar-range-selected-background: var(--color-secondary);
 
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--s));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-background-hover: var(--color-secondary);
+    --datepicker-calendar-header-month-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-month-nav-icon-prev-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-prev-filter: var(--color-neutral-content);
 
     --datepicker-calendar-split-border: 1px solid pink;
 
     --datepicker-presets-border: 1px solid pink;
     --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--s));
-    --datepicker-presets-button-color-active: oklch(var(--s));
+    --datepicker-presets-button-color: var(--color-secondary);
+    --datepicker-presets-button-color-active: var(--color-secondary);
     --datepicker-presets-button-color-hover: #333;
     --datepicker-presets-button-color-focus: #333;
   }

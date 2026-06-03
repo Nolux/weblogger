@@ -13,7 +13,6 @@
     timecodeHotkey,
   } from "$lib/stores/hotkeysStore.js";
 
-
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
@@ -51,7 +50,7 @@
         .add($tcOffsets.minutes, "minute")
         .add($tcOffsets.seconds, "second");
       const res = await fetch(
-        "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD")
+        "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD"),
       );
       const data = await res.json();
       logs = data.logs;
@@ -154,30 +153,32 @@
   let logs = $state(data.logs);
   let user = $derived(data.user);
   let currentProject = $derived(data.currentProject);
-  $effect(() => { logs = data.logs; });
+  $effect(() => {
+    logs = data.logs;
+  });
 </script>
 
 <div class="flex flex-col gap-8">
-  <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
+  <h1 class="hidden text-3xl font-bold text-center lg:block lg:text-left">
     Logger
   </h1>
-  <div class="grid grid-cols-4 w-full gap-4">
+  <div class="grid grid-cols-4 gap-4 w-full">
     <textarea
       bind:this={textarea}
       bind:value={$loggerInput}
       disabled={submittingLog}
-      class="col-span-4 lg:col-span-2 grow text-xl textarea textarea-lg textarea-primary p-2"
+      class="col-span-4 p-2 w-full text-xl lg:col-span-2 grow textarea textarea-lg textarea-primary"
       placeholder="Logger"
       rows={8}
     ></textarea>
     <div
-      class="relative col-span-4 lg:col-span-2 border border-primary p-4 flex flex-col gap-4"
+      class="flex relative flex-col col-span-4 gap-4 p-4 border lg:col-span-2 border-primary"
     >
       <div class="absolute top-2 right-2 z-10">
         <TcOffsetModal />
       </div>
       <div
-        class="mt-4 text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+        class="mt-4 text-2xl font-bold text-center select-none xl:text-3xl tooltip lg:tooltip-left"
         data-tip="TC right now"
       >
         <div class="flex flex-col">
@@ -192,7 +193,7 @@
         </div>
       </div>
       <div
-        class="text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
+        class="text-2xl font-bold text-center select-none xl:text-3xl tooltip lg:tooltip-left"
         data-tip="In-point for log TC click or {$timecodeHotkey.modifiers
           .control
           ? 'CTL + '
@@ -219,7 +220,7 @@
       <div class="divider"></div>
       <div class="flex gap-2">
         <button
-          class="btn w-1/2"
+          class="py-8 w-1/2 btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
           use:shortcut={{
             shift: $submitHotkey.modifiers.shift,
             control: $submitHotkey.modifiers.control,
@@ -246,7 +247,7 @@
           </div>
         </button>
         <button
-          class="btn w-1/2"
+          class="py-8 w-1/2 btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
           use:shortcut={{
             shift: $resetHotkey.modifiers.shift,
             control: $resetHotkey.modifiers.control,

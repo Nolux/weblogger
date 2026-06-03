@@ -30,7 +30,7 @@
         <input
           type="text"
           name="email"
-          class="input input-bordered"
+          class="input"
           bind:value={user.email}
         /></label
       >
@@ -39,7 +39,7 @@
         <input
           type="text"
           name="firstName"
-          class="input input-bordered"
+          class="input"
           bind:value={user.firstName}
         /></label
       >
@@ -48,7 +48,7 @@
         <input
           type="text"
           name="lastName"
-          class="input input-bordered"
+          class="input"
           bind:value={user.lastName}
         /></label
       >
@@ -68,7 +68,7 @@
         <input
           type="password"
           name="oldPassword"
-          class="input input-bordered"
+          class="input"
         /></label
       >
       <label class="flex gap-2 items-center justify-between">
@@ -76,7 +76,7 @@
         <input
           type="password"
           name="password"
-          class="input input-bordered"
+          class="input"
           bind:value={passwordInput.password}
         /></label
       >
@@ -85,7 +85,7 @@
         <input
           type="password"
           name="password"
-          class="input input-bordered"
+          class="input"
           bind:value={passwordInput.passwordConfirm}
         /></label
       >

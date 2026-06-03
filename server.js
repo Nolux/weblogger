@@ -2,7 +2,6 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
-import cron from "node-cron";
 
 import { handler } from "./build/handler.js";
 import { generateStats } from "./src/lib/server/generateStats.js";

@@ -36,7 +36,7 @@
   <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">
     Project Controller
   </h1>
-  <div role="tablist" class="tabs tabs-bordered w-full flex p-8">
+  <div role="tablist" class="tabs tabs-border w-full flex p-8">
     <input
       onclick={() => {
         selectedTab = 0;
@@ -81,7 +81,7 @@
               Project Name:
               <input
                 name="name"
-                class="input input-bordered"
+                class="input"
                 type="text"
                 bind:value={currentProject.name}
               />
@@ -91,7 +91,7 @@
               Name:
               <input
                 name="contactName"
-                class="input input-bordered"
+                class="input"
                 type="text"
                 bind:value={currentProject.contact.name}
               />
@@ -100,7 +100,7 @@
               Email:
               <input
                 name="contactEmail"
-                class="input input-bordered"
+                class="input"
                 type="email"
                 bind:value={currentProject.contact.email}
               />
@@ -109,7 +109,7 @@
               Phonenumber:
               <input
                 name="contactTelephone"
-                class="input input-bordered right-0"
+                class="input right-0"
                 type="phone"
                 bind:value={currentProject.contact.telephone}
               />
@@ -153,7 +153,7 @@
                   Text:
                   <input
                     name={"markerText"}
-                    class="input input-xs input-bordered"
+                    class="input input-xs"
                     type="text"
                     bind:value={markerColor.text}
                   /></label
@@ -161,7 +161,7 @@
                 <label class="flex items-center justify-between"
                   >Color: <select
                     name={"markerColor"}
-                    class="select select-xs select-bordered"
+                    class="select select-xs"
                     type="text"
                     bind:value={markerColor.color}
                   >
@@ -236,7 +236,7 @@
                 }}
               >
                 <input
-                  class="input input-bordered"
+                  class="input"
                   type="text"
                   bind:value={form.registerLink}
                 />
@@ -281,7 +281,7 @@
             <label class="flex items-center justify-between">
               User email: <input
                 name="email"
-                class="input input-bordered"
+                class="input"
                 type="text"
               /></label
             >
@@ -315,7 +315,7 @@
             }}
           >
             <label class="flex items-center justify-between">
-              User: <select class="select select-bordered" name="email">
+              User: <select class="select" name="email">
                 {#each assignedUsers as user}
                   <option value={user.email}>{user.email}</option>
                 {/each}

@@ -374,7 +374,7 @@
           min="0"
           max="23"
           id="hours"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="Hours"
           onkeyup={(e) => {
             inTimecode.hours = enforceMinMax(e);
@@ -386,7 +386,7 @@
           max="59"
           min="0"
           id="minutes"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="minutes"
           onkeyup={(e) => {
             inTimecode.minutes = enforceMinMax(e, inTimecode, "minutes");
@@ -401,7 +401,7 @@
           max="59"
           min="0"
           id="seconds"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="seconds"
           onkeyup={(e) => {
             inTimecode.seconds = enforceMinMax(e, inTimecode, "seconds");
@@ -416,7 +416,7 @@
           max="24"
           min="0"
           id="frames"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="frames"
           onkeyup={(e) => {
             inTimecode.frames = enforceMinMax(e, inTimecode, "frames");
@@ -433,7 +433,7 @@
           min="0"
           max="23"
           id="hours"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="Hours"
           onkeyup={(e) => {
             outTimecode.hours = enforceMinMax(e, outTimecode, "hours");
@@ -448,7 +448,7 @@
           max="59"
           min="0"
           id="minutes"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="minutes"
           onkeyup={(e) => {
             outTimecode.minutes = enforceMinMax(e, outTimecode, "minutes");
@@ -463,7 +463,7 @@
           max="59"
           min="0"
           id="seconds"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="seconds"
           onkeyup={(e) => {
             outTimecode.seconds = enforceMinMax(e, outTimecode, "seconds");
@@ -478,7 +478,7 @@
           max="24"
           min="0"
           id="frames"
-          class="input input-bordered"
+          class="input w-full"
           placeholder="frames"
           onkeyup={(e) => {
             outTimecode.frames = enforceMinMax(e, outTimecode, "frames");
@@ -691,27 +691,27 @@
   }
   :global(.datepicker[data-picker-theme="custom-datepicker"]) {
     height: 100%;
-    --datepicker-container-background: oklch(var(--b1));
-    --datepicker-container-border: 1px solid oklch(var(--a));
+    --datepicker-container-background: var(--color-base-100);
+    --datepicker-container-border: 1px solid var(--color-accent);
 
-    --datepicker-calendar-header-text-color: oklch(var(--bc));
-    --datepicker-calendar-dow-color: oklch(var(--bc));
-    --datepicker-calendar-day-color: oklch(var(--a));
-    --datepicker-calendar-day-color-disabled: oklch(var(--nc));
-    --datepicker-calendar-range-selected-background: oklch(var(--a));
+    --datepicker-calendar-header-text-color: var(--color-base-content);
+    --datepicker-calendar-dow-color: var(--color-base-content);
+    --datepicker-calendar-day-color: var(--color-accent);
+    --datepicker-calendar-day-color-disabled: var(--color-neutral-content);
+    --datepicker-calendar-range-selected-background: var(--color-accent);
 
-    --datepicker-calendar-header-month-nav-background-hover: oklch(var(--a));
-    --datepicker-calendar-header-month-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-month-nav-icon-prev-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-next-filter: oklch(var(--nc));
-    --datepicker-calendar-header-year-nav-icon-prev-filter: oklch(var(--nc));
+    --datepicker-calendar-header-month-nav-background-hover: var(--color-accent);
+    --datepicker-calendar-header-month-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-month-nav-icon-prev-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-next-filter: var(--color-neutral-content);
+    --datepicker-calendar-header-year-nav-icon-prev-filter: var(--color-neutral-content);
 
     --datepicker-calendar-split-border: 1px solid pink;
 
     --datepicker-presets-border: 1px solid pink;
     --datepicker-presets-button-background-active: #ff1683;
-    --datepicker-presets-button-color: oklch(var(--a));
-    --datepicker-presets-button-color-active: oklch(var(--a));
+    --datepicker-presets-button-color: var(--color-accent);
+    --datepicker-presets-button-color-active: var(--color-accent);
     --datepicker-presets-button-color-hover: #333;
     --datepicker-presets-button-color-focus: #333;
   }

@@ -5,7 +5,7 @@
     replaceBody,
     markerColors = [],
     inTimecode,
-    setTimecodeToNow
+    setTimecodeToNow,
   } = $props();
 </script>
 
@@ -14,7 +14,7 @@
     {#each $hotkeys as hotkey, i}
       {#if markerColors[i]}
         <button
-          class="btn lg:btn-lg"
+          class="py-8 btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
           use:shortcut={{
             shift: hotkey.modifiers.shift,
             control: hotkey.modifiers.control,
