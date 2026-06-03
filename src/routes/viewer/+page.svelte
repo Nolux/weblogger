@@ -8,30 +8,30 @@
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
 
-  export let data;
+  let { data } = $props();
 
-  $: logs = data.logs;
-  $: pages = data.page;
-  $: user = data.user;
-  $: projectDays = data.projectDays;
-  $: selectedDate = data.selectedDate;
-  $: perPage = data.perPage;
+  let logs = $derived(data.logs);
+  let pages = $derived(data.page);
+  let user = $derived(data.user);
+  let projectDays = $derived(data.projectDays);
+  let selectedDate = $derived(data.selectedDate);
+  let perPage = $derived(data.perPage);
   let asc = true;
 
-  let currentPage = 0;
-  let filters = $page.url.searchParams.get("filters") || [];
+  let currentPage = $state(0);
+  let filters = $state($page.url.searchParams.get("filters") || []);
   if (filters != "") {
     filters = filters.split(" ");
   }
-  let filterColors = [];
+  let filterColors = $state([]);
 
-  let loading = false;
+  let loading = $state(false);
 
-  let showTimecodePicker = false;
-  let inTimecode = { hours: 0, minutes: 0, seconds: 0, frames: 0 };
-  let outTimecode = { hours: 23, minutes: 59, seconds: 59, frames: 24 };
+  let showTimecodePicker = $state(false);
+  let inTimecode = $state({ hours: 0, minutes: 0, seconds: 0, frames: 0 });
+  let outTimecode = $state({ hours: 23, minutes: 59, seconds: 59, frames: 24 });
 
-  let excludeMode = $page.url.searchParams.get("excludeMode") || false;
+  let excludeMode = $state($page.url.searchParams.get("excludeMode") || false);
 
   const getNewData = async () => {
     loading = true;
@@ -73,7 +73,7 @@
     loading = false;
   };
 
-  let isOpen = false;
+  let isOpen = $state(false);
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
@@ -130,7 +130,7 @@
               class="h-full input input-accent w-full text-4xl input-lg text-center"
               type="text"
               placeholder="Select date"
-              on:click={toggleDatePicker}
+              onclick={toggleDatePicker}
               bind:value={selectedDate}
             />
           </div>
@@ -142,7 +142,7 @@
         <button
           class="btn tooltip {showTimecodePicker ? 'btn-warning' : ''}"
           data-tip="Filter by start time"
-          on:click={() => {
+          onclick={() => {
             showTimecodePicker = !showTimecodePicker;
             if (!showTimecodePicker) {
               getNewData();
@@ -163,7 +163,7 @@
                 type="checkbox"
                 class="toggle {excludeMode ? 'toggle-warning' : ''}"
                 bind:checked={excludeMode}
-                on:click={() => {
+                onclick={() => {
                   console.log("object");
                   excludeMode = !excludeMode;
                   $page.url.searchParams.set("excludeMode", excludeMode);
@@ -376,7 +376,7 @@
           id="hours"
           class="input input-bordered"
           placeholder="Hours"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             inTimecode.hours = enforceMinMax(e);
           }}
           value="0"
@@ -388,10 +388,10 @@
           id="minutes"
           class="input input-bordered"
           placeholder="minutes"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             inTimecode.minutes = enforceMinMax(e, inTimecode, "minutes");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             inTimecode.minutes = enforceMinMax(e, inTimecode, "minutes");
           }}
           value="0"
@@ -403,10 +403,10 @@
           id="seconds"
           class="input input-bordered"
           placeholder="seconds"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             inTimecode.seconds = enforceMinMax(e, inTimecode, "seconds");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             inTimecode.seconds = enforceMinMax(e, inTimecode, "seconds");
           }}
           value="0"
@@ -418,10 +418,10 @@
           id="frames"
           class="input input-bordered"
           placeholder="frames"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             inTimecode.frames = enforceMinMax(e, inTimecode, "frames");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             inTimecode.frames = enforceMinMax(e, inTimecode, "frames");
           }}
           value="0"
@@ -435,10 +435,10 @@
           id="hours"
           class="input input-bordered"
           placeholder="Hours"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             outTimecode.hours = enforceMinMax(e, outTimecode, "hours");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             outTimecode.hours = enforceMinMax(e, outTimecode, "hours");
           }}
           value="23"
@@ -450,10 +450,10 @@
           id="minutes"
           class="input input-bordered"
           placeholder="minutes"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             outTimecode.minutes = enforceMinMax(e, outTimecode, "minutes");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             outTimecode.minutes = enforceMinMax(e, outTimecode, "minutes");
           }}
           value="59"
@@ -465,10 +465,10 @@
           id="seconds"
           class="input input-bordered"
           placeholder="seconds"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             outTimecode.seconds = enforceMinMax(e, outTimecode, "seconds");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             outTimecode.seconds = enforceMinMax(e, outTimecode, "seconds");
           }}
           value="59"
@@ -480,15 +480,15 @@
           id="frames"
           class="input input-bordered"
           placeholder="frames"
-          on:keyup={(e) => {
+          onkeyup={(e) => {
             outTimecode.frames = enforceMinMax(e, outTimecode, "frames");
           }}
-          on:change={(e) => {
+          onchange={(e) => {
             outTimecode.frames = enforceMinMax(e, outTimecode, "frames");
           }}
           value="24"
         />
-        <button class="btn btn-success" on:click={getNewData}>
+        <button class="btn btn-success" onclick={getNewData}>
           {#if loading}<span class="loading loading-spinner loading-lg"
             ></span>{:else}GO{/if}
         </button>
@@ -515,7 +515,7 @@
       {#if filters.length > 0}
         <div
           class="badge badge-warning hover:brightness-50 cursor-pointer"
-          on:click={() => {
+          onclick={() => {
             filters = [];
 
             getNewData();
@@ -564,7 +564,7 @@
                       data-tip="Click to apply filter"
                     >
                       <div
-                        on:click={() => {
+                        onclick={() => {
                           let newFilters = filters;
                           if (!filters.includes(tag)) {
                             newFilters.push(tag);
@@ -628,7 +628,7 @@
                 {#if !log.deleted}
                   <button
                     class="btn {log.confirmDelete ? 'btn-error' : ''}"
-                    on:click={async () => {
+                    onclick={async () => {
                       if (!log.confirmDelete) {
                         log.confirmDelete = true;
                         setTimeout(() => {
@@ -645,7 +645,7 @@
                   >{:else}
                   <button
                     class="btn {log.confirmRestore ? 'btn-success' : ''}"
-                    on:click={async () => {
+                    onclick={async () => {
                       if (!log.confirmRestore) {
                         log.confirmRestore = true;
                         setTimeout(() => {
@@ -675,7 +675,7 @@
             i
               ? 'btn-active'
               : ''}"
-            on:click={() => {
+            onclick={() => {
               currentPage = i;
               getNewData();
             }}>{i + 1}</button

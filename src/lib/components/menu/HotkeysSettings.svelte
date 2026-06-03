@@ -199,7 +199,7 @@
         <td
           ><button
             class="btn btn-xs"
-            on:click={() => {
+            onclick={() => {
               window.location.reload();
             }}>Save</button
           >
@@ -207,7 +207,7 @@
         <td
           ><button
             class="btn btn-xs"
-            on:click={() => {
+            onclick={() => {
               hotkeys.set([
                 {
                   key: "F1",

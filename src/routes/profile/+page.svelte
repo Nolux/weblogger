@@ -1,11 +1,10 @@
 <script>
-  export let data;
   import { enhance } from "$app/forms";
 
-  $: user = data.user;
-  let passwordInput = { password: "", passwordConfirm: "" };
+  let passwordInput = $state({ password: "", passwordConfirm: "" });
 
-  export let form;
+  let { data, form } = $props();
+  let user = $derived(data.user);
 </script>
 
 <h1 class="text-3xl font-bold text-center hidden lg:block lg:text-left">

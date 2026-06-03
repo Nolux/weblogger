@@ -1,16 +1,18 @@
 <script>
+  import { run } from 'svelte/legacy';
+
   import { enhance } from "$app/forms";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
 
-  export let form;
+  let { form } = $props();
 
-  let passwordInput = { password: "", passwordConfirm: "" };
+  let passwordInput = $state({ password: "", passwordConfirm: "" });
 
-  $: {
+  run(() => {
     if (form?.error) {
       AlertsStore.addAlert(form?.error, "error");
     }
-  }
+  });
 </script>
 
 <section>

@@ -8,13 +8,14 @@
 
   import { socket, socketStatus } from "$lib/socket.js";
 
-  export let data;
+  let { data } = $props();
 
-  let holder;
-  let fullscreen = false;
-  $: logs = data.logs;
-  $: user = data.user;
-  $: currentProject = data.currentProject;
+  let holder = $state();
+  let fullscreen = $state(false);
+  let logs = $state(data.logs);
+  let user = $derived(data.user);
+  let currentProject = $derived(data.currentProject);
+  $effect(() => { logs = data.logs; });
 
   socket.emit("joinProject", data.currentProject.id);
 
@@ -29,7 +30,7 @@
     }
   });
 
-  let clock = dayjs().format("HH:mm:ss");
+  let clock = $state(dayjs().format("HH:mm:ss"));
 
   setInterval(() => {
     clock = dayjs().format("HH:mm:ss");
@@ -62,7 +63,7 @@
         data-tip="Server status"
       ></div>
       <button
-        on:click={() => {
+        onclick={() => {
           if (fullscreen) {
             document.exitFullscreen();
           } else {

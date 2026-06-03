@@ -3,13 +3,13 @@
 
   import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
 
-  let dialog;
+  let dialog = $state();
 </script>
 
 <div class="tooltip tooltip-left" data-tip="Timecode Offset Settings">
   <button
     class="btn btn-ghost z-10"
-    on:click={() => {
+    onclick={() => {
       dialog.showModal();
     }}><Icon icon="mdi:cog" /></button
   >

@@ -5,11 +5,11 @@
   import "../app.css";
   import Icon from "@iconify/svelte";
 
-  export let data;
-  let sideBarOpen = false;
+  let { data, children } = $props();
+  let sideBarOpen = $state(false);
 
-  $: user = data.user;
-  $: currentProject = data.currentProject;
+  let user = $derived(data.user);
+  let currentProject = $derived(data.currentProject);
 
   const gotoLink = (e) => {
     sideBarOpen = false;
@@ -50,7 +50,7 @@
           </div>
         {/if}
       </div>
-      <slot />
+      {@render children?.()}
     </div>
   </div>
   <div class="z-40 border-r drawer-side border-base-300">
@@ -60,7 +60,7 @@
       class="flex flex-col gap-4 p-4 w-80 h-full menu bg-base-200 text-base-content lg:justify-between lg:text-xl"
     >
       <li class="text-3xl">
-        <a class="font-bold" on:click={gotoLink} href="/"
+        <a class="font-bold" onclick={gotoLink} href="/"
           >Weblogger <span class="text-xs">2.0</span></a
         >
       </li>
@@ -70,25 +70,25 @@
             <li class="p-4 select-none text-md">
               Project: {currentProject.name}
             </li>
-            <li><a on:click={gotoLink} href="/logger/">Logger</a></li>
-            <li><a on:click={gotoLink} href="/postlogger/">Post Logger</a></li>
-            <li><a on:click={gotoLink} href="/viewer/">Viewer</a></li>
-            <li><a on:click={gotoLink} href="/search/">Search</a></li>
-            <li><a on:click={gotoLink} href="/live/">Live</a></li>
+            <li><a onclick={gotoLink} href="/logger/">Logger</a></li>
+            <li><a onclick={gotoLink} href="/postlogger/">Post Logger</a></li>
+            <li><a onclick={gotoLink} href="/viewer/">Viewer</a></li>
+            <li><a onclick={gotoLink} href="/search/">Search</a></li>
+            <li><a onclick={gotoLink} href="/live/">Live</a></li>
           </div>
           <div>
             {#if user.isAdmin}
-              <li><a on:click={gotoLink} href="/admin">Admin</a></li>
+              <li><a onclick={gotoLink} href="/admin">Admin</a></li>
             {/if}
             {#if user.projectController?.includes(user.selectedProjectId) || user.isAdmin}
               <li>
-                <a on:click={gotoLink} href="/controller">Project Controller</a>
+                <a onclick={gotoLink} href="/controller">Project Controller</a>
               </li>
             {/if}
           </div>
         {:else}
           <div>
-            <li><a on:click={gotoLink} href="/login/">Sign In</a></li>
+            <li><a onclick={gotoLink} href="/login/">Sign In</a></li>
           </div>
         {/if}
         <div>
@@ -106,7 +106,7 @@
               </div>
             </div>
             <div class="text-2xl tooltip" data-tip="Open profile">
-              <a on:click={gotoLink} href="/profile">
+              <a onclick={gotoLink} href="/profile">
                 {user.fullName}
               </a>
             </div>

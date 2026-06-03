@@ -1,15 +1,15 @@
 <script>
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  export let data;
+  let { data } = $props();
 
   dayjs.extend(relativeTime);
 
-  $: user = data.user;
+  let user = $derived(data.user);
 
-  $: userAgent = data.userAgent?.toLowerCase();
+  let userAgent = $derived(data.userAgent?.toLowerCase());
 
-  $: isSafari = userAgent?.indexOf("safari/") > -1;
+  let isSafari = $derived(userAgent?.indexOf("safari/") > -1);
 </script>
 
 <div class="flex flex-col gap-8">

@@ -1,5 +1,4 @@
 <script>
-  export let data;
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import { writable } from "svelte/store";
@@ -16,25 +15,26 @@
   import { persisted } from "svelte-persisted-store";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   import PersonalHotkeys from "$lib/components/hotkeys/PersonalHotkeys.svelte";
+  let { data } = $props();
 
-  $: logs = data.logs;
-  $: user = data.user;
-  $: currentProject = data.currentProject;
+  let logs = $derived(data.logs);
+  let user = $derived(data.user);
+  let currentProject = $derived(data.currentProject);
 
   dayjs.extend(relativeTime);
 
-  let input = {
+  let input = $state({
     timecode: { hours: 0, minutes: 0, seconds: 0, frames: 0 },
     localDate: { year: 2024, month: 1, day: 1 },
-  };
+  });
   let postLoggerInput = persisted("postLoggerInput", "");
 
-  let dateInput = dayjs().format("YYYY-MM-DD");
+  let dateInput = $state(dayjs().format("YYYY-MM-DD"));
 
   let recentLogs = writable([]);
 
-  let submittingLog = false;
-  let textarea;
+  let submittingLog = $state(false);
+  let textarea = $state();
 
   const submitLog = async () => {
     submittingLog = true;
@@ -64,7 +64,7 @@
     submittingLog = false;
   };
 
-  let isOpen = false;
+  let isOpen = $state(false);
 
   const toggleDatePicker = () => (isOpen = !isOpen);
 
@@ -124,7 +124,7 @@
               class="input input-ghost w-full input-lg text-center xl:text-3xl text-2xl font-bold select-none tooltip lg:tooltip-left"
               type="text"
               placeholder="Select date"
-              on:click={toggleDatePicker}
+              onclick={toggleDatePicker}
               bind:value={dateInput}
             />
           </div>
@@ -151,8 +151,8 @@
             id="hours"
             class="input"
             placeholder="Hours"
-            on:keyup={(e) => enforceMinMax(e, "hours")}
-            on:change={(e) => enforceMinMax(e, "hours")}
+            onkeyup={(e) => enforceMinMax(e, "hours")}
+            onchange={(e) => enforceMinMax(e, "hours")}
             value="0"
           />
           <input
@@ -162,8 +162,8 @@
             id="minutes"
             class="input"
             placeholder="minutes"
-            on:keyup={(e) => enforceMinMax(e, "minutes")}
-            on:change={(e) => enforceMinMax(e, "minutes")}
+            onkeyup={(e) => enforceMinMax(e, "minutes")}
+            onchange={(e) => enforceMinMax(e, "minutes")}
             value="0"
           />
           <input
@@ -173,8 +173,8 @@
             id="seconds"
             class="input"
             placeholder="seconds"
-            on:keyup={(e) => enforceMinMax(e, "seconds")}
-            on:change={(e) => enforceMinMax(e, "seconds")}
+            onkeyup={(e) => enforceMinMax(e, "seconds")}
+            onchange={(e) => enforceMinMax(e, "seconds")}
             value="0"
           />
           <input
@@ -184,8 +184,8 @@
             id="frames"
             class="input"
             placeholder="frames"
-            on:keyup={(e) => enforceMinMax(e, "frames")}
-            on:change={(e) => enforceMinMax(e, "frames")}
+            onkeyup={(e) => enforceMinMax(e, "frames")}
+            onchange={(e) => enforceMinMax(e, "frames")}
             value="0"
           />
         </div>
@@ -199,7 +199,7 @@
               alt: $submitHotkey.modifiers.alt,
               code: $submitHotkey.key,
             }}
-            on:click={() => {
+            onclick={() => {
               submitLog();
             }}
           >
@@ -226,7 +226,7 @@
               alt: $resetHotkey.modifiers.alt,
               code: $resetHotkey.key,
             }}
-            on:click={() => {
+            onclick={() => {
               postLoggerInput.set("");
             }}
           >
