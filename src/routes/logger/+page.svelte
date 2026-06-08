@@ -9,7 +9,11 @@
     isFreshLocalLtcSnapshot,
     toLocalDateString,
   } from "$lib/timecode/timecode.js";
-  import { connectLocalLtc, localLtcState } from "$lib/timecode/ltcClient.js";
+  import {
+    connectLocalLtc,
+    localLtcState,
+    disconnectLocalLtc,
+  } from "$lib/timecode/ltcClient.js";
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
   import TimecodeSettingsModal from "$lib/components/logger/TimecodeSettingsModal.svelte";
@@ -35,6 +39,11 @@
     if ($timecodeSource.mode === "local-ltc") {
       connectLocalLtc($timecodeSource.ltcDeviceId);
     }
+    return () => {
+      if ($timecodeSource.mode === "local-ltc") {
+        disconnectLocalLtc();
+      }
+    };
   });
   dayjs.extend(relativeTime);
 
@@ -52,7 +61,12 @@
       if (snapshot) {
         return {
           ...snapshot,
-          localDate: browserClockSnapshot(dayjs(), { hours: 0, minutes: 0, seconds: 0, frames: 0 }).localDate,
+          localDate: browserClockSnapshot(dayjs(), {
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            frames: 0,
+          }).localDate,
         };
       }
     }
@@ -64,7 +78,8 @@
 
   let input = $state({
     timecode: {},
-    localDate: browserClockSnapshot(dayjs(), $tcOffsets, $timecodeSource.fps).localDate,
+    localDate: browserClockSnapshot(dayjs(), $tcOffsets, $timecodeSource.fps)
+      .localDate,
   });
 
   let loggerInput = persisted("loggerInput", "");
@@ -75,7 +90,8 @@
     if (projectId == user.selectedProjectId) {
       const snapshot = getCurrentTimecodeSnapshot();
       const res = await fetch(
-        "/api/log?page=0&perPage=10&localDate=" + toLocalDateString(snapshot.localDate),
+        "/api/log?page=0&perPage=10&localDate=" +
+          toLocalDateString(snapshot.localDate),
       );
       const data = await res.json();
       logs = data.logs;
@@ -93,7 +109,10 @@
     submittingLog = true;
     const snapshot = getCurrentTimecodeSnapshot({ allowStale: false });
     if (!snapshot) {
-      AlertsStore.addAlert("Local LTC is not locked. Connect a valid LTC input before submitting.", "warning");
+      AlertsStore.addAlert(
+        "Local LTC is not locked. Connect a valid LTC input before submitting.",
+        "warning",
+      );
       submittingLog = false;
       return;
     }
@@ -140,7 +159,10 @@
     textarea?.select();
     const snapshot = getCurrentTimecodeSnapshot({ allowStale: false });
     if (!snapshot) {
-      AlertsStore.addAlert("Local LTC is not locked. Connect a valid LTC input before setting TC.", "warning");
+      AlertsStore.addAlert(
+        "Local LTC is not locked. Connect a valid LTC input before setting TC.",
+        "warning",
+      );
       return;
     }
 
@@ -190,11 +212,14 @@
           </div>
           {#if $timecodeSource.mode === "local-ltc"}
             <div class="flex items-center justify-center gap-2 text-sm mt-1">
-              <span class="inline-block w-3 h-3 rounded-full {
-                $localLtcState.status === 'locked'    ? 'bg-success' :
-                $localLtcState.status === 'listening' ? 'bg-warning' :
-                                                        'bg-error'
-              }"></span>
+              <span
+                class="inline-block w-3 h-3 rounded-full {$localLtcState.status ===
+                'locked'
+                  ? 'bg-success'
+                  : $localLtcState.status === 'listening'
+                    ? 'bg-warning'
+                    : 'bg-error'}"
+              ></span>
               <span class="opacity-70">LTC {$localLtcState.status}</span>
             </div>
           {/if}
