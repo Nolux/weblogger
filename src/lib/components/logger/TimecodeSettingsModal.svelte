@@ -128,6 +128,17 @@
         onclick={() => connectLocalLtc($timecodeSource.ltcDeviceId)}
         >Connect / Reconnect</button
       >
+      {#if $localLtcState.status !== "idle" && $localLtcState.status !== "permission-needed"}
+        <div class="flex items-center gap-2">
+          <span class="text-xs opacity-60 shrink-0">Level</span>
+          <div class="flex-1 h-2 rounded-full bg-base-300 overflow-hidden">
+            <div
+              class="h-full rounded-full transition-all duration-75 {$localLtcState.level > 0.8 ? 'bg-error' : $localLtcState.level > 0.4 ? 'bg-success' : 'bg-success opacity-60'}"
+              style="width: {$localLtcState.level * 100}%"
+            ></div>
+          </div>
+        </div>
+      {/if}
       <div class="text-sm">
         Status: <span class="font-semibold">{$localLtcState.status}</span>
         {#if $localLtcState.deviceLabel}

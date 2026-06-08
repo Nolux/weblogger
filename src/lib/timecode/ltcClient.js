@@ -11,6 +11,7 @@ const initialState = {
   timecode: null,
   timecodeString: "--:--:--:--",
   lastSeenAt: null,
+  level: 0,
   error: null,
 };
 
@@ -108,7 +109,10 @@ export const connectLocalLtc = async (deviceId = null) => {
     const source = audioContext.createMediaStreamSource(mediaStream);
     processor = audioContext.createScriptProcessor(4096, 1, 1);
     processor.onaudioprocess = (event) => {
-      decoder.decode(Array.from(event.inputBuffer.getChannelData(0)));
+      const samples = Array.from(event.inputBuffer.getChannelData(0));
+      decoder.decode(samples);
+      const rms = Math.sqrt(samples.reduce((sum, s) => sum + s * s, 0) / samples.length);
+      update({ level: Math.min(1, rms * 4) });
     };
 
     source.connect(processor);
@@ -146,6 +150,7 @@ export const disconnectLocalLtc = () => {
     timecode: null,
     timecodeString: "--:--:--:--",
     lastSeenAt: null,
+    level: 0,
     error: null,
   });
 };
