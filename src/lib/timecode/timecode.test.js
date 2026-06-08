@@ -18,7 +18,7 @@ describe("timecode utilities", () => {
 
     expect(toTimecodeString(tc)).toBe("01:02:03:04");
     expect(parseTimecode("01:02:03:04")).toEqual(tc);
-    expect(MAX_FRAME).toBe(24);
+    expect(MAX_FRAME).toBe(29);
   });
 
   test("uses frame offsets when creating browser-clock snapshots", () => {

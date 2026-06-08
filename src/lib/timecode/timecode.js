@@ -2,8 +2,18 @@ import dayjs from "dayjs";
 
 export const TIMECODE_FPS = 25;
 export const FRAME_DURATION_MS = 1000 / TIMECODE_FPS;
-export const MAX_FRAME = TIMECODE_FPS - 1;
+export const MAX_FRAME = 29;
 export const LOCAL_LTC_STALE_MS = 500;
+
+export const FRAME_RATES = [
+  { label: "23.976", value: 23.976 },
+  { label: "24", value: 24 },
+  { label: "25", value: 25 },
+  { label: "29.97", value: 29.97 },
+  { label: "30", value: 30 },
+];
+
+const effectiveFps = (fps) => Math.ceil(fps);
 
 export const DEFAULT_TIMECODE_SOURCE = {
   mode: "browser-clock",
@@ -35,20 +45,21 @@ export const localDateFromDayjs = (value) => ({
   day: value.date(),
 });
 
-export const dayjsWithFrameOffset = (value, offsets = {}) =>
+export const dayjsWithFrameOffset = (value, offsets = {}, fps = TIMECODE_FPS) =>
   value
     .add(Number(offsets.hours || 0), "hour")
     .add(Number(offsets.minutes || 0), "minute")
     .add(Number(offsets.seconds || 0), "second")
-    .add(Number(offsets.frames || 0) * FRAME_DURATION_MS, "millisecond");
+    .add(Number(offsets.frames || 0) * (1000 / effectiveFps(fps)), "millisecond");
 
-export const browserClockSnapshot = (value = dayjs(), offsets = {}) => {
-  const time = dayjsWithFrameOffset(value, offsets);
+export const browserClockSnapshot = (value = dayjs(), offsets = {}, fps = TIMECODE_FPS) => {
+  const frameDuration = 1000 / effectiveFps(fps);
+  const time = dayjsWithFrameOffset(value, offsets, fps);
   const timecode = {
     hours: time.hour(),
     minutes: time.minute(),
     seconds: time.second(),
-    frames: Math.floor(time.millisecond() / FRAME_DURATION_MS),
+    frames: Math.floor(time.millisecond() / frameDuration),
   };
 
   return {

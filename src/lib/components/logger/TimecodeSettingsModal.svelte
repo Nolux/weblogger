@@ -3,6 +3,7 @@
 
   import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
   import { timecodeSource } from "$lib/stores/timecodeSourceStore.js";
+  import { FRAME_RATES } from "$lib/timecode/timecode.js";
   import {
     connectLocalLtc,
     disconnectLocalLtc,
@@ -20,6 +21,13 @@
   const selectDevice = (deviceId) => {
     $timecodeSource = { ...$timecodeSource, ltcDeviceId: deviceId || null };
   };
+
+  const selectFps = (fps) => {
+    $timecodeSource = { ...$timecodeSource, fps };
+    $tcOffsets = { ...$tcOffsets, frames: 0 };
+  };
+
+  let maxFrameOffset = $derived(Math.ceil($timecodeSource.fps) - 1);
 </script>
 
 <div class="tooltip tooltip-left" data-tip="Timecode Settings">
@@ -67,6 +75,16 @@
 
     {#if $timecodeSource.mode === "browser-clock"}
       <div class="divider my-0"></div>
+      <div class="font-semibold">Frame rate</div>
+      <div class="flex gap-2 flex-wrap">
+        {#each FRAME_RATES as fr}
+          <button
+            class="btn btn-sm {$timecodeSource.fps === fr.value ? 'btn-primary' : 'btn-ghost'}"
+            onclick={() => selectFps(fr.value)}
+          >{fr.label}</button>
+        {/each}
+      </div>
+      <div class="divider my-0"></div>
       <div class="font-semibold">Browser clock offset</div>
       <label class="input w-full flex items-center gap-2">
         Hours: <input
@@ -100,8 +118,8 @@
       >
       <label class="input w-full flex items-center gap-2">
         Frames: <input
-          max="24"
-          min="-24"
+          max={maxFrameOffset}
+          min={-maxFrameOffset}
           type="number"
           class="grow text-right"
           placeholder="Frame"
