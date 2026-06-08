@@ -57,14 +57,14 @@
       }
     }
 
-    return browserClockSnapshot(dayjs(), $tcOffsets);
+    return browserClockSnapshot(dayjs(), $tcOffsets, $timecodeSource.fps);
   };
 
   let currentSnapshot = $state(getCurrentTimecodeSnapshot());
 
   let input = $state({
     timecode: {},
-    localDate: browserClockSnapshot(dayjs(), $tcOffsets).localDate,
+    localDate: browserClockSnapshot(dayjs(), $tcOffsets, $timecodeSource.fps).localDate,
   });
 
   let loggerInput = persisted("loggerInput", "");
