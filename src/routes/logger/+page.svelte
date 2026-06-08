@@ -3,9 +3,16 @@
 
   import { shortcut } from "$lib/components/hotkeys/shortcut.js";
   import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
+  import { timecodeSource } from "$lib/stores/timecodeSourceStore.js";
+  import {
+    browserClockSnapshot,
+    isFreshLocalLtcSnapshot,
+    toLocalDateString,
+  } from "$lib/timecode/timecode.js";
+  import { connectLocalLtc, localLtcState } from "$lib/timecode/ltcClient.js";
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
-  import TcOffsetModal from "$lib/components/logger/TcOffsetModal.svelte";
+  import TimecodeSettingsModal from "$lib/components/logger/TimecodeSettingsModal.svelte";
 
   import {
     submitHotkey,
@@ -13,6 +20,7 @@
     timecodeHotkey,
   } from "$lib/stores/hotkeysStore.js";
 
+  import { onMount } from "svelte";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
   import Icon from "@iconify/svelte";
@@ -22,6 +30,12 @@
   import { AlertsStore } from "$lib/stores/alertsStore.js";
   import PersonalHotkeys from "$lib/components/hotkeys/PersonalHotkeys.svelte";
   let { data } = $props();
+
+  onMount(() => {
+    if ($timecodeSource.mode === "local-ltc") {
+      connectLocalLtc($timecodeSource.ltcDeviceId);
+    }
+  });
   dayjs.extend(relativeTime);
 
   let timecode = $state("00:00:00:00");
@@ -29,14 +43,28 @@
   let submittingLog = $state(false);
   let textarea = $state();
 
-  let now = dayjs()
-    .add($tcOffsets.hours, "hour")
-    .add($tcOffsets.minutes, "minute")
-    .add($tcOffsets.seconds, "second");
+  const getCurrentTimecodeSnapshot = ({ allowStale = true } = {}) => {
+    if ($timecodeSource.mode === "local-ltc") {
+      const snapshot = $localLtcState.snapshot;
+      if (!allowStale && !isFreshLocalLtcSnapshot(snapshot)) {
+        return null;
+      }
+      if (snapshot) {
+        return {
+          ...snapshot,
+          localDate: browserClockSnapshot(dayjs(), { hours: 0, minutes: 0, seconds: 0, frames: 0 }).localDate,
+        };
+      }
+    }
+
+    return browserClockSnapshot(dayjs(), $tcOffsets);
+  };
+
+  let currentSnapshot = $state(getCurrentTimecodeSnapshot());
 
   let input = $state({
     timecode: {},
-    localDate: { year: now.year(), month: now.month() + 1, day: now.date() },
+    localDate: browserClockSnapshot(dayjs(), $tcOffsets).localDate,
   });
 
   let loggerInput = persisted("loggerInput", "");
@@ -45,60 +73,36 @@
 
   socket.on("fetchNewData", async (projectId) => {
     if (projectId == user.selectedProjectId) {
-      let now = dayjs()
-        .add($tcOffsets.hours, "hour")
-        .add($tcOffsets.minutes, "minute")
-        .add($tcOffsets.seconds, "second");
+      const snapshot = getCurrentTimecodeSnapshot();
       const res = await fetch(
-        "/api/log?page=0&perPage=10&localDate=" + now.format("YYYY.MM.DD"),
+        "/api/log?page=0&perPage=10&localDate=" + toLocalDateString(snapshot.localDate),
       );
       const data = await res.json();
       logs = data.logs;
     }
   });
 
-  // Refresh Timecode display
+  // Refresh Timecode display/date from the selected source.
   setInterval(() => {
-    let time = dayjs()
-      .add($tcOffsets.hours, "hour")
-      .add($tcOffsets.minutes, "minute")
-      .add($tcOffsets.seconds, "second");
-    timecode =
-      time.format("HH:mm:ss:") +
-      Math.floor(time.millisecond() / 40)
-        .toString()
-        .padStart(2, "0");
+    currentSnapshot = getCurrentTimecodeSnapshot();
+    timecode = currentSnapshot.timecodeString;
+    input.localDate = currentSnapshot.localDate;
   }, 50);
-
-  // Refresh Date
-  setInterval(() => {
-    let now = dayjs()
-      .add($tcOffsets.hours, "hour")
-      .add($tcOffsets.minutes, "minute")
-      .add($tcOffsets.seconds, "second");
-
-    input.localDate = {
-      year: now.year(),
-      month: now.month() + 1,
-      day: now.date(),
-    };
-  }, 1000);
 
   const submitLog = async () => {
     submittingLog = true;
-    let now = dayjs()
-      .add($tcOffsets.hours, "hour")
-      .add($tcOffsets.minutes, "minute")
-      .add($tcOffsets.seconds, "second");
+    const snapshot = getCurrentTimecodeSnapshot({ allowStale: false });
+    if (!snapshot) {
+      AlertsStore.addAlert("Local LTC is not locked. Connect a valid LTC input before submitting.", "warning");
+      submittingLog = false;
+      return;
+    }
+
     if (inTimecode == "XX:XX:XX:XX") {
       setTimecodeToNow();
     }
 
-    input.localDate = {
-      year: now.year(),
-      month: now.month() + 1,
-      day: now.date(),
-    };
+    input.localDate = snapshot.localDate;
 
     input.timecode = {
       hours: parseInt(inTimecode.split(":")[0]),
@@ -123,11 +127,7 @@
 
     input = {
       timecode: {},
-      localDate: {
-        year: now.year(),
-        month: now.month() + 1,
-        day: now.date(),
-      },
+      localDate: snapshot.localDate,
     };
     loggerInput.set("");
     submittingLog = false;
@@ -137,17 +137,15 @@
   };
 
   const setTimecodeToNow = (forced = false) => {
-    textarea.select();
-    let now = dayjs()
-      .add($tcOffsets.hours, "hour")
-      .add($tcOffsets.minutes, "minute")
-      .add($tcOffsets.seconds, "second");
+    textarea?.select();
+    const snapshot = getCurrentTimecodeSnapshot({ allowStale: false });
+    if (!snapshot) {
+      AlertsStore.addAlert("Local LTC is not locked. Connect a valid LTC input before setting TC.", "warning");
+      return;
+    }
+
     if (inTimecode == "XX:XX:XX:XX" || forced) {
-      inTimecode =
-        now.format("HH:mm:ss:") +
-        Math.floor(now.millisecond() / 40) // TODO: check frame rate?
-          .toString()
-          .padStart(2, "0");
+      inTimecode = snapshot.timecodeString;
     }
   };
   let logs = $state(data.logs);
@@ -175,7 +173,7 @@
       class="flex relative flex-col col-span-4 gap-4 p-4 border lg:col-span-2 border-primary"
     >
       <div class="absolute top-2 right-2 z-10">
-        <TcOffsetModal />
+        <TimecodeSettingsModal />
       </div>
       <div
         class="mt-4 text-2xl font-bold text-center select-none xl:text-3xl tooltip lg:tooltip-left"
@@ -190,6 +188,16 @@
               {timecode}
             </span>
           </div>
+          {#if $timecodeSource.mode === "local-ltc"}
+            <div class="flex items-center justify-center gap-2 text-sm mt-1">
+              <span class="inline-block w-3 h-3 rounded-full {
+                $localLtcState.status === 'locked'    ? 'bg-success' :
+                $localLtcState.status === 'listening' ? 'bg-warning' :
+                                                        'bg-error'
+              }"></span>
+              <span class="opacity-70">LTC {$localLtcState.status}</span>
+            </div>
+          {/if}
         </div>
       </div>
       <div
@@ -255,16 +263,7 @@
             code: $resetHotkey.key,
           }}
           onclick={() => {
-            let now = dayjs()
-              .add($tcOffsets.hours, "hour")
-              .add($tcOffsets.minutes, "minute")
-              .add($tcOffsets.seconds, "second");
-
-            input.localDate = {
-              year: now.year(),
-              month: now.month() + 1,
-              day: now.date(),
-            };
+            input.localDate = getCurrentTimecodeSnapshot().localDate;
 
             loggerInput.set("");
             inTimecode = "XX:XX:XX:XX";
