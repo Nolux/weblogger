@@ -1,7 +1,13 @@
 import { json, error } from "@sveltejs/kit";
-import dayjs from "dayjs";
 
 import { db } from "$lib/db.js";
+import {
+  parseLocalDateString,
+  parseTimecode,
+  timecodeToDayjs,
+  toLocalDateString,
+  toTimecodeString,
+} from "$lib/timecode/timecode.js";
 import { checkIfAdmin, checkIfOwner } from "$lib/server/auth.js";
 import { editColors } from "$lib/helpers/editColors.js";
 import { LogModel } from "$lib/Models/Log.js";
@@ -50,15 +56,12 @@ export const GET = async ({ url, locals }) => {
   }
 
   if (afterTc) {
-    let timecode = afterTc.split(":");
-
     searchObj.timecodeDateObj = {};
 
-    const timecodeDateObj = dayjs(localDate)
-      .add(timecode[0], "h")
-      .add(timecode[1], "m")
-      .add(timecode[2], "s")
-      .add(timecode[3] * 40, "ms");
+    const timecodeDateObj = timecodeToDayjs(
+      parseLocalDateString(localDate),
+      parseTimecode(afterTc),
+    );
 
     searchObj.timecodeDateObj.gte = timecodeDateObj.format(
       "YYYY-MM-DD[T]HH:mm:ss.SSSZ"
@@ -66,13 +69,10 @@ export const GET = async ({ url, locals }) => {
   }
 
   if (beforeTc) {
-    let timecode = beforeTc.split(":");
-
-    const timecodeDateObj = dayjs(localDate)
-      .add(timecode[0], "h")
-      .add(timecode[1], "m")
-      .add(timecode[2], "s")
-      .add(timecode[3] * 40, "ms");
+    const timecodeDateObj = timecodeToDayjs(
+      parseLocalDateString(localDate),
+      parseTimecode(beforeTc),
+    );
 
     searchObj.timecodeDateObj.lte = timecodeDateObj.format(
       "YYYY-MM-DD[T]HH:mm:ss.SSSZ"
@@ -148,20 +148,10 @@ export const POST = async ({ request, locals }) => {
 
   // Create localdate obj
 
-  const localDateString = `${localDate.year
-    .toString()
-    .padStart(4, "0")}.${localDate.month
-    .toString()
-    .padStart(2, "0")}.${localDate.day.toString().padStart(2, "0")}`;
+  const localDateString = toLocalDateString(localDate);
 
   // Create timecode obj
-  const timecodeString = `${timecode.hours
-    .toString()
-    .padStart(2, "0")}:${timecode.minutes
-    .toString()
-    .padStart(2, "0")}:${timecode.seconds
-    .toString()
-    .padStart(2, "0")}:${timecode.frames.toString().padStart(2, "0")}`;
+  const timecodeString = toTimecodeString(timecode);
 
   // Check if project has this day?
   const project = await db.project.findUnique({
@@ -175,11 +165,7 @@ export const POST = async ({ request, locals }) => {
     });
   }
 
-  const timecodeDateObj = dayjs(localDateString)
-    .add(timecode.hours, "h")
-    .add(timecode.minutes, "m")
-    .add(timecode.seconds, "s")
-    .add(timecode.frames * 40, "ms");
+  const timecodeDateObj = timecodeToDayjs(localDate, timecode);
 
   const logObj = {
     body: body.trim(),
@@ -236,29 +222,13 @@ export const PATCH = async ({ request, locals }) => {
 
   // Create localdate obj
 
-  const localDateString = `${updatedLog.localDate.year
-    .toString()
-    .padStart(4, "0")}.${updatedLog.localDate.month
-    .toString()
-    .padStart(2, "0")}.${updatedLog.localDate.day.toString().padStart(2, "0")}`;
+  const localDateString = toLocalDateString(updatedLog.localDate);
 
   // Create timecode obj
-  const timecodeString = `${updatedLog.timecode.hours
-    .toString()
-    .padStart(2, "0")}:${updatedLog.timecode.minutes
-    .toString()
-    .padStart(2, "0")}:${updatedLog.timecode.seconds
-    .toString()
-    .padStart(2, "0")}:${updatedLog.timecode.frames
-    .toString()
-    .padStart(2, "0")}`;
+  const timecodeString = toTimecodeString(updatedLog.timecode);
 
   // Update TimecodeDateObj
-  const timecodeDateObj = dayjs(localDateString)
-    .add(updatedLog.timecode.hours, "h")
-    .add(updatedLog.timecode.minutes, "m")
-    .add(updatedLog.timecode.seconds, "s")
-    .add(updatedLog.timecode.frames * 40, "ms");
+  const timecodeDateObj = timecodeToDayjs(updatedLog.localDate, updatedLog.timecode);
 
   const logObj = {
     ...updatedLog,

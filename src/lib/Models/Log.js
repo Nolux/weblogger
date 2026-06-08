@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MAX_FRAME } from "$lib/timecode/timecode.js";
 
 export const LogModel = z.object({
   body: z.string(),
@@ -8,7 +9,7 @@ export const LogModel = z.object({
     hours: z.number().max(23).min(0),
     minutes: z.number().max(59).min(0),
     seconds: z.number().max(59).min(0),
-    frames: z.number().max(24).min(0), // TODO: change when updating to other framerates
+    frames: z.number().max(MAX_FRAME).min(0),
   }),
   timecodeString: z.string(),
   timecodeDateObj: z.string(),

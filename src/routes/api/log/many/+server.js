@@ -1,7 +1,7 @@
 import { json, error } from "@sveltejs/kit";
 import { db } from "$lib/db.js";
-import dayjs from "dayjs";
 import { LogModel } from "$lib/Models/Log.js";
+import { timecodeToDayjs, toLocalDateString, toTimecodeString } from "$lib/timecode/timecode.js";
 
 export const POST = async ({ request, locals }) => {
   let { logs, localDateString } = await request.json();
@@ -35,26 +35,12 @@ export const POST = async ({ request, locals }) => {
 
     // Create localdate obj
 
-    const localDateString = `${log.localDate.year
-      .toString()
-      .padStart(4, "0")}.${log.localDate.month
-      .toString()
-      .padStart(2, "0")}.${log.localDate.day.toString().padStart(2, "0")}`;
+    const localDateString = toLocalDateString(log.localDate);
 
     // Create timecode obj
-    const timecodeString = `${log.timecode.hours
-      .toString()
-      .padStart(2, "0")}:${log.timecode.minutes
-      .toString()
-      .padStart(2, "0")}:${log.timecode.seconds
-      .toString()
-      .padStart(2, "0")}:${log.timecode.frames.toString().padStart(2, "0")}`;
+    const timecodeString = toTimecodeString(log.timecode);
 
-    const timecodeDateObj = dayjs(localDateString)
-      .add(log.timecode.hours, "h")
-      .add(log.timecode.minutes, "m")
-      .add(log.timecode.seconds, "s")
-      .add(log.timecode.frames * 40, "ms");
+    const timecodeDateObj = timecodeToDayjs(log.localDate, log.timecode);
 
     const logObj = {
       body: log.body,
