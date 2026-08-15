@@ -63,21 +63,25 @@
 </script>
 
 {#snippet row(id, label, hotkey, set, withText = false)}
-  <tr
-    class={conflicts.has(sig(hotkey)) ? "bg-error/20" : ""}
-    title={conflicts.has(sig(hotkey))
-      ? "Same combination as another hotkey"
-      : ""}
-  >
+  <tr class={conflicts.has(sig(hotkey)) ? "bg-error/20" : ""}>
     <td>{label}</td>
     <td>
-      <button
-        class="btn btn-xs w-32 font-mono"
-        class:btn-primary={armed?.id === id}
-        onclick={() => (armed = { id, current: hotkey, set })}
+      <span
+        class="tooltip tooltip-right"
+        data-tip={armed?.id === id
+          ? "Press the key combination you want · Esc to cancel"
+          : conflicts.has(sig(hotkey))
+            ? "Same combination as another hotkey · click to rebind"
+            : "Click, then press the key you want"}
       >
-        {armed?.id === id ? "Press key…" : display(hotkey)}
-      </button>
+        <button
+          class="btn btn-xs w-32 font-mono"
+          class:btn-primary={armed?.id === id}
+          onclick={() => (armed = { id, current: hotkey, set })}
+        >
+          {armed?.id === id ? "Press key…" : display(hotkey)}
+        </button>
+      </span>
     </td>
     <td>
       {#if withText}
@@ -89,23 +93,6 @@
         />
       {/if}
     </td>
-    {#each ["control", "shift", "alt"] as modifier}
-      <td>
-        <input
-          class="toggle toggle-xs"
-          type="checkbox"
-          checked={hotkey.modifiers[modifier]}
-          onchange={(e) =>
-            set({
-              ...hotkey,
-              modifiers: {
-                ...hotkey.modifiers,
-                [modifier]: e.currentTarget.checked,
-              },
-            })}
-        />
-      </td>
-    {/each}
   </tr>
 {/snippet}
 
@@ -114,11 +101,8 @@
     <thead>
       <tr>
         <th>type</th>
-        <th>Button</th>
+        <th>Keybind</th>
         <th>opt</th>
-        <th>Control</th>
-        <th>Shift</th>
-        <th>Alt</th>
       </tr>
     </thead>
     <tbody>
@@ -145,17 +129,8 @@
       {/each}
       <tr
         ><td colspan="2" class="text-center"
-          >Click a key to rebind · Esc cancels · Save or refresh to update
-          hotkeys</td
+          >Click a key to rebind · Esc cancels · changes apply immediately</td
         >
-        <td
-          ><button
-            class="btn btn-xs"
-            onclick={() => {
-              window.location.reload();
-            }}>Save</button
-          >
-        </td>
         <td
           ><button
             class="btn btn-xs"
