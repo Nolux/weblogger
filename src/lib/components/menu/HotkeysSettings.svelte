@@ -99,11 +99,11 @@
 {/snippet}
 
 <div class="flex flex-col gap-1">
-  <table class="table table-xs table-zebra w-full">
+  <table class="table table-xs table-zebra table-fixed w-full">
     <thead>
       <tr>
-        <th>type</th>
-        <th>Keybind</th>
+        <th class="w-1/3">type</th>
+        <th class="w-2/3">Keybind</th>
       </tr>
     </thead>
     <tbody>
@@ -128,28 +128,30 @@
           true
         )}
       {/each}
-      <tr
-        ><td class="text-center"
-          >Click a key to rebind · Esc cancels · changes apply immediately</td
-        >
-        <td
-          ><button
-            class="btn btn-xs"
-            onclick={() => {
-              hotkeys.set(structuredClone(defaults.hotkeys));
-              submitHotkey.set(structuredClone(defaults.submitHotkey));
-              resetHotkey.set(structuredClone(defaults.resetHotkey));
-              timecodeHotkey.set(structuredClone(defaults.timecodeHotkey));
-              // keybinds go back to default, the user's typed text stays
-              personalHotkeys.update((current) =>
-                defaults.personalHotkeys.map((d, i) => ({
-                  ...structuredClone(d),
-                  text: current[i]?.text ?? "",
-                }))
-              );
-            }}>Reset hotkeys</button
-          ></td
-        >
+      <tr>
+        <td colspan="2">
+          <div class="flex items-center justify-between gap-2">
+            <span
+              >Click a key to rebind · Esc cancels · changes apply immediately</span
+            >
+            <button
+              class="btn btn-xs shrink-0"
+              onclick={() => {
+                hotkeys.set(structuredClone(defaults.hotkeys));
+                submitHotkey.set(structuredClone(defaults.submitHotkey));
+                resetHotkey.set(structuredClone(defaults.resetHotkey));
+                timecodeHotkey.set(structuredClone(defaults.timecodeHotkey));
+                // keybinds go back to default, the user's typed text stays
+                personalHotkeys.update((current) =>
+                  defaults.personalHotkeys.map((d, i) => ({
+                    ...structuredClone(d),
+                    text: current[i]?.text ?? "",
+                  }))
+                );
+              }}>Reset hotkeys</button
+            >
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
