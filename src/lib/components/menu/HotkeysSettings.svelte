@@ -66,32 +66,33 @@
   <tr class={conflicts.has(sig(hotkey)) ? "bg-error/20" : ""}>
     <td>{label}</td>
     <td>
-      <span
-        class="tooltip tooltip-right"
-        data-tip={armed?.id === id
-          ? "Press the key combination you want · Esc to cancel"
-          : conflicts.has(sig(hotkey))
-            ? "Same combination as another hotkey · click to rebind"
-            : "Click, then press the key you want"}
-      >
-        <button
-          class="btn btn-xs w-32 font-mono"
-          class:btn-primary={armed?.id === id}
-          onclick={() => (armed = { id, current: hotkey, set })}
+      <div class="flex items-center gap-2">
+        <span
+          class="tooltip tooltip-right"
+          data-tip={armed?.id === id
+            ? "Press the key combination you want · Esc to cancel"
+            : conflicts.has(sig(hotkey))
+              ? "Same combination as another hotkey · click to rebind"
+              : "Click, then press the key you want"}
         >
-          {armed?.id === id ? "Press key…" : display(hotkey)}
-        </button>
-      </span>
-    </td>
-    <td>
-      {#if withText}
-        <input
-          class="input input-xs w-16"
-          type="text"
-          value={hotkey.text}
-          onchange={(e) => set({ ...hotkey, text: e.currentTarget.value })}
-        />
-      {/if}
+          <button
+            class="btn btn-xs w-32 font-mono"
+            class:btn-primary={armed?.id === id}
+            onclick={() => (armed = { id, current: hotkey, set })}
+          >
+            {armed?.id === id ? "Press key…" : display(hotkey)}
+          </button>
+        </span>
+        {#if withText}
+          <input
+            class="input input-xs flex-1"
+            type="text"
+            placeholder="Input text"
+            value={hotkey.text}
+            onchange={(e) => set({ ...hotkey, text: e.currentTarget.value })}
+          />
+        {/if}
+      </div>
     </td>
   </tr>
 {/snippet}
@@ -102,7 +103,6 @@
       <tr>
         <th>type</th>
         <th>Keybind</th>
-        <th>opt</th>
       </tr>
     </thead>
     <tbody>
@@ -128,7 +128,7 @@
         )}
       {/each}
       <tr
-        ><td colspan="2" class="text-center"
+        ><td class="text-center"
           >Click a key to rebind · Esc cancels · changes apply immediately</td
         >
         <td
