@@ -5,6 +5,7 @@
     resetHotkey,
     timecodeHotkey,
     personalHotkeys,
+    defaults,
   } from "$lib/stores/hotkeysStore.js";
 
   // { id, current, set } of the row waiting for a keypress, or null
@@ -135,54 +136,17 @@
           ><button
             class="btn btn-xs"
             onclick={() => {
-              hotkeys.set([
-                {
-                  key: "F1",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F2",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F3",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F4",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F5",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F6",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F7",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F8",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-              ]);
-              submitHotkey.set({
-                key: "F1",
-                modifiers: { control: false, shift: true, alt: false },
-              });
-
-              resetHotkey.set({
-                key: "F2",
-                modifiers: { control: false, shift: true, alt: false },
-              });
-
-              timecodeHotkey.set({
-                key: "F3",
-                modifiers: { control: false, shift: true, alt: false },
-              });
+              hotkeys.set(structuredClone(defaults.hotkeys));
+              submitHotkey.set(structuredClone(defaults.submitHotkey));
+              resetHotkey.set(structuredClone(defaults.resetHotkey));
+              timecodeHotkey.set(structuredClone(defaults.timecodeHotkey));
+              // keybinds go back to default, the user's typed text stays
+              personalHotkeys.update((current) =>
+                defaults.personalHotkeys.map((d, i) => ({
+                  ...structuredClone(d),
+                  text: current[i]?.text ?? "",
+                }))
+              );
             }}>Reset hotkeys</button
           ></td
         >
