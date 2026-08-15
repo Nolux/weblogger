@@ -74,7 +74,7 @@
             ? "Press the key combination you want · Esc to cancel"
             : conflicts.has(sig(hotkey))
               ? "Same combination as another hotkey · click to rebind"
-              : "Click, then press the key you want"}
+              : "Click, and press the key combination you want"}
         >
           <button
             class="btn btn-xs w-32 font-mono"
