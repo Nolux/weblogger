@@ -21,9 +21,13 @@ export const defaults = {
     ...h,
     text: "",
   })),
-  submitHotkey: { key: "Enter", modifiers: modifiers({ shift: true }) },
-  resetHotkey: { key: "R", modifiers: modifiers({ shift: true }) },
-  timecodeHotkey: { key: "T", modifiers: modifiers({ shift: true }) },
+  // Alt on all three: these fire while the logger textarea has focus, so they
+  // must not be things you can type, and Alt avoids the browser's Ctrl+T /
+  // Ctrl+R. macOS rewrites Alt+letter to "®", "†", … — the matcher falls back
+  // to the physical key for that.
+  submitHotkey: { key: "Enter", modifiers: modifiers({ alt: true }) },
+  resetHotkey: { key: "r", modifiers: modifiers({ alt: true }) },
+  timecodeHotkey: { key: "t", modifiers: modifiers({ alt: true }) },
 };
 
 // First param is the local storage key, second is the initial value.

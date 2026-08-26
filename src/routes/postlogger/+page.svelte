@@ -6,7 +6,7 @@
 
   import { socket } from "$lib/socket.js";
   import { submitHotkey, resetHotkey } from "$lib/stores/hotkeysStore.js";
-  import { shortcut } from "$lib/components/hotkeys/shortcut.js";
+  import { shortcut, display } from "$lib/components/hotkeys/shortcut.js";
 
   import Hotkeys from "$lib/components/hotkeys/Hotkeys.svelte";
   import Icon from "@iconify/svelte";
@@ -210,12 +210,7 @@
                 ></span>
               {:else}
                 <div>Submit</div>
-                <div class="text-xs">
-                  {$submitHotkey.modifiers.control ? "CTL + " : ""}
-                  {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
-                  {$submitHotkey.modifiers.alt ? "ALT + " : ""}
-                  {$submitHotkey.key}
-                </div>
+                <div class="text-xs">{display($submitHotkey)}</div>
               {/if}
             </div>
           </button>
@@ -233,12 +228,7 @@
           >
             <div class="flex flex-col">
               <div>Reset</div>
-              <div class="text-xs">
-                {$resetHotkey.modifiers.control ? "CTL + " : ""}
-                {$resetHotkey.modifiers.shift ? "SHIFT + " : ""}
-                {$resetHotkey.modifiers.alt ? "ALT + " : ""}
-                {$resetHotkey.key}
-              </div>
+              <div class="text-xs">{display($resetHotkey)}</div>
             </div></button
           >
         </div>

@@ -7,6 +7,7 @@
     personalHotkeys,
     defaults,
   } from "$lib/stores/hotkeysStore.js";
+  import { display, keyFromEvent } from "$lib/components/hotkeys/shortcut.js";
 
   // { id, current, set } of the row waiting for a keypress, or null
   let armed = $state(null);
@@ -15,12 +16,6 @@
 
   const sig = (h) =>
     `${h.modifiers.control}${h.modifiers.shift}${h.modifiers.alt}:${h.key}`;
-
-  const display = (h) =>
-    (h.modifiers.control ? "CTL + " : "") +
-    (h.modifiers.shift ? "SHIFT + " : "") +
-    (h.modifiers.alt ? "ALT + " : "") +
-    h.key;
 
   let allRows = $derived([
     $submitHotkey,
@@ -49,7 +44,7 @@
       if (MODIFIER_KEYS.includes(e.key)) return;
       armed.set({
         ...armed.current,
-        key: e.key,
+        key: keyFromEvent(e),
         modifiers: {
           control: e.ctrlKey || e.metaKey,
           shift: e.shiftKey,

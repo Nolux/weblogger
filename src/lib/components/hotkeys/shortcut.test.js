@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { shortcut } from "./shortcut.js";
+import { shortcut, keyFromEvent } from "./shortcut.js";
 
 // ponytail: hand-rolled window stub instead of pulling in jsdom for one test
 let listeners;
 const fakeEvent = (key, mods = {}) => ({
   key,
+  code: mods.code,
   altKey: !!mods.alt,
   shiftKey: !!mods.shift,
   ctrlKey: !!mods.control,
@@ -24,6 +25,20 @@ beforeEach(() => {
 
 afterEach(() => {
   delete globalThis.window;
+});
+
+describe("keyFromEvent", () => {
+  it("stores the physical key, not the typed character", () => {
+    expect(keyFromEvent({ key: "!", code: "Digit1" })).toBe("1");
+    expect(keyFromEvent({ key: "®", code: "KeyR" })).toBe("r");
+    expect(keyFromEvent({ key: "R", code: "KeyR" })).toBe("r");
+  });
+
+  it("keeps event.key for everything else", () => {
+    expect(keyFromEvent({ key: "F1", code: "F1" })).toBe("F1");
+    expect(keyFromEvent({ key: "Enter", code: "Enter" })).toBe("Enter");
+    expect(keyFromEvent({ key: " ", code: "Space" })).toBe(" ");
+  });
 });
 
 describe("shortcut", () => {
@@ -61,6 +76,25 @@ describe("shortcut", () => {
     expect(fired).toBe(0);
 
     press("F4", { alt: true });
+    expect(fired).toBe(1);
+  });
+
+  it("matches the physical key when macOS rewrites Alt+letter", () => {
+    let fired = 0;
+    shortcut({}, { code: "r", alt: true, callback: () => fired++ });
+
+    press("®", { alt: true, code: "KeyR" });
+    expect(fired).toBe(1);
+
+    press("®", { alt: true, code: "KeyT" }); // different physical key
+    expect(fired).toBe(1);
+  });
+
+  it("matches a physical-key binding through the typed character", () => {
+    let fired = 0;
+    shortcut({}, { code: "1", shift: true, callback: () => fired++ });
+
+    press("!", { shift: true, code: "Digit1" });
     expect(fired).toBe(1);
   });
 
