@@ -1,6 +1,6 @@
 import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
-import { env } from "$env/dynamic/public";
+import { dev } from "$app/environment";
 
 Sentry.init({
   dsn: "https://6ff730d0e1c9e8e48ee1103159eb5434@o4509541128601600.ingest.de.sentry.io/4511008257278032",
@@ -24,7 +24,7 @@ Sentry.init({
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/sveltekit/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
-  environment: env.NODE_ENV || "production",
+  environment: dev ? "development" : "production",
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
