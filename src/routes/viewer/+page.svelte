@@ -7,6 +7,7 @@
   import dayjs from "dayjs";
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   let { data } = $props();
 
@@ -38,7 +39,9 @@
     $page.url.searchParams.set("selectedDate", selectedDate);
     $page.url.searchParams.set("filters", filters);
     goto(`?${$page.url.searchParams.toString()}`);
-    const res = await fetch(
+
+    try {
+      const res = await fetch(
       `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${
         showTimecodePicker
           ? `&afterTc=${inTimecode.hours
@@ -60,17 +63,25 @@
               .padStart(2, "0")}`
           : ""
       }`
-    );
-    const data = await res.json();
-    logs = data.logs;
-    pages = data.page;
+      );
+      if (!res.ok) return;
+      const data = await res.json();
+      logs = data.logs;
+      pages = data.page;
 
-    if (currentPage > pages.totalPages) {
-      currentPage = 0;
-      getNewData();
+      if (currentPage > pages.totalPages) {
+        currentPage = 0;
+        getNewData();
+      }
+    } catch {
+      AlertsStore.addAlert(
+        "Could not load logs. Check your connection and try again.",
+        "warning",
+      );
+    } finally {
+      // must always clear, or the viewer spins forever on a failed fetch
+      loading = false;
     }
-
-    loading = false;
   };
 
   let isOpen = $state(false);

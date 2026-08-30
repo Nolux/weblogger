@@ -87,14 +87,22 @@
   socket.emit("joinProject", data.currentProject.id);
 
   socket.on("fetchNewData", async (projectId) => {
-    if (projectId == user.selectedProjectId) {
+    if (projectId != user.selectedProjectId) return;
+
+    // socket.io never awaits this handler, so anything that throws here becomes
+    // an unhandled rejection. Keep the logs we already have and wait for the
+    // next event rather than tearing the list down.
+    try {
       const snapshot = getCurrentTimecodeSnapshot();
       const res = await fetch(
         "/api/log?page=0&perPage=10&localDate=" +
           toLocalDateString(snapshot.localDate),
       );
+      if (!res.ok) return;
       const data = await res.json();
       logs = data.logs;
+    } catch {
+      // offline, reconnecting, or mid-deploy; the next fetchNewData refreshes
     }
   });
 
