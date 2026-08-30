@@ -1,7 +1,9 @@
 <script>
+  import { onMount } from "svelte";
   import { goto } from "$app/navigation";
   import Alerts from "$lib/components/alerts/Alerts.svelte";
   import SettingsModal from "$lib/components/menu/SettingsModal.svelte";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
   import "../app.css";
   import Icon from "@iconify/svelte";
 
@@ -13,8 +15,30 @@
 
   const gotoLink = (e) => {
     sideBarOpen = false;
-    goto(e.target.href);
+    goto(e.currentTarget.href);
   };
+
+  // The app is a client-rendered SPA, so a session that dies while the user sits
+  // on /logger is only ever visible in an API response. Catch it in one place
+  // instead of at all 14 fetch call sites.
+  onMount(() => {
+    const originalFetch = window.fetch;
+
+    window.fetch = async (...args) => {
+      const res = await originalFetch(...args);
+
+      if (res.status === 401 && !location.pathname.startsWith("/login")) {
+        AlertsStore.addAlert("Session expired. Please sign in again.", "warning");
+        goto("/login", { invalidateAll: true });
+      }
+
+      return res;
+    };
+
+    return () => {
+      window.fetch = originalFetch;
+    };
+  });
 </script>
 
 <Alerts />

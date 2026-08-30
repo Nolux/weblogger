@@ -130,10 +130,21 @@
       frames: parseInt(inTimecode.split(":")[3]),
     };
 
-    const res = await fetch("/api/log", {
-      method: "POST",
-      body: JSON.stringify({ ...input, body: $loggerInput }),
-    });
+    let res;
+
+    try {
+      res = await fetch("/api/log", {
+        method: "POST",
+        body: JSON.stringify({ ...input, body: $loggerInput }),
+      });
+    } catch {
+      AlertsStore.addAlert(
+        "Could not reach the server. The log was not saved.",
+        "warning",
+      );
+      submittingLog = false;
+      return;
+    }
     if (!res.ok) {
       const json = await res.json();
       AlertsStore.addAlert(json.message, "warning");
