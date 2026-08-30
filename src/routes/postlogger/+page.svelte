@@ -44,10 +44,21 @@
       day: parseInt(dateInput.split("-")[2]),
     };
 
-    const res = await fetch("/api/log", {
-      method: "POST",
-      body: JSON.stringify({ ...input, body: $postLoggerInput }),
-    });
+    let res;
+
+    try {
+      res = await fetch("/api/log", {
+        method: "POST",
+        body: JSON.stringify({ ...input, body: $postLoggerInput }),
+      });
+    } catch {
+      AlertsStore.addAlert(
+        "Could not reach the server. The log was not saved.",
+        "warning",
+      );
+      submittingLog = false;
+      return;
+    }
 
     if (!res.ok) {
       const json = await res.json();
