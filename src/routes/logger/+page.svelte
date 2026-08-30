@@ -1,7 +1,7 @@
 <script>
   import { socket } from "$lib/socket.js";
 
-  import { shortcut } from "$lib/components/hotkeys/shortcut.js";
+  import { shortcut, display } from "$lib/components/hotkeys/shortcut.js";
   import { tcOffsets } from "$lib/stores/tcOffsetStore.js";
   import { timecodeSource } from "$lib/stores/timecodeSourceStore.js";
   import {
@@ -227,14 +227,7 @@
       </div>
       <div
         class="text-2xl font-bold text-center select-none xl:text-3xl tooltip lg:tooltip-left"
-        data-tip="In-point for log TC click or {$timecodeHotkey.modifiers
-          .control
-          ? 'CTL + '
-          : ''}{$timecodeHotkey.modifiers.shift
-          ? 'SHIFT + '
-          : ''}{$timecodeHotkey.modifiers.alt
-          ? 'ALT + '
-          : ''}{$timecodeHotkey.key} to SET"
+        data-tip="In-point for log TC click or {display($timecodeHotkey)} to SET"
       >
         <div
           use:shortcut={{
@@ -270,12 +263,7 @@
               ></span>
             {:else}
               <div>Submit</div>
-              <div class="text-xs">
-                {$submitHotkey.modifiers.control ? "CTL + " : ""}
-                {$submitHotkey.modifiers.shift ? "SHIFT + " : ""}
-                {$submitHotkey.modifiers.alt ? "ALT + " : ""}
-                {$submitHotkey.key}
-              </div>
+              <div class="text-xs">{display($submitHotkey)}</div>
             {/if}
           </div>
         </button>
@@ -296,12 +284,7 @@
         >
           <div class="flex flex-col">
             <div>Reset</div>
-            <div class="text-xs">
-              {$resetHotkey.modifiers.control ? "CTL + " : ""}
-              {$resetHotkey.modifiers.shift ? "SHIFT + " : ""}
-              {$resetHotkey.modifiers.alt ? "ALT + " : ""}
-              {$resetHotkey.key}
-            </div>
+            <div class="text-xs">{display($resetHotkey)}</div>
           </div></button
         >
       </div>

@@ -1,96 +1,44 @@
 import { persisted } from "svelte-persisted-store";
 
-// First param `preferences` is the local storage key.
-// Second param is the initial value.
-export const hotkeys = persisted("hotkeys", [
-  {
-    key: "F1",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F2",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F3",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F4",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F5",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F6",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F7",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-  {
-    key: "F8",
-    modifiers: { control: false, shift: false, alt: true },
-  },
-]);
-
-export const personalHotkeys = persisted("personalHotkeys", [
-  {
-    key: "F1",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F2",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F3",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F4",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F5",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F6",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F7",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-  {
-    key: "F8",
-    modifiers: { control: false, shift: false, alt: false },
-    text: "",
-  },
-]);
-
-export const submitHotkey = persisted("submitHotkey", {
-  key: "F1",
-  modifiers: { control: false, shift: true, alt: false },
+const modifiers = (m = {}) => ({
+  control: false,
+  shift: false,
+  alt: false,
+  ...m,
 });
 
-export const resetHotkey = persisted("resetHotkey", {
-  key: "F2",
-  modifiers: { control: false, shift: true, alt: false },
-});
+const functionKeys = (m) =>
+  Array.from({ length: 8 }, (_, i) => ({
+    key: `F${i + 1}`,
+    modifiers: modifiers(m),
+  }));
 
-export const timecodeHotkey = persisted("timecodeHotkey", {
-  key: "F3",
-  modifiers: { control: false, shift: true, alt: false },
-});
+// Single source of truth: the stores seed from this and the settings modal's
+// "Reset hotkeys" button restores from it.
+export const defaults = {
+  hotkeys: functionKeys(),
+  personalHotkeys: functionKeys({ shift: true }).map((h) => ({
+    ...h,
+    text: "",
+  })),
+  // Alt on all three: these fire while the logger textarea has focus, so they
+  // must not be things you can type, and Alt avoids the browser's Ctrl+T /
+  // Ctrl+R. macOS rewrites Alt+letter to "®", "†", … — the matcher falls back
+  // to the physical key for that.
+  submitHotkey: { key: "Enter", modifiers: modifiers({ alt: true }) },
+  resetHotkey: { key: "r", modifiers: modifiers({ alt: true }) },
+  timecodeHotkey: { key: "t", modifiers: modifiers({ alt: true }) },
+};
+
+// First param is the local storage key, second is the initial value.
+export const hotkeys = persisted("hotkeys", defaults.hotkeys);
+export const personalHotkeys = persisted(
+  "personalHotkeys",
+  defaults.personalHotkeys
+);
+export const submitHotkey = persisted("submitHotkey", defaults.submitHotkey);
+export const resetHotkey = persisted("resetHotkey", defaults.resetHotkey);
+export const timecodeHotkey = persisted(
+  "timecodeHotkey",
+  defaults.timecodeHotkey
+);

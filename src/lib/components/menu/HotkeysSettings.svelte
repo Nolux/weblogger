@@ -5,260 +5,148 @@
     resetHotkey,
     timecodeHotkey,
     personalHotkeys,
+    defaults,
   } from "$lib/stores/hotkeysStore.js";
+  import { display, keyFromEvent } from "$lib/components/hotkeys/shortcut.js";
+
+  // { id, current, set } of the row waiting for a keypress, or null
+  let armed = $state(null);
+
+  const MODIFIER_KEYS = ["Shift", "Control", "Alt", "Meta"];
+
+  const sig = (h) =>
+    `${h.modifiers.control}${h.modifiers.shift}${h.modifiers.alt}:${h.key}`;
+
+  let allRows = $derived([
+    $submitHotkey,
+    $resetHotkey,
+    $timecodeHotkey,
+    ...$hotkeys,
+    ...$personalHotkeys,
+  ]);
+
+  let conflicts = $derived(
+    new Set(allRows.map(sig).filter((s, i, a) => a.indexOf(s) !== i))
+  );
+
+  $effect(() => {
+    if (!armed) return;
+    const onKey = (e) => {
+      e.preventDefault();
+      // capture phase + stopPropagation so the shortcut action on window
+      // doesn't fire the app's own hotkeys while we're binding
+      e.stopPropagation();
+      if (e.key === "Escape") {
+        armed = null;
+        return;
+      }
+      // ignore modifier-only presses so the user can hold them first
+      if (MODIFIER_KEYS.includes(e.key)) return;
+      armed.set({
+        ...armed.current,
+        key: keyFromEvent(e),
+        modifiers: {
+          control: e.ctrlKey || e.metaKey,
+          shift: e.shiftKey,
+          alt: e.altKey,
+        },
+      });
+      armed = null;
+    };
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  });
 </script>
 
+{#snippet row(id, label, hotkey, set, withText = false)}
+  <tr class={conflicts.has(sig(hotkey)) ? "bg-error/20" : ""}>
+    <td>{label}</td>
+    <td>
+      <div class="flex items-center gap-2">
+        <span
+          class="tooltip tooltip-right"
+          data-tip={armed?.id === id
+            ? "Press the key combination you want · Esc to cancel"
+            : conflicts.has(sig(hotkey))
+              ? "Same combination as another hotkey · click to rebind"
+              : "Click, and press the key combination you want"}
+        >
+          <button
+            class="btn btn-xs w-32 font-mono"
+            class:btn-primary={armed?.id === id}
+            onclick={() => (armed = { id, current: hotkey, set })}
+          >
+            {armed?.id === id ? "Press key…" : display(hotkey)}
+          </button>
+        </span>
+        {#if withText}
+          <input
+            class="input input-xs flex-1"
+            type="text"
+            placeholder="Input text"
+            value={hotkey.text}
+            onchange={(e) => set({ ...hotkey, text: e.currentTarget.value })}
+          />
+        {/if}
+      </div>
+    </td>
+  </tr>
+{/snippet}
+
 <div class="flex flex-col gap-1">
-  <table class="table table-xs table-zebra w-full">
+  <table class="table table-xs table-zebra table-fixed w-full">
     <thead>
       <tr>
-        <th>type</th>
-        <th>Button</th>
-        <th>opt</th>
-        <th>Control</th>
-        <th>Shift</th>
-        <th>Alt</th>
+        <th class="w-1/3">type</th>
+        <th class="w-2/3">Keybind</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>Submit</td>
-        <td>
-          <input
-            class="input input-xs w-16"
-            type="text"
-            bind:value={$submitHotkey.key}
-          />
-        </td>
-        <td></td>
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$submitHotkey.modifiers.control}
-          /></td
-        >
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$submitHotkey.modifiers.shift}
-          /></td
-        >
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$submitHotkey.modifiers.alt}
-          /></td
-        >
-      </tr>
-      <tr>
-        <td>Reset</td>
-        <td>
-          <input
-            class="input input-xs w-16"
-            type="text"
-            bind:value={$resetHotkey.key}
-          />
-        </td>
-        <td></td>
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$resetHotkey.modifiers.control}
-          /></td
-        >
-
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$resetHotkey.modifiers.shift}
-          /></td
-        >
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$resetHotkey.modifiers.alt}
-          /></td
-        >
-      </tr>
-      <tr>
-        <td>Timecode</td>
-        <td>
-          <input
-            class="input input-xs w-16"
-            type="text"
-            bind:value={$timecodeHotkey.key}
-          />
-        </td>
-        <td></td>
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$timecodeHotkey.modifiers.control}
-          /></td
-        >
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$timecodeHotkey.modifiers.shift}
-          /></td
-        >
-        <td
-          ><input
-            class="toggle toggle-xs"
-            type="checkbox"
-            bind:checked={$timecodeHotkey.modifiers.alt}
-          /></td
-        >
-      </tr>
+      {@render row("submit", "Submit", $submitHotkey, (v) =>
+        submitHotkey.set(v)
+      )}
+      {@render row("reset", "Reset", $resetHotkey, (v) => resetHotkey.set(v))}
+      {@render row("timecode", "Timecode", $timecodeHotkey, (v) =>
+        timecodeHotkey.set(v)
+      )}
       {#each $hotkeys as hotkey, i}
-        <tr>
-          <td>Hotkey {i + 1}</td>
-          <td>
-            <input
-              class="input input-xs w-16"
-              type="text"
-              bind:value={hotkey.key}
-            />
-          </td>
-          <td></td>
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.control}
-            /></td
-          >
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.shift}
-            /></td
-          >
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.alt}
-            /></td
-          >
-        </tr>
+        {@render row(`h${i}`, `Hotkey ${i + 1}`, hotkey, (v) =>
+          hotkeys.update((a) => a.map((x, j) => (j === i ? v : x)))
+        )}
       {/each}
       {#each $personalHotkeys as hotkey, i}
-        <tr>
-          <td>Personal Hotkey {i + 1}</td>
-          <td>
-            <input
-              class="input input-xs w-16"
-              type="text"
-              bind:value={hotkey.key}
-            />
-          </td>
-          <td>
-            <input
-              class="input input-xs w-16"
-              type="text"
-              bind:value={hotkey.text}
-            />
-          </td>
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.control}
-            /></td
-          >
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.shift}
-            /></td
-          >
-          <td
-            ><input
-              class="toggle toggle-xs"
-              type="checkbox"
-              bind:checked={hotkey.modifiers.alt}
-            /></td
-          >
-        </tr>
+        {@render row(
+          `p${i}`,
+          `Personal Hotkey ${i + 1}`,
+          hotkey,
+          (v) => personalHotkeys.update((a) => a.map((x, j) => (j === i ? v : x))),
+          true
+        )}
       {/each}
-      <tr
-        ><td colspan="2" class="text-center"
-          >Save or refresh to update hotkeys</td
-        >
-        <td
-          ><button
-            class="btn btn-xs"
-            onclick={() => {
-              window.location.reload();
-            }}>Save</button
-          >
+      <tr>
+        <td colspan="2">
+          <div class="flex items-center justify-between gap-2">
+            <span
+              >Click a key to rebind · Esc cancels · changes apply immediately</span
+            >
+            <button
+              class="btn btn-xs shrink-0"
+              onclick={() => {
+                hotkeys.set(structuredClone(defaults.hotkeys));
+                submitHotkey.set(structuredClone(defaults.submitHotkey));
+                resetHotkey.set(structuredClone(defaults.resetHotkey));
+                timecodeHotkey.set(structuredClone(defaults.timecodeHotkey));
+                // keybinds go back to default, the user's typed text stays
+                personalHotkeys.update((current) =>
+                  defaults.personalHotkeys.map((d, i) => ({
+                    ...structuredClone(d),
+                    text: current[i]?.text ?? "",
+                  }))
+                );
+              }}>Reset hotkeys</button
+            >
+          </div>
         </td>
-        <td
-          ><button
-            class="btn btn-xs"
-            onclick={() => {
-              hotkeys.set([
-                {
-                  key: "F1",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F2",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F3",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F4",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F5",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F6",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F7",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-                {
-                  key: "F8",
-                  modifiers: { control: false, shift: false, alt: false },
-                },
-              ]);
-              submitHotkey.set({
-                key: "F1",
-                modifiers: { control: false, shift: true, alt: false },
-              });
-
-              resetHotkey.set({
-                key: "F2",
-                modifiers: { control: false, shift: true, alt: false },
-              });
-
-              timecodeHotkey.set({
-                key: "F3",
-                modifiers: { control: false, shift: true, alt: false },
-              });
-            }}>Reset hotkeys</button
-          ></td
-        >
       </tr>
     </tbody>
   </table>
