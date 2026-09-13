@@ -9,6 +9,7 @@
   import dayjs from "dayjs";
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   let { data } = $props();
 
@@ -47,6 +48,15 @@
     const res = await fetch(
       `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
     );
+
+    if (!res.ok) {
+      const error = await res.json();
+      AlertsStore.addAlert(error.message, "warning");
+      loading = false;
+
+      return;
+    }
+
     const data = await res.json();
 
     logs = data.logs;
