@@ -21,6 +21,16 @@ Sentry.init({
   // If you don't want to use Session Replay, just remove the line below:
   integrations: [replayIntegration()],
 
+  // Transient browser network failures (offline, connection drop, navigating
+  // away mid-request). These surface as unhandled errors from SvelteKit's
+  // link preloading, but are not actionable: in-app fetches handle their own
+  // failures and show the user an alert.
+  ignoreErrors: [
+    "Failed to fetch",
+    "NetworkError when attempting to fetch resource",
+    "Load failed",
+  ],
+
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/sveltekit/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
