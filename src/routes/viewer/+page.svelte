@@ -7,6 +7,7 @@
   import dayjs from "dayjs";
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   let { data } = $props();
 
@@ -38,8 +39,10 @@
     $page.url.searchParams.set("selectedDate", selectedDate);
     $page.url.searchParams.set("filters", filters);
     goto(`?${$page.url.searchParams.toString()}`);
-    const res = await fetch(
-      `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${
+    let res;
+    try {
+      res = await fetch(
+        `/api/log?page=${currentPage}&perPage=${perPage}&localDate=${selectedDate}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${
         showTimecodePicker
           ? `&afterTc=${inTimecode.hours
               .toString()
@@ -60,7 +63,15 @@
               .padStart(2, "0")}`
           : ""
       }`
-    );
+      );
+    } catch {
+      AlertsStore.addAlert(
+        "Could not reach the server. Logs were not updated.",
+        "warning",
+      );
+      loading = false;
+      return;
+    }
     const data = await res.json();
     logs = data.logs;
     pages = data.page;
