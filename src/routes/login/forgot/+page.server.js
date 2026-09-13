@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
 
 import { db } from "$lib/db.js";
+import { parseFormData } from "$lib/server/formData.js";
 import { env } from "$env/dynamic/private";
 
 const transporter = nodemailer.createTransport({
@@ -18,7 +19,7 @@ const transporter = nodemailer.createTransport({
 
 export const actions = {
   default: async ({ request, url }) => {
-    const formData = Object.fromEntries(await request.formData());
+    const formData = await parseFormData(request);
 
     if (!formData.email) {
       return fail(400, {
