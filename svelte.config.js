@@ -11,6 +11,11 @@ const config = {
     csrf: {
       checkOrigin: false,
     },
+    version: {
+      // Mobile Safari keeps tabs alive for weeks; poll so a tab opened before a
+      // deploy knows its chunk hashes are dead.
+      pollInterval: 60000,
+    },
   },
   preprocess: vitePreprocess(),
 };

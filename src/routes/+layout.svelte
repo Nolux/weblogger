@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
+  import { beforeNavigate, goto } from "$app/navigation";
+  import { updated } from "$app/state";
   import Alerts from "$lib/components/alerts/Alerts.svelte";
   import SettingsModal from "$lib/components/menu/SettingsModal.svelte";
   import { AlertsStore } from "$lib/stores/alertsStore.js";
@@ -12,6 +13,15 @@
 
   let user = $derived(data.user);
   let currentProject = $derived(data.currentProject);
+
+  // After a deploy the old page's hashed route chunks are gone, so a client-side
+  // navigation dies with "Importing a module script failed". Do a full page load
+  // instead once a new version is known.
+  beforeNavigate((navigation) => {
+    if (updated.current && !navigation.willUnload && navigation.to?.url) {
+      location.href = navigation.to.url.href;
+    }
+  });
 
   const gotoLink = (e) => {
     sideBarOpen = false;
