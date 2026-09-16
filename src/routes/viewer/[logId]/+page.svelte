@@ -3,6 +3,7 @@
   import dayjs from "dayjs";
   import { DatePicker } from "@svelte-plugins/datepicker";
   import { page } from "$app/stores";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   let { data } = $props();
 
@@ -12,20 +13,44 @@
 
   let isOpen = $state(false);
   let dateInput = "";
+  let savingLog = $state(false);
 
   const updateLog = async () => {
-    const data = await fetch("/api/log", {
-      method: "PATCH",
-      body: JSON.stringify({
-        id: log.id,
-        updatedLog: {
-          body: log.body,
-          timecode: log.timecode,
-          localDate: log.localDate,
-        },
-      }),
-    });
-    const returnedLog = await data.json();
+    if (savingLog) return;
+    savingLog = true;
+
+    let res;
+
+    try {
+      res = await fetch("/api/log", {
+        method: "PATCH",
+        body: JSON.stringify({
+          id: log.id,
+          updatedLog: {
+            body: log.body,
+            timecode: log.timecode,
+            localDate: log.localDate,
+          },
+        }),
+      });
+    } catch {
+      AlertsStore.addAlert(
+        "Could not reach the server. The log was not saved.",
+        "warning",
+      );
+      savingLog = false;
+      return;
+    }
+
+    savingLog = false;
+
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      AlertsStore.addAlert(json.message || "The log was not saved.", "warning");
+      return;
+    }
+
+    const returnedLog = await res.json();
     log = returnedLog;
     editMode = false;
   };
@@ -218,6 +243,7 @@
       <div class="col-span-4 flex gap-2">
         <button
           class="btn btn-primary w-full"
+          disabled={savingLog}
           onclick={() => {
             updateLog();
           }}>Save</button
