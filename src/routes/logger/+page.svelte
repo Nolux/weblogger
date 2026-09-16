@@ -170,7 +170,7 @@
     loggerInput.set("");
     submittingLog = false;
     setTimeout(() => {
-      textarea.select();
+      textarea?.select();
     }, 50);
   };
 
