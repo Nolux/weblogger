@@ -4,6 +4,7 @@ import { json, redirect } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
 import { env } from "$env/dynamic/private";
+import { dev } from "$app/environment";
 import { db } from "$lib/db.js";
 
 Sentry.init({
@@ -11,7 +12,7 @@ Sentry.init({
     tracesSampleRate: 1,
     enableLogs: true,
     sendDefaultPii: true,
-    environment: env.NODE_ENV || "production",
+    environment: dev ? "development" : "production",
 })
 
 export const handleError = Sentry.handleErrorWithSentry();
