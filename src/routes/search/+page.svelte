@@ -9,6 +9,7 @@
   import dayjs from "dayjs";
 
   import SearchBadge from "$lib/components/viewer/SearchBadge.svelte";
+  import { AlertsStore } from "$lib/stores/alertsStore.js";
 
   let { data } = $props();
 
@@ -44,16 +45,25 @@
 
     goto(`?${$page.url.searchParams.toString()}`);
 
-    const res = await fetch(
-      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
-    );
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
+      );
+      if (!res.ok) return;
+      const data = await res.json();
 
-    logs = data.logs;
-    pages = data.page;
-
-    loading = false;
-    firstSearchDone = true;
+      logs = data.logs;
+      pages = data.page;
+      firstSearchDone = true;
+    } catch {
+      AlertsStore.addAlert(
+        "Could not run the search. Check your connection and try again.",
+        "warning",
+      );
+    } finally {
+      // must always clear, or the search spins forever on a failed fetch
+      loading = false;
+    }
   };
 </script>
 
