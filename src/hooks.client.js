@@ -1,6 +1,7 @@
 import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
 import { env } from "$env/dynamic/public";
+import { reloadOnChunkError } from "$lib/helpers/reloadOnChunkError.js";
 
 Sentry.init({
   dsn: "https://6ff730d0e1c9e8e48ee1103159eb5434@o4509541128601600.ingest.de.sentry.io/4511008257278032",
@@ -39,3 +40,5 @@ Sentry.init({
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();
+
+reloadOnChunkError();
