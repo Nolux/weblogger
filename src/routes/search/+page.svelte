@@ -49,7 +49,14 @@
       const res = await fetch(
         `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
       );
-      if (!res.ok) return;
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        AlertsStore.addAlert(
+          error.message || "Could not run the search. Check your connection and try again.",
+          "warning",
+        );
+        return;
+      }
       const data = await res.json();
 
       logs = data.logs;
