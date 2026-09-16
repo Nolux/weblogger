@@ -16,7 +16,7 @@
   let searchInput = $state($page.url.searchParams.get("query") || "");
 
   let logs = $derived(data.logs || []);
-  let pages = $derived(data.page);
+  let pages = $derived(data.page || { page: 0, totalPages: 0, totalCount: 0 });
   let user = $derived(data.user);
   let projectDays = $derived(data.projectDays);
   let selectedDate = $derived(data.selectedDate);
