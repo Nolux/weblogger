@@ -61,9 +61,17 @@
 
     logs = data.logs;
     pages = data.page;
-
-    loading = false;
     firstSearchDone = true;
+    
+    } catch {
+      AlertsStore.addAlert(
+        "Could not run the search. Check your connection and try again.",
+        "warning",
+      );
+    } finally {
+      // must always clear, or the search spins forever on a failed fetch
+      loading = false;
+    }
   };
 </script>
 

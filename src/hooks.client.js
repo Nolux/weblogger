@@ -1,6 +1,7 @@
 import { handleErrorWithSentry, replayIntegration } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
-import { env } from "$env/dynamic/public";
+import { dev } from "$app/environment";
+import { reloadOnChunkError } from "$lib/helpers/reloadOnChunkError.js";
 
 Sentry.init({
   dsn: "https://6ff730d0e1c9e8e48ee1103159eb5434@o4509541128601600.ingest.de.sentry.io/4511008257278032",
@@ -21,11 +22,23 @@ Sentry.init({
   // If you don't want to use Session Replay, just remove the line below:
   integrations: [replayIntegration()],
 
+  // Transient browser network failures (offline, connection drop, navigating
+  // away mid-request). These surface as unhandled errors from SvelteKit's
+  // link preloading, but are not actionable: in-app fetches handle their own
+  // failures and show the user an alert.
+  ignoreErrors: [
+    "Failed to fetch",
+    "NetworkError when attempting to fetch resource",
+    "Load failed",
+  ],
+
   // Enable sending user PII (Personally Identifiable Information)
   // https://docs.sentry.io/platforms/javascript/guides/sveltekit/configuration/options/#sendDefaultPii
   sendDefaultPii: true,
-  environment: env.NODE_ENV || "production",
+  environment: dev ? "development" : "production",
 });
 
 // If you have a custom error handler, pass it to `handleErrorWithSentry`
 export const handleError = handleErrorWithSentry();
+
+reloadOnChunkError();
