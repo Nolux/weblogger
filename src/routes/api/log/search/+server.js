@@ -16,9 +16,7 @@ export const GET = async ({ request, locals, url }) => {
 
   const currentProject = locals.user.assignedProjects[find];
 
-  if (filters) {
-    filters = filters.split(",");
-  }
+  filters = filters ? filters.split(",") : [];
 
   const splitSearch = query.split(" ");
   let regex = "";
