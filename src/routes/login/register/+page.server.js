@@ -2,6 +2,7 @@ import { fail, redirect, error } from "@sveltejs/kit";
 import jwt from "jsonwebtoken";
 
 import { createUser } from "$lib/server/user.js";
+import { parseFormData } from "$lib/server/formData.js";
 import { env } from "$env/dynamic/private";
 import { db } from "$lib/db.js";
 import { UserModel } from "$lib/Models/User.js";
@@ -27,7 +28,7 @@ export async function load({ fetch, locals, url }) {
 
 export const actions = {
   default: async ({ request, url }) => {
-    const formData = Object.fromEntries(await request.formData());
+    const formData = await parseFormData(request);
 
     const token = url.searchParams.get("token");
 

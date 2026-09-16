@@ -1,9 +1,10 @@
 import { loginUser } from "$lib/server/user.js";
+import { parseFormData } from "$lib/server/formData.js";
 import { redirect, fail } from "@sveltejs/kit";
 
 export const actions = {
   default: async (event) => {
-    const formData = Object.fromEntries(await event.request.formData());
+    const formData = await parseFormData(event.request);
 
     if (!formData.email || !formData.password) {
       return fail(400, {

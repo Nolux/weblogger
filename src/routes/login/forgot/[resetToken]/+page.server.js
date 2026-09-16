@@ -3,11 +3,12 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 
 import { db } from "$lib/db.js";
+import { parseFormData } from "$lib/server/formData.js";
 import { env } from "$env/dynamic/private";
 
 export const actions = {
   default: async ({ request, url, params }) => {
-    const formData = Object.fromEntries(await request.formData());
+    const formData = await parseFormData(request);
     const resetToken = params.resetToken;
 
     if (!formData.password || !resetToken) {
