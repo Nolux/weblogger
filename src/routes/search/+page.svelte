@@ -45,24 +45,23 @@
 
     goto(`?${$page.url.searchParams.toString()}`);
 
-    const res = await fetch(
-      `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
-    );
+    try {
+      const res = await fetch(
+        `/api/log/search?query=${searchInput}&page=${currentPage}&perPage=${perPage}&filters=${filters.join(",")}&asc=${asc ? "asc" : "desc"}${dateSelectorOpen ? "&localDate=" + selectedDate : ""}`,
+      );
+      if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        AlertsStore.addAlert(
+          error.message || "Could not run the search. Check your connection and try again.",
+          "warning",
+        );
+        return;
+      }
+      const data = await res.json();
 
-    if (!res.ok) {
-      const error = await res.json();
-      AlertsStore.addAlert(error.message, "warning");
-      loading = false;
-
-      return;
-    }
-
-    const data = await res.json();
-
-    logs = data.logs;
-    pages = data.page;
-    firstSearchDone = true;
-    
+      logs = data.logs;
+      pages = data.page;
+      firstSearchDone = true;
     } catch {
       AlertsStore.addAlert(
         "Could not run the search. Check your connection and try again.",
